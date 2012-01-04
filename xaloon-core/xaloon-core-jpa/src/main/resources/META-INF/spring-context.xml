@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd"> -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd"
+	default-autowire="byName">
+
+	<!-- ENTITIES -->
+	<bean id="coreModelEntities" class="org.xaloon.core.jpa.spring.EntityListProvider">
+		<property name="entities">
+			<list>
+				<value>org.xaloon.core.jpa.plugin.resource.model.PluginEntity</value>	
+				<value>org.xaloon.core.jpa.model.JpaKeyValue</value>		
+				
+				<!-- Classifier -->	
+				<value>org.xaloon.core.jpa.classifier.model.JpaClassifierItem</value>
+				<value>org.xaloon.core.jpa.classifier.model.JpaClassifier</value>		
+				
+				<!-- File -->
+				<value>org.xaloon.core.jpa.storage.model.JpaFileDescriptor</value>	
+				<value>org.xaloon.core.jpa.storage.model.JpaFileStorage</value>		
+				
+				<!-- User -->
+				<value>org.xaloon.core.jpa.user.model.AbstractUser</value>
+				<value>org.xaloon.core.jpa.user.model.JpaUser</value>
+				<value>org.xaloon.core.jpa.user.model.JpaAnonymousUser</value>
+				<value>org.xaloon.core.jpa.user.model.JpaUserProperties</value>
+				<!-- Message -->
+				<value>org.xaloon.core.jpa.message.model.JpaMessage</value>		
+				<value>org.xaloon.core.jpa.message.model.JpaTextMessage</value>		
+				<value>org.xaloon.core.jpa.message.model.JpaMailMessage</value>
+				<value>org.xaloon.core.jpa.plugin.comment.model.JpaComment</value>		
+				
+				<!-- Audit -->
+				<value>org.xaloon.core.jpa.audit.model.JpaAuditEntity</value>		
+				<value>org.xaloon.core.jpa.audit.model.JpaAuditEntityItem</value>							
+			</list>
+		</property>
+	</bean>	
+</beans>

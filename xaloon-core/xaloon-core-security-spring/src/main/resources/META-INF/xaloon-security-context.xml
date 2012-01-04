@@ -1,0 +1,46 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://activemq.apache.org/schema/core 
+      http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd
+      http://www.springframework.org/schema/security 
+      http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	default-autowire="byName">
+
+	<security:http create-session="never" auto-config="true">
+		<security:intercept-url pattern="/**" />
+	</security:http>
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="daoAuthenticationProvider" />
+		<security:authentication-provider ref="externalAuthenticationProvider" />
+	</security:authentication-manager>
+
+	<bean id="daoAuthenticationProvider" class="org.xaloon.wicket.security.spring.XaloonDaoAuthenticationProvider">
+		<property name="userDetailsService" ref="springUserDetailsService" />
+	</bean>
+	
+	<!-- SECURITY ENTITIES -->
+	<bean id="securityModelEntities" class="org.xaloon.core.jpa.spring.EntityListProvider">
+		<property name="entities">
+			<list>
+				<value>org.xaloon.core.jpa.model.JpaKeyValue</value>
+				<value>org.xaloon.core.jpa.security.model.JpaAuthority</value>	
+				<value>org.xaloon.core.jpa.security.model.JpaUserDetails</value>	
+				<value>org.xaloon.core.jpa.security.model.JpaUserAlias</value>	
+				<value>org.xaloon.core.jpa.security.model.JpaGroup</value>	
+				<value>org.xaloon.core.jpa.security.model.JpaGroupAuthority</value>	
+				<value>org.xaloon.core.jpa.security.model.JpaGroupMembers</value>		
+			</list>
+		</property>
+	</bean>	
+</beans>

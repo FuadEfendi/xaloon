@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>xaloon-parent</artifactId>
+		<groupId>org.xaloon</groupId>
+		<version>1.5.0-RC4-SNAPSHOT</version>
+	</parent>
+	<groupId>org.xaloon.core</groupId>
+	<artifactId>xaloon-core-parent</artifactId>
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+	<name>xaloon core folder</name>
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>xaloon-core-api</module>
+				<module>xaloon-core-jpa</module>
+				<module>xaloon-core-jcr</module>
+				<module>xaloon-core-cache</module>
+				<module>xaloon-core-security-spring</module>
+				<module>xaloon-core-security-shiro</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonatype-deploy</id>
+			<activation>
+				<property>
+					<name>sonatype-deploy</name>
+				</property>
+			</activation>
+			<modules>
+				<!-- Do deploy core-cache until infinispan resources will be synchronized with central repository -->
+				<module>xaloon-core-api</module>
+				<module>xaloon-core-jpa</module>
+				<module>xaloon-core-jcr</module>
+				<module>xaloon-core-security-spring</module>
+				<module>xaloon-core-security-shiro</module>
+			</modules>
+		</profile>
+	</profiles>
+</project>

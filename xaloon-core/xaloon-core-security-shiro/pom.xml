@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>xaloon-core-parent</artifactId>
+		<groupId>org.xaloon.core</groupId>
+		<version>1.5.0-RC4-SNAPSHOT</version>
+	</parent>
+	<artifactId>xaloon-core-security-shiro</artifactId>
+	<name>xaloon-core-security-shiro</name>
+	<url>http://www.xaloon.org</url>
+	<description>
+		xaloon security shiro implementation
+	</description>
+	<dependencies>
+		<!-- Core API -->
+		<dependency>
+			<groupId>org.xaloon.core</groupId>
+			<artifactId>xaloon-core-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<!-- Apache shiro -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+		</dependency>
+	</dependencies>
+</project>
