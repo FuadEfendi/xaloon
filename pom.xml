@@ -540,31 +540,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-
-	<!-- Repositories will stay until all dependencies will be resolved. -->
-	<repositories>
-		<repository>
-			<id>EclipseLink Repo</id>
-			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-		</repository>
-		<!-- TODO shoud we use it? -->
-		<repository>
-			<id>jboss-repository</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-		</repository>
-		<repository>
-			<id>xaloon</id>
-			<name>Local Snapshots Repository</name>
-			<url>https://xaloon.googlecode.com/svn/maven2/snapshots</url>
-		</repository>
-		<repository>
-			<id>mandubian-mvn</id>
-			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
-		</repository>
-		<repository>
-			<id>jqwicket</id>
-			<url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
-		</repository>
-	</repositories>
 </project>
