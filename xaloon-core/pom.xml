@@ -20,7 +20,6 @@
 				<module>xaloon-core-api</module>
 				<module>xaloon-core-jpa</module>
 				<module>xaloon-core-jcr</module>
-				<module>xaloon-core-cache</module>
 				<module>xaloon-core-security-spring</module>
 				<module>xaloon-core-security-shiro</module>
 			</modules>
