@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.xaloon.plugins</groupId>
+		<artifactId>xaloon-wicket-plugins-parent</artifactId>
+		<version>1.5.0-RC4-SNAPSHOT</version>
+	</parent>
+	<artifactId>xaloon-wicket-plugin-gdata</artifactId>
+	<packaging>jar</packaging>
+	<name>xaloon-wicket-plugin-gdata</name>
+	<description>
+		exposed google services, which requires dependencies, not stored under central maven repository
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.xaloon.wicket</groupId>
+			<artifactId>xaloon-wicket-components</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Scribe -->
+		<dependency>
+			<groupId>org.scribe</groupId>
+			<artifactId>scribe</artifactId>
+		</dependency>
+
+		<!-- Gdata dependency -->
+		<dependency>
+			<groupId>com.google.gdata</groupId>
+			<artifactId>gdata-photos-2.0</artifactId>
+			<version>1.41.5</version>
+		</dependency>
+	</dependencies>
+</project>
