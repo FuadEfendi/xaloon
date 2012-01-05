@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
+   <title>Getting Started</title>
+	<section>
+		<title>Building startup project</title>
+		<section>
+			<title>Web container based project</title>
+			<para>
+				Xaloon provides several archetypes to create project structure in more elegant way.
+			</para>
+			<para>Generating project:</para>
+			<programlisting language="java"><![CDATA[[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
+-DarchetypeArtifactId=xaloon-archetype-wicket-jpa-spring \
+-DarchetypeVersion=1.5.0 \
+-DgroupId=com.mycompany \
+-DartifactId=myproject \
+-DarchetypeRepository=http://xaloon.googlecode.com/svn/maven2/releases/]]></programlisting>
+			<para>
+				This will create ready-to-deploy web application, which can be started using web application container, such Apache Tomcat, Jetty. Created project contains these dependencies:	
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>xaloon wicket components, xaloon JPA persistence, xaloon plugins</para>
+				</listitem>
+				<listitem>
+					<para>hibernate - for persistence management</para>
+				</listitem>
+				<listitem>
+					<para>spring - for DI, security and transaction management</para>
+				</listitem>
+			</itemizedlist>
+			<para>Deploying and running application:</para>
+			<programlisting><![CDATA[[xaloon/myproject/myproject-web]$ mvn jetty:run]]></programlisting>
+			<para>This will start jetty container with xaloon application deployed.</para>
+		</section>
+		<section>
+			<title>Glassfish JEE project</title>
+			<para>Generating project:</para>
+			<programlisting><![CDATA[[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
+-DarchetypeArtifactId=xaloon-archetype-wicket-jpa-glassfish \
+-DarchetypeVersion=1.5.0 \
+-DgroupId=com.mycompany \
+-DartifactId=myproject-j2ee \
+-DarchetypeRepository=http://xaloon.googlecode.com/svn/maven2/releases/
+			]]></programlisting>
+			<para>
+				This will create ready-to-deploy web application, which can be started using Glassfish 3.1. Created project will contain these dependencies:</para>
+			<itemizedlist>
+				<listitem>
+					<para>xaloon wicket components, xaloon JPA persistence, xaloon plugins</para>
+				</listitem>
+				<listitem>
+					<para>apache shiro - for security</para>
+				</listitem>				
+			</itemizedlist>
+			<para>xaloon application will reuse Java EE 6 capabilities:</para>	
+			<itemizedlist>
+				<listitem>
+					<para>CDI - for dependency injection</para>
+				</listitem>
+				<listitem>
+					<para>JPA - for persistence</para>
+				</listitem>
+				<listitem>
+					<para>Partially - Java EE security. Standard security roles are used to authorise wicket web pages.</para>
+				</listitem>		
+				<listitem>
+					<para>Transaction management</para>
+				</listitem>						
+			</itemizedlist>	
+			<para>You should have Glassfish >=3.1.1 up and running. Also database should be started. Then
+				deployment is very easy. You should change glassfish username and password in
+				<emphasis>pom.xml</emphasis> file</para>
+			<programlisting><![CDATA[[xaloon/myproject-j2ee/myproject-j2ee-ear]$ mvn glassfish:deploy]]></programlisting>
+		</section>
+	</section>
+	<section>
+		<title>Configuration</title>
+		<para></para>
+	</section>
+	<section>
+		<title>Adding existing plugin</title>
+		<para></para>
+	</section>
+   	<section>
+		<title>Creating project manually</title>
+		<section>
+			<title>Add maven dependencies</title>
+			<para></para>
+		</section>
+		<section>
+			<title>Creating Apache Wicket Web application</title>
+			<para></para>
+		</section>
+		<section>
+			<title>Implementing custom layout</title>
+			<para></para>
+		</section>
+		<section>
+			<title>Creating new page</title>
+			<para></para>
+		</section>
+		<section>
+			<title>Mounting pages</title>
+			<para></para>
+		</section>
+		<section>
+			<title>Adding security</title>
+			<para></para>
+		</section>
+	</section>	
+</chapter>

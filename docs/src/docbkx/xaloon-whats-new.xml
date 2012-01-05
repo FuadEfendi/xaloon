@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
+   <title>What's new in xaloon 1.5</title>
+	<section>
+		<title>New features and enhancements</title>
+		<para>xaloon 1.5 version was re architectured drastically. Now it has more flexibility, developer
+			can easily change configuration and default implementation if required.</para>
+		<section>
+			<title>Basic features</title>
+			<para>Support of common annotations is introduced in new xaloon version. This makes xaloon based projects more flexible when it comes to migration between Spring and Java EE. It makes development Java EE ready.</para>
+			<itemizedlist>
+				<listitem>
+					<para>Architecture of xaloon is changed and improved to be more flexible and lean;</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>javax.inject.Inject</emphasis> annotation support for dependency injection;</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>javax.annotation.security.RolesAllowed</emphasis> annotation support for
+						page/component security;</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>javax.ejb.TransactionAttribute</emphasis> annotation support for transaction management;</para>
+				</listitem>
+				<listitem>
+					<para>Rss feeds updated: image support added.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		<section>
+			<title>Dynamic menu and automatic page mounting</title>
+			<para>Now single page
+					annotation(<emphasis>org.xaloon.wicket.component.mount.annotation.MountPage</emphasis>)
+				makes more things: </para>
+			<itemizedlist>
+				<listitem>
+					<para>Improved automatic page mounting;</para>
+				</listitem>
+				<listitem>
+					<para>Improved automatic dynamic menu;</para>
+				</listitem>
+				<listitem>
+					<para>Menu localization, grouping and ordering.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		<section>
+			<title>Plugin support</title>
+			<itemizedlist>
+				<listitem>
+					<para>Each plugin may have it's own administration panel;</para>
+				</listitem>
+				<listitem>
+					<para>Plugin registry may have custom implementation;</para>
+				</listitem>
+				<listitem>
+					<para>Plugin registry resource/properties storage may have custom implementation;</para>
+				</listitem>
+				<listitem>
+					<para>Improved plugin administration panel;</para>
+				</listitem>
+				<listitem>
+					<para>Plugins now have categories.</para>
+				</listitem>
+			</itemizedlist>
+			<section>
+				<title>Blog plugin</title>
+				<itemizedlist>
+					<listitem>
+						<para>Image set support as gallery. Now you can exclude your images from blog content and display them as an album;</para>
+					</listitem>
+					<listitem>
+						<para>Sticky blog entry support. Blog entry will be always on top once checkbox is selected;</para>
+					</listitem>
+					<listitem>
+						<para>Custom blog entry URL path methods added, such as "author/blog title", "author/year/month/day/blog title" and others;</para>
+					</listitem>
+					<listitem>
+						<para>Added categories and tags for blog entry;</para>
+					</listitem>
+					<listitem>
+						<para>Added pagination for blog entries;</para>
+					</listitem>
+					<listitem>
+						<para>You don't need to add short description anymore. First N set of sentences will be taken
+							by default, so make them reasonable when writing your blog entry!</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+			<section>
+				<title>External authentication plugin</title>
+				<itemizedlist>
+					<listitem>
+						<para>External authentication improved, added <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://code.google.com/apis/accounts/docs/OAuth2.html">Google OAuth 2.0</link> support;</para>
+					</listitem>					
+				</itemizedlist>
+			</section>
+			<section>
+				<title>Photo gallery plugin</title>
+				<para>New plugin added for photo album management. It is based on <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://galleria.aino.se/">jQuery Galleria</link></para>
+			</section>
+		</section>
+		<section>
+			<title>Resources management</title>
+			<para>Default resources, such as <emphasis>*.properties.xml</emphasis>,
+					<emphasis>*.html</emphasis> files, images now are moved to separate project
+					<emphasis>xaloon-wicket-components-resources</emphasis> in order to have
+				everything in one place. This makes easier to apply new design to default xaloon
+				components and plugins.</para>
+		</section>
+	</section>
+</chapter>

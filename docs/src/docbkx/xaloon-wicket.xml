@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
+	<title>xaloon wicket</title>
+	<section>
+		<title>Profiles</title>
+		<para></para>
+	</section>
+	<section>
+		<title>Security</title>
+		<para></para>
+	</section>
+	<section>
+		<title>Wicket components</title>
+		<para></para>
+	</section>
+	<section>
+		<title>Styling</title>
+		<para></para>
+	</section>
+	<section>
+		<title>Plugins</title>
+		<para></para>
+	</section>   
+</chapter>
