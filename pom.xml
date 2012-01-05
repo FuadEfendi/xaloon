@@ -59,10 +59,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
-				<module>xaloon-archetypes</module>
 				<module>xaloon-core</module>
-				<module>xaloon-wicket</module>
-				<module>xaloon-demo</module>
 			</modules>
 			<properties>
 				<downloadSources>true</downloadSources>
