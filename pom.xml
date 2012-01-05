@@ -60,6 +60,9 @@
 			</activation>
 			<modules>
 				<module>xaloon-core</module>
+				<module>xaloon-wicket</module>
+				<module>xaloon-archetypes</module>
+				<module>docs</module>
 			</modules>
 			<properties>
 				<downloadSources>true</downloadSources>
