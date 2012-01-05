@@ -27,11 +27,11 @@
 			<artifactId>scribe</artifactId>
 		</dependency>
 
+		<!-- OFFLINE OR EXTERNAL PROVIDED DEP -->
 		<!-- Gdata dependency -->
 		<dependency>
 			<groupId>com.google.gdata</groupId>
 			<artifactId>gdata-photos-2.0</artifactId>
-			<version>1.41.5</version>
 		</dependency>
 	</dependencies>
 </project>
