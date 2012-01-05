@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>xaloon-wicket-parent</artifactId>
+		<groupId>org.xaloon.wicket</groupId>
+		<version>1.5.0-RC4-SNAPSHOT</version>
+	</parent>
+	<artifactId>xaloon-wicket-components-spring</artifactId>
+	<name>xaloon-wicket-components-spring</name>
+	<url>http://www.xaloon.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Xaloon -->
+		<dependency>
+			<groupId>org.xaloon.core</groupId>
+			<artifactId>xaloon-core-jpa</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.xaloon.wicket</groupId>
+			<artifactId>xaloon-wicket-components</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Spring framework -->
+		<dependency>   
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>		
+
+		<!-- Spring ORM Support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+
+
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+
+		<!-- Wicket spring -->
+		<dependency> 
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+		</dependency>
+	</dependencies>
+</project>
