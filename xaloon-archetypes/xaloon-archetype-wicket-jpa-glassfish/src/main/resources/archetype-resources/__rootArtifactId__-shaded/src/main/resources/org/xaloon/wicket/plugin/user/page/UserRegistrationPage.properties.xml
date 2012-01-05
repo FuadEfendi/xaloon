@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="agreement-message">I accept the 
+			&lt;a href="${symbol_pound}" onclick="javascript:window.open('terms','_wh_popup','width=665,height=440,resizeable=yes,scrollbars=yes');return false"&gt;Terms &amp; Conditions&lt;/a&gt;, 
+			&lt;a href="${symbol_pound}" onclick="javascript:window.open('policy','_wh_popup','width=665,height=440,resizeable=yes,scrollbars=yes');return false"&gt;Privacy Policy&lt;/a&gt;, &amp; 
+			&lt;a href="${symbol_pound}" onclick="javascript:window.open('age_verification','_wh_popup','width=665,height=440,resizeable=yes,scrollbars=yes');return false"&gt;Age Verification Policy&lt;/a&gt; 
+			as published on this site
+	</entry>
+</properties>

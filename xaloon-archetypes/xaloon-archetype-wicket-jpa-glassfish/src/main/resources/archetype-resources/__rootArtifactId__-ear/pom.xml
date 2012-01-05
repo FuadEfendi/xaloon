@@ -1,0 +1,65 @@
+#set( $symbol_dollar = '$' )
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<parent>
+		<groupId>${groupId}</groupId>
+		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>${artifactId}</artifactId>
+	<packaging>ear</packaging>
+	<name>${artifactId} assembly</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>${rootArtifactId}-web</artifactId>
+			<version>${symbol_dollar}{project.version}</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.glassfish.maven.plugin</groupId>
+				<artifactId>maven-glassfish-plugin</artifactId>
+				<configuration>
+					<user>admin</user>
+					<adminPassword>admin</adminPassword>
+					<glassfishDirectory>/srv/soft/glassfish3/</glassfishDirectory>
+					<components>
+						<component>
+							<name>${symbol_dollar}{project.artifactId}</name>
+							<artifact>${symbol_dollar}{project.build.directory}/${symbol_dollar}{project.build.finalName}.ear
+							</artifact>
+						</component>
+					</components>
+					<domain>
+						<name>${symbol_dollar}{project.artifactId}</name>
+						<adminPort>4848</adminPort>
+						<httpPort>8080</httpPort>
+						<httpsPort>8443</httpsPort>
+					</domain>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven.java.net</id>
+			<name>Java.net Maven2 Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

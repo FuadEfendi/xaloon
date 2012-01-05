@@ -1,0 +1,84 @@
+#set( $symbol_dollar = '$' )
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<parent>
+		<groupId>${groupId}</groupId>
+		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>${artifactId}</artifactId>
+	<packaging>war</packaging>
+	<name>glassfish web application</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>${rootArtifactId}-shaded</artifactId>
+			<version>${symbol_dollar}{project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-javaee-inject</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-shiro</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xaloon.core</groupId>
+			<artifactId>xaloon-core-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xaloon</groupId>
+			<artifactId>xaloon-wicket-components</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.xaloon</groupId>
+			<artifactId>xaloon-wicket-components-resources</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.xaloon.plugins</groupId>
+			<artifactId>xaloon-wicket-plugin-blog</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.xaloon.plugins</groupId>
+			<artifactId>xaloon-wicket-plugin-google</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.xaloon.plugins</groupId>
+			<artifactId>xaloon-wicket-plugin-authentication</artifactId>
+		</dependency>
+		
+		<!-- OFFLINE DEP -->
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jai-core</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.media</groupId>
+			<artifactId>jai-codec</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/xaloon-core-*.jar,WEB-INF/lib/xaloon-wicket-components*.jar,WEB-INF/lib/xaloon-wicket-plugin*.jar,WEB-INF/lib/xaloon-wicket-demo-application*.jar</packagingExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="parent.org.xaloon.wicket.plugin.admin.PluginAdministrationNoParamPage">Admin</entry>
+	<entry key="parent.org.xaloon.wicket.plugin.blog.page.BlogEntryListPage">Blog</entry>
+	<entry key="parent.org.xaloon.wicket.plugin.user.page.UserProfilePage">Personal</entry>
+	
+	<entry key="org.xaloon.wicket.plugin.user.page.UserProfilePage">User profile</entry>
+	<entry key="org.xaloon.wicket.component.classifier.page.ClassifiersPage">Classifiers</entry>
+	<entry key="org.xaloon.wicket.plugin.comment.page.WaitingCommentsForApprovalPage">Comments to approve</entry>
+	<entry key="org.xaloon.wicket.plugin.admin.PluginAdministrationNoParamPage">Plugin management</entry>
+	<entry key="org.xaloon.wicket.plugin.blog.page.CreateBlogEntryPage">New blog entry</entry>
+	<entry key="org.xaloon.wicket.plugin.user.page.ChangePasswordPage">Change password</entry>
+	<entry key="org.xaloon.wicket.plugin.blog.page.BlogEntryListPage">Blog</entry>
+	
+</properties>

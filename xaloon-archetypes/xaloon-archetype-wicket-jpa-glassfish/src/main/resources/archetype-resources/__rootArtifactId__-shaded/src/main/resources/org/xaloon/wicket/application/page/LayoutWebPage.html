@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title wicket:id="title">layout</title>
+<meta wicket:id="description" name="description" content="test" />
+<meta wicket:id="keywords" name="keywords" content="test" />
+<meta wicket:id="webmaster-keys" name="keywords" content="test" />
+<wicket:link>
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/superfish.js"></script>
+</wicket:link>
+<!--
+paradigm, a free CSS web template by spyka Webmaster (www.spyka.net)
+
+Download: http://www.spyka.net/web-templates/paradigm/
+
+License: Creative Commons Attribution
+//-->
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<div class="header_menu" wicket:id="header-panel"/>
+			
+			<h1>
+				<a href="index">xaloon<strong>.org</strong>
+				</a>
+			</h1>
+			<h2>integration platform for apache wicket</h2>
+			<div class="clear"></div>
+		</div>
+		<div class="nav" wicket:id="dynamic-menu-container">
+			<wicket:container wicket:id="menu-panel"></wicket:container>
+		</div>
+		<div id="body">
+			<div >
+				<wicket:container wicket:id="history-panel"></wicket:container>
+				<div class="box">
+					<div wicket:id="content" class="content"></div>
+					<wicket:child />
+				</div>
+			</div>
+
+			
+			<wicket:enclosure child="sidebar">
+				<div class="sidebar">
+				<ul>
+					<li>
+						<h4>
+							<span>Navigate</span>
+						</h4>
+						<ul class="blocklist" wicket:id="sidebar">
+							<li><a href="${symbol_pound}">Home</a>
+							</li>
+							<li><a href="${symbol_pound}">Examples</a>
+							</li>
+							<li><a href="${symbol_pound}">Products</a>
+							</li>
+							<li><a href="${symbol_pound}">Solutions</a>
+							</li>
+							<li><a href="${symbol_pound}">Contact</a>
+							</li>
+						</ul></li>
+
+					<li>
+						<h4>
+							<span>About</span>
+						</h4>
+						<ul>
+							<li>
+								<p style="margin: 0;">Aenean nec massa a tortor auctor
+									sodales sed a dolor. Duis vitae lorem sem. Proin at velit vel
+									arcu pretium luctus.</p></li>
+						</ul></li>
+				</ul>
+			</div>
+			</wicket:enclosure>
+			<div wicket:id="add-this-panel"/>
+			<div class="clear"></div>
+		</div>
+		<div id="footer">
+			<div class="footer-content">
+
+				<span class="sitename">xaloon.org</span>
+				<p class="footer-links">
+					<a href="${symbol_pound}container" class="backtotop">Back to top</a>
+				</p>
+				<div class="clear"></div>
+			</div>
+			<div class="footer-bottom">
+				<p>
+					&copy; xaloon.org 2008-2011. Website Design by <a
+						href="http://www.spyka.net">Free CSS Templates</a> | <a
+						href="http://www.justfreetemplates.com">Free Web Templates</a>
+				</p>
+			</div>
+			<div wicket:id="google-analytics-panel"/>
+		</div>
+	</div>
+</body>
+</html>
