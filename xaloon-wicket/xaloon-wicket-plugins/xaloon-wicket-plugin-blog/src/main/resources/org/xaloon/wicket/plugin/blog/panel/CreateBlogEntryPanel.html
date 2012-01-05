@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html xmlns:wicket>
+<body>
+<wicket:panel>
+	<h2>Create new blog entry</h2>
+	<form class="blog-entry-form" wicket:id="blog-entry-form">
+		<table class="blog-entry">
+			<tr>
+	  			<td>&nbsp;</td>
+	  			<td><span wicket:id="feedback-panel"/></td>
+	  		</tr>
+			<tr>
+	  			<td><label for="title">Title</label></td>
+	  			<td class="align_right"><input id="title" wicket:id="title" class="input-blog-title"/></td>
+	  		</tr>
+	  		<tr>
+	  			<td><label for="sticky">Blog entry on top of page</label></td>
+	  			<td class="align_right"><input id="sticky" type="checkbox" wicket:id="sticky"/></td>
+	  		</tr>
+	  		
+		    <tr>
+	  			<td><label for="blogEntryPathType">Blog path type</label></td>
+	  			<td class="align_right"><select id="blogEntryPathType" wicket:id="blogEntryPathType"></select></td>
+	  		</tr>
+	  		<tr wicket:id="customPathContainer">
+	  			<td colspan="2">
+	  				<wicket:enclosure child="customPath">
+	  				<table class="blog-entry">
+	  					<tr>
+	  						<td><label for="customPath">Custom URL path</label></td>
+	  						<td class="align_right"><input id="customPath" wicket:id="customPath" class="input-blog-path"/></td>	  						
+	  					</tr>
+	  					<tr>
+				  			<td>&nbsp;</td>
+				  			<td class="notification align_right">Optional. If not provided, URL will be generated from title.</td>
+				  		</tr>
+	  				</table>
+	  				</wicket:enclosure>
+	  			</td>
+	  			
+	  		</tr>	  		
+	  		<tr>
+	  			<td><label for="entry_thumbnail">Blog entry thumbnail</label></td>
+	  			<td class="align_right">
+					<div wicket:id="image-administration-panel"/>
+				</td>
+	  		</tr>
+	  		<tr>
+	  			<td colspan="2"><label for="entry_content">Blog entry content</label></td>
+	  		</tr>
+	  		<tr>
+	  			<td colspan="2" class="align_right">
+	  				<textarea id="entry_content" wicket:id="content" cols="110" rows="30" class="entry_content">test rich text input</textarea>
+	  			</td>
+	  		</tr>
+	  		<tr>
+	  			<td><label for="category">Category</label></td>
+	  			<td class="align_right">
+	  				<select id="category" wicket:id ="category"><option></option><option>Lithuania</option> </select>
+	  			</td>
+	  		</tr>
+	  		<tr>
+	  			<td><label for="tags-panel">Tags for blog entry</label></td>
+	  			<td class="align_right">
+	  				<div id="tags-panel" wicket:id="tags-panel"/>
+				</td>
+	  		</tr>
+	  		<tr>
+	  			<td><label for="images-panel">Blog entry image album</label></td>
+	  			<td class="align_right">
+	  				<div id="images-panel">
+	  					<div wicket:id="images-administration"/>
+	  				</div>
+				</td>
+	  		</tr>
+	  		<tr>
+	  			<td>&nbsp;</td>
+	  			<td>
+					<div class="align_right">
+						<input class="formbutton" type="submit" value="Save"/>				
+					</div>
+				</td>
+	  		</tr>
+  		</table>
+	</form>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="title">Blog entries by tag</entry>
+	<entry key="keywords">wicket blogging, xaloon blog</entry>
+	<entry key="description">This should be replaced with blog entry description</entry>
+</properties>

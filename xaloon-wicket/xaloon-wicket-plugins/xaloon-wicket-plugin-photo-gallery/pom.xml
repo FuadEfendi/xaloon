@@ -3,19 +3,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>xaloon-wicket-parent</artifactId>
-		<groupId>org.xaloon.wicket</groupId>
+		<groupId>org.xaloon.plugins</groupId>
+		<artifactId>xaloon-wicket-plugins-parent</artifactId>
 		<version>1.5.0-RC4-SNAPSHOT</version>
 	</parent>
-	<artifactId>xaloon-wicket-components</artifactId>
+	<artifactId>xaloon-wicket-plugin-photo-gallery</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon-wicket-components</name>
+	<name>xaloon-wicket-plugin-photo-gallery</name>
 	<description>
-		wicket components
+		simple xaloon wicket photo gallery
 	</description>
-
 	<dependencies>
-		<!-- Junit -->
+		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -24,36 +23,22 @@
 
 		<!-- Xaloon -->
 		<dependency>
+			<groupId>org.xaloon.wicket</groupId>
+			<artifactId>xaloon-wicket-components</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.xaloon.core</groupId>
-			<artifactId>xaloon-core-api</artifactId>
+			<artifactId>xaloon-core-jpa</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- Wicket dependencies -->
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-ioc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-datetime</artifactId>
-		</dependency>
-
-		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<!-- OFFLINE OR EXTERNAL PROVIDED DEP -->
 		<!-- jqWicket -->
 		<dependency>

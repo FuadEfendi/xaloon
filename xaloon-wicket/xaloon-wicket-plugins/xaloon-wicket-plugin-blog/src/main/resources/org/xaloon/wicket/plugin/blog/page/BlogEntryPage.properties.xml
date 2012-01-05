@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="title">Blog for current site</entry>
+	<entry key="keywords">wicket blogging, xaloon blog</entry>
+	<entry key="description">Please enter short description to represent your blogging page</entry>
+</properties>
