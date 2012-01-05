@@ -19,6 +19,7 @@
 			<modules>
 				<module>xaloon-wicket-plugin-authentication</module>
 				<module>xaloon-wicket-plugin-google</module>
+				<module>xaloon-wicket-plugin-photo-gallery</module>
 			</modules>
 		</profile>
 		<profile>

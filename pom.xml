@@ -305,13 +305,7 @@
 				<artifactId>wicket-spring</artifactId>
 				<version>${wicket.version}</version>
 			</dependency>
-			<!-- TODO jqWicket -->
-			<dependency>
-				<groupId>com.google.code.jqwicket</groupId>
-				<artifactId>jqwicket</artifactId>
-				<version>0.8</version>
-			</dependency>
-
+			
 			<!-- Servlet -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -474,6 +468,14 @@
 				<groupId>org.eclipse.persistence</groupId>
 				<artifactId>eclipselink</artifactId>
 				<version>2.2.0</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- jqWicket -->
+			<dependency>
+				<groupId>com.google.code.jqwicket</groupId>
+				<artifactId>jqwicket</artifactId>
+				<version>0.8</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>
