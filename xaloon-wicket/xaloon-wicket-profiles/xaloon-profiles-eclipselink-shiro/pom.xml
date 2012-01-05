@@ -35,10 +35,11 @@
 			<artifactId>wicketstuff-shiro</artifactId>
 		</dependency>
 		
-		<!-- Eclipselink -->
+		<!-- Eclipselink 
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>
 		</dependency>
+		-->
 	</dependencies>
 </project>
