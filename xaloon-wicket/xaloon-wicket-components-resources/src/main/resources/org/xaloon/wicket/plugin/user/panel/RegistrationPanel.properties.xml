@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="PASSWORDS_DO_NOT_MATCH">Passwords do not match!</entry>
+	<entry key="USERNAME_IN_USE">Such username already exists!</entry>
+	<entry key="EMAIL_IN_USE">Such email already exists!</entry>
+	<entry key="username.Required">Field is required.</entry>
+	<entry key="email.Required">Field is required.</entry>
+	<entry key="password.Required">Field is required.</entry>
+	<entry key="repeat_password.Required">Field is required.</entry>
+	<entry key="USER_ALREADY_EXSITS">Such username already exists!</entry>
+	<entry key="USERNAME_PATTERN_NOT_VALID">Username format is not valid. 4 to 15 characters with any lower case character, digit or special symbol “_-” only.</entry>
+	
+	<entry key="EMAIL_SENT">Email was sent to activate your account. Please, check spam box, if you did not receive an email.</entry>
+</properties>

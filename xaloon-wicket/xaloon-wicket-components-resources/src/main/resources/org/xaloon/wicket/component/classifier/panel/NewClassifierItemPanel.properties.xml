@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="ERROR_CLASSIFIER_ITEM_CODE_EXISTS">Such item code for this classifier already exists!</entry>	
+</properties>

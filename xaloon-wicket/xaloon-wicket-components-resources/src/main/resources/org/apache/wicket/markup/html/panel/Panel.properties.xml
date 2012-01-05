@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="EMAIL_PROPERTIES_NOT_CONFIGURED">SMTP properties are not configured propertly!. Please contact administrator.</entry>
+	<entry key="DELETE_CONFIRMATION">Are you sure you want to delete?</entry>
+	<entry key="AGREEMENT_NOT_OK">You must agree with agreement statement</entry>
+	<entry key="password.PasswordStrengthValidator">Password must contain at least one digit, lowercase character, uppercase character and length should be between 6 and 20 characters</entry>
+	<entry key="new_password.PasswordStrengthValidator">Password must contain at least one digit, lowercase character, uppercase character and length should be between 6 and 20 characters</entry>
+	
+</properties>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="PLUGIN_NOT_ENABLED">Selected Plugin is disabled and cannot be used!</entry>	
+	<entry key="PLUGIN_BEAN_UNRESOLVED">Plugin bean could not be resolved. Please, check configuration</entry>		
+</properties>

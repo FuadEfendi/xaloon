@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="org.xaloon.wicket.component.plugin.PluginAdministrationPage">Plugin administration</entry>	
+	<entry key="title">Plugin administration for xaloon demo</entry>	
+	<entry key="keywords">plugin,xaloon</entry>	
+	<entry key="description">plugin administration for xaloon</entry>	
+</properties>

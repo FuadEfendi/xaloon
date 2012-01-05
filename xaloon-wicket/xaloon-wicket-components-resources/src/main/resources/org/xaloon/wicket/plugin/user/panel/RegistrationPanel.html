@@ -1,0 +1,95 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+<head>
+</head>
+<body>
+<wicket:panel  xmlns:wicket>
+	<h2>Registration form</h2>
+	<div wicket:id="feedback-panel"></div>
+	<form wicket:id="register-form">
+		<wicket:child/>
+		<fieldset class="user_form">
+			<legend><span>registration information</span></legend>
+			<div class="row">
+	      		<span class="label"><label for="username">Select username:</label></span>
+	      		<span class="formw"><input class="finput" type="text" id="username" wicket:id="username" /></span>
+	      		
+		    </div>
+		    <wicket:enclosure child="username_fp">
+			    <div class="row">
+			    	<span class="label">&nbsp;</span>
+			    	<span class="formw"><span class="error_fp" wicket:id="username_fp"></span></span>
+			    </div>
+		    </wicket:enclosure>
+		    <div class="row">
+	      		<span class="label"><label for="email">Your email:</label></span>
+	      		<span class="formw"><input class="finput" type="text" id="email" wicket:id="email" /></span>
+		    </div>
+		    <wicket:enclosure child="email_fp">
+			    <div class="row">
+			    	<span class="label">&nbsp;</span>
+			    	<span class="formw"><span class="error_fp" wicket:id="email_fp"></span></span>
+			    </div>
+		    </wicket:enclosure>
+		     <div class="row">
+	      		<span class="label"><label for="password">Select password:</label></span>
+	      		<span class="formw"><input class="finput" type="password" id="password"  wicket:id="password" /></span>
+		    </div>
+		    <wicket:enclosure child="password_fp">
+			    <div class="row">
+			    	<span class="label">&nbsp;</span>
+			    	<span class="formw"><span class="error_fp" wicket:id="password_fp"></span></span>
+			    </div>
+		    </wicket:enclosure>
+		    <div class="row">
+	      		<span class="label"><label for="repeat_password">Repeat password:</label></span>
+	      		<span class="formw"><input class="finput" type="password" id="repeat_password"  wicket:id="repeat_password" /></span>
+		    </div>
+		    <wicket:enclosure child="repeat_password_fp">
+			    <div class="row">
+			    	<span class="label">&nbsp;</span>
+			    	<span class="formw"><span class="error_fp" wicket:id="repeat_password_fp"></span></span>
+			    </div>
+		    </wicket:enclosure>
+		</fieldset>
+		
+		<table class="user_form">
+			<tr>
+				<td colspan="2">
+					<input type="checkbox" wicket:id="agreement" class="checkbox-agreement"/>
+					<span wicket:id="agreement-message"></span>
+				</td>
+			</tr>	
+			<tr>
+				<td colspan="2">
+					<span class="error_fp" wicket:id="agreement_fp"></span>
+				</td>
+			</tr>			
+			<tr>
+	  			<td>&nbsp;</td>
+	  			<td>
+					<div class="align_right">
+						<input class="formbutton" type="submit" value="Register"/>				
+					</div>
+				</td>
+	  		</tr>
+  		</table>
+	</form>
+</wicket:panel>
+</body>
+</html>

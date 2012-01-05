@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:wicket="http://wicket.sourceforge.net">
+	<channel>
+		<title>www.xaloon.org blog rss</title>
+		<link>http://www.xaloon.org</link>
+		<description>xaloon - web components for Apache Wicket</description>
+		<language>en-us</language>
+		<image>
+			<title>xaloon logo image title</title>
+			<url>http://www.xaloon.org/images?id=aW1hZ2VzL3hhbG9vbi5qcGc=</url>
+			<link>http://www.xaloon.org</link>
+		</image>
+		<item wicket:id="item">
+			<title wicket:id="title">The Future of content</title>
+			<link wicket:id="link">http://www.itworld.com/nl/ecom_in_act/11122003wetert/</link>
+			<description wicket:id="description"> 
+	<![CDATA[<a href="http://www.worldcarfans.com/111040131229/zagato-alfa-romeo-tz3-may-go-to-limited-production"><img 
+src=" http://cdn1.worldcarfans.co/2011/4/1/thumbnails/21272259659001.tn.jpg" 
+align="left" 
+hspace="5" vspace="5" border="1" 
+/></a> Limited series production for the Zagato Alfa Romeo TZ3 would base the car on the Dodge Viper.]]>
+			</description>
+			<pubDate wicket:id="pubDate">Sun, 19 May 2002 15:21:36 GMT</pubDate>
+		</item>
+	</channel>
+</rss>

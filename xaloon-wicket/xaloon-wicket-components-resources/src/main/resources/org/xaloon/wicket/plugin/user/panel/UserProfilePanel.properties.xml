@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="EMAIL_IN_USE">Email aready in use</entry>
+	<entry key="USERNAME_IN_USE">Username aready in use</entry>
+	<entry key="PROFILE_SAVED">Your profile was updated.</entry>
+	<entry key="USER_ALREADY_EXSITS">Such username already exists.</entry>
+	<entry key="USERNAME_PATTERN_NOT_VALID">Username format is not valid. 4 to 15 characters with any lower case character, digit or special symbol “_-” only.</entry>
+	
+	<entry key="username.Required">Username is required</entry>
+	<entry key="email.Required">Email is required</entry>
+</properties>
