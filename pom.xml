@@ -83,20 +83,34 @@
 				</repository>
 			</distributionManagement>
 		</profile>
-		<profile>
-			<id>sonatype-deploy</id>
-			<activation>
-				<property>
-					<name>sonatype-deploy</name>
-				</property>
-			</activation>
-			<modules>
-				<!-- Do not deploy demo to central repository -->
-				<module>xaloon-archetypes</module>
-				<module>xaloon-core</module>
-				<module>xaloon-wicket</module>
-			</modules>
-		</profile>
+		<profiles>
+  <profile>
+    <id>release-sign-artifacts</id>
+    <activation>
+      <property>
+        <name>performRelease</name>
+        <value>true</value>
+      </property>
+    </activation>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+</profiles>
 	</profiles>
 
 	<dependencyManagement>
@@ -502,19 +516,6 @@
 			</extension>
 		</extensions>
 		<plugins>
-			<plugin>
-        			<groupId>org.apache.maven.plugins</groupId>
-        			<artifactId>maven-gpg-plugin</artifactId>
-        			<executions>
-          				<execution>
-            					<id>sign-artifacts</id>
-            					<phase>verify</phase>
-            					<goals>
-              						<goal>sign</goal>
-            					</goals>
-          				</execution>
-        			</executions>
-      			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
