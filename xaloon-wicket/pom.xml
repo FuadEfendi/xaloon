@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>xaloon-parent</artifactId>
 		<groupId>org.xaloon</groupId>
-		<version>1.5.0-RC4-SNAPSHOT</version>
+		<version>1.5.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.xaloon.wicket</groupId>
