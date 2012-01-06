@@ -1,3 +1,4 @@
+
 #set( $symbol_dollar = '$' )
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
@@ -33,14 +34,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components-resources</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.xaloon.plugins</groupId>
 			<artifactId>xaloon-wicket-plugin-blog</artifactId>
@@ -53,7 +54,7 @@
 			<groupId>org.xaloon.plugins</groupId>
 			<artifactId>xaloon-wicket-plugin-authentication</artifactId>
 		</dependency>
-		
+
 		<!-- OFFLINE DEP -->
 		<dependency>
 			<groupId>javax.media</groupId>
@@ -64,6 +65,22 @@
 			<groupId>com.sun.media</groupId>
 			<artifactId>jai-codec</artifactId>
 			<version>1.1.3</version>
+		</dependency>
+
+		<!-- jqWicket -->
+		<dependency>
+			<groupId>com.google.code.jqwicket</groupId>
+			<artifactId>jqwicket</artifactId>
+			<version>0.8</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Gdata dependency -->
+		<dependency>
+			<groupId>com.google.gdata</groupId>
+			<artifactId>gdata-photos-2.0</artifactId>
+			<version>1.41.5</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

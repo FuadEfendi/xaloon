@@ -17,15 +17,15 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components-resources</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components-jee</artifactId>
 		</dependency>
 
@@ -73,7 +73,7 @@
 							</transformers>
 							<artifactSet>
 								<includes>
-									<include>org.xaloon:*</include>
+									<include>org.xaloon.wicket:*</include>
 									<include>org.xaloon.plugins:*</include>
 									<include>org.xaloon.demo:*</include>
 								</includes>

@@ -45,6 +45,9 @@ import org.xaloon.wicket.component.resource.FileResource;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.menu.DynamicMenuMountScannerListener;
 
+import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
+import com.google.code.jqwicket.JQContributionConfig;
+
 /**
  * @author vytautas r.
  */
@@ -194,6 +197,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication {
 	 * Initialize jqwicket by default
 	 */
 	protected void initJavascriptComponents() {
+		getComponentPreOnBeforeRenderListeners().add(new JQComponentOnBeforeRenderListener(new JQContributionConfig().withDefaultJQueryUi()));
 	}
 
 	@Override

@@ -50,6 +50,9 @@ import org.xaloon.wicket.plugin.user.validator.EmailUsageValidator;
 import org.xaloon.wicket.plugin.user.validator.UsernamePatternValidator;
 import org.xaloon.wicket.plugin.user.validator.UsernameValidator;
 
+import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
+import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
+
 /**
  * user profile panel
  * 
@@ -166,7 +169,8 @@ public class UserProfilePanel<T extends User> extends Panel {
 
 	private Component createSignatureField() {
 		// Add signature editor
-		return new TextField<String>("signature");
+		return new CKEditorTextArea<String>("signature", new CKEditorOptions().toolbar(new CharSequence[][] {
+				{ "Bold", "Italic", "-", "NumberedList", "BulletedList", "-", "Link", "Unlink" }, { "UIColor" } }));
 	}
 
 	private Component createTimezoneField() {

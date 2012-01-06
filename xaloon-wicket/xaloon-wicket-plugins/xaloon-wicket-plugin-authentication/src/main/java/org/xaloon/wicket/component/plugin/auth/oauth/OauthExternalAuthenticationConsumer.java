@@ -80,6 +80,9 @@ public abstract class OauthExternalAuthenticationConsumer extends AbstractExtern
 	}
 
 	public void beginConsumption(String absoluteRequestURL) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("Got security backlink: %s", absoluteRequestURL));
+		}
 		// Get OAuth properties
 		OAuthProviderProperties authenticationProviderProperties = getAuthenticationProviderProperties();
 		if (authenticationProviderProperties == null) {

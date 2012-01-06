@@ -35,7 +35,7 @@
 				<artifactId>xaloon-core-jpa</artifactId>
 				<version>${xaloon.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.xaloon.profiles</groupId>
 				<artifactId>xaloon-profiles-hibernate-spring</artifactId>
@@ -44,7 +44,7 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.xaloon</groupId>
+				<groupId>org.xaloon.wicket</groupId>
 				<artifactId>xaloon-wicket-components-resources</artifactId>
 				<version>${xaloon.version}</version>
 			</dependency>
@@ -93,7 +93,7 @@
 				<version>${jetty.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
@@ -109,7 +109,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			
+
 			<!-- HSQL -->
 			<dependency>
 				<groupId>hsqldb</groupId>
@@ -159,25 +159,16 @@
 
 	<repositories>
 		<repository>
-			<id>repository.xaloon.org</id>
-			<name>xaloon Maven Release Repository</name>
-			<url>http://xaloon.googlecode.com/svn/maven2/releases</url>
-		</repository>
-		<repository>
-			<id>snapshots.xaloon.org</id>
-			<name>xaloon Maven Snapshot Repository</name>
-			<url>http://xaloon.googlecode.com/svn/maven2/snapshots</url>
-			<snapshots>
-			</snapshots>
+			<id>jboss-repository</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
 		</repository>
 		<repository>
 			<id>EclipseLink Repo</id>
 			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
 		</repository>
-		<!-- TODO shoud we use it? -->
 		<repository>
-			<id>jboss-repository</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+			<id>googlecode-jqwicket</id>
+			<url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
 		</repository>
 		<repository>
 			<id>mandubian-mvn</id>
