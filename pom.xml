@@ -26,11 +26,11 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<developerConnection>scm:svn:https://xaloon.googlecode.com/svn/trunk</developerConnection>
-		<connection>scm:svn:https://xaloon.googlecode.com/svn/trunk</connection>
-		<url>http://code.google.com/p/xaloon/source/browse</url>
-	</scm>
+	 <scm>
+		<connection>scm:git:git@github.com:turisto/xaloon.git</connection>
+		<url>scm:git:git@github.com:turisto/xaloon.git</url>
+		<developerConnection>scm:git:git@github.com:turisto/xaloon.git</developerConnection>
+  	</scm>
 
 	<organization>
 		<name>xaloon.org</name>
