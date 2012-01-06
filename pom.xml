@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+    		<groupId>org.sonatype.oss</groupId>
+    		<artifactId>oss-parent</artifactId>
+    		<version>7</version>
+  	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.xaloon</groupId>
 	<artifactId>xaloon-parent</artifactId>
@@ -52,66 +57,13 @@
 		</developer>
 	</developers>
 
-	<profiles>
-		<profile>
-			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
+	<modules>
 				<module>xaloon-core</module>
 				<module>xaloon-wicket</module>
 				<module>xaloon-archetypes</module>
 				<module>docs</module>
 			</modules>
-			<properties>
-				<downloadSources>true</downloadSources>
-				<downloadJavadocs>true</downloadJavadocs>
-			</properties>
-			<distributionManagement>
-				<snapshotRepository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>xaloon</id>
-					<name>Local Snapshots Repository</name>
-					<url>dav:https://xaloon.googlecode.com/svn/maven2/snapshots/</url>
-				</snapshotRepository>
-				<repository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>xaloon</id>
-					<name>Local Releases Repository</name>
-					<url>dav:https://xaloon.googlecode.com/svn/maven2/releases/</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-		<profiles>
-  <profile>
-    <id>release-sign-artifacts</id>
-    <activation>
-      <property>
-        <name>performRelease</name>
-        <value>true</value>
-      </property>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>sign-artifacts</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>sign</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-</profiles>
-	</profiles>
+
 
 	<dependencyManagement>
 		<dependencies>
