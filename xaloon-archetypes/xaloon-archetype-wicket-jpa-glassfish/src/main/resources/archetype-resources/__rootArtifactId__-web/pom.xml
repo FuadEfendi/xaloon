@@ -17,25 +17,13 @@
 			<artifactId>${rootArtifactId}-shaded</artifactId>
 			<version>${symbol_dollar}{project.version}</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-javaee-inject</artifactId>
+			<groupId>org.xaloon.profiles</groupId>
+			<artifactId>xaloon-profiles-jee</artifactId>
+			<type>pom</type>
 		</dependency>
-
-		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-shiro</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.xaloon.core</groupId>
-			<artifactId>xaloon-core-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.xaloon.wicket</groupId>
-			<artifactId>xaloon-wicket-components</artifactId>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components-resources</artifactId>
