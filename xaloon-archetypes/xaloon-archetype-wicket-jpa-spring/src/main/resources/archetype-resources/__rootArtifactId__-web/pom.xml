@@ -73,7 +73,6 @@
 			<groupId>com.google.code.jqwicket</groupId>
 			<artifactId>jqwicket</artifactId>
 			<version>0.8</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Gdata dependency -->
@@ -81,7 +80,6 @@
 			<groupId>com.google.gdata</groupId>
 			<artifactId>gdata-photos-2.0</artifactId>
 			<version>1.41.5</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
