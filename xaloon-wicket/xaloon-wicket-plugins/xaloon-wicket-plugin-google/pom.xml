@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.xaloon.plugins</groupId>
 		<artifactId>xaloon-wicket-plugins-parent</artifactId>
-		<version>1.5.0-RC4-SNAPSHOT</version>
+		<version>1.5.0</version>
 	</parent>
 	<artifactId>xaloon-wicket-plugin-google</artifactId>
 	<packaging>jar</packaging>
