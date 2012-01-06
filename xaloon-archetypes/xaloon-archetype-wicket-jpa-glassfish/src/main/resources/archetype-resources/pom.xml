@@ -19,7 +19,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xaloon.version>1.5.0-RC4-SNAPSHOT</xaloon.version>
+		<xaloon.version>1.5.0</xaloon.version>
 		<wicket.version>1.5.3</wicket.version>
 	</properties>
 
