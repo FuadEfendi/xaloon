@@ -20,6 +20,7 @@ import org.xaloon.wicket.plugin.menu.DynamicMenuFacade;
 import org.xaloon.wicket.plugin.menu.MenuContainer;
 import org.xaloon.wicket.plugin.menu.panel.DynamicMenuItemPanel;
 import org.xaloon.wicket.plugin.user.panel.HeaderPanel;
+import org.apache.wicket.model.Model;
 
 @Named
 public class WicketLayoutComponentInitializer implements LayoutComponentInitializer {

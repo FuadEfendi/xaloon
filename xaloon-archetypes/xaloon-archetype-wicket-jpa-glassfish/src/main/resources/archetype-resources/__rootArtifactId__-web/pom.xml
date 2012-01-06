@@ -33,11 +33,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.xaloon</groupId>
+			<groupId>org.xaloon.wicket</groupId>
 			<artifactId>xaloon-wicket-components-resources</artifactId>
 		</dependency>
 		
