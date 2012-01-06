@@ -40,20 +40,10 @@
 
 			<dependency>
 				<groupId>org.xaloon.wicket</groupId>
-				<artifactId>xaloon-wicket-components</artifactId>
-				<version>${symbol_dollar}{xaloon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.xaloon.wicket</groupId>
 				<artifactId>xaloon-wicket-components-resources</artifactId>
 				<version>${symbol_dollar}{xaloon.version}</version>
 			</dependency>
 
-			<dependency>
-				<groupId>org.xaloon.wicket</groupId>
-				<artifactId>xaloon-wicket-components-jee</artifactId>
-				<version>${symbol_dollar}{xaloon.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.xaloon.plugins</groupId>
 				<artifactId>xaloon-wicket-plugin-blog</artifactId>
@@ -69,6 +59,13 @@
 				<artifactId>xaloon-wicket-plugin-authentication</artifactId>
 				<version>${symbol_dollar}{xaloon.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.xaloon.profiles</groupId>
+				<artifactId>xaloon-profiles-jee</artifactId>
+				<version>${symbol_dollar}{xaloon.version}</version>
+				<type>pom</type>
+			</dependency> 
 
 			<!-- LOGGING DEPENDENCIES - LOG4J -->
 			<dependency>
@@ -100,6 +97,14 @@
 				<groupId>org.wicketstuff</groupId>
 				<artifactId>wicketstuff-shiro</artifactId>
 				<version>${symbol_dollar}{wicket.version}</version>
+			</dependency>
+
+			<!-- Servlet -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
