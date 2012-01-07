@@ -114,6 +114,8 @@ public interface PersistenceServices extends Serializable {
 	 */
 	int executeUpdate(QueryBuilder queryBuilder);
 
+	int executeNativeUpdate(String query);
+
 	/**
 	 * Executes native SQL query
 	 * 
@@ -129,4 +131,6 @@ public interface PersistenceServices extends Serializable {
 	 * @return concrete single object
 	 */
 	<T> T executeNativeQuerySingle(String query);
+
+	void flush();
 }

@@ -33,6 +33,30 @@ public abstract class RetryAction<T, Z> implements Serializable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetryAction.class);
 
+	private boolean sleepFirst;
+
+	private int millisecondsToSleep = 10000;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param sleepFirst
+	 */
+	public RetryAction(boolean sleepFirst) {
+		this.sleepFirst = sleepFirst;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param sleepFirst
+	 * @param millisecondsToSleep
+	 */
+	public RetryAction(boolean sleepFirst, int millisecondsToSleep) {
+		this.sleepFirst = sleepFirst;
+		this.millisecondsToSleep = millisecondsToSleep;
+	}
+
 	/**
 	 * @param parameters
 	 * @return expected result type
@@ -42,11 +66,19 @@ public abstract class RetryAction<T, Z> implements Serializable {
 		int i = 0;
 		T result = null;
 		while (result == null && i++ < 3) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+			if (sleepFirst) {
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+				}
+				Thread.sleep(millisecondsToSleep);
 			}
-			Thread.sleep(10000);
 			result = onPerform(parameters);
+			if (result == null && !sleepFirst) {
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+				}
+				Thread.sleep(millisecondsToSleep);
+			}
 		}
 		return result;
 	}

@@ -96,4 +96,17 @@ public interface AlbumFacade extends Serializable {
 	 * @see ImageDao#createPhysicalFile(Image, FileDescriptor)
 	 */
 	FileDescriptor createPhysicalFile(Image thumbnailToAdd) throws MalformedURLException, IOException;
+
+	/**
+	 * Parses image and stores it.
+	 * 
+	 * @param temporaryImage
+	 * @param existingToUpdate
+	 * @param imageLocation
+	 * 
+	 * @return file descriptor
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
+	FileDescriptor createPhysicalFile(Image temporaryImage, FileDescriptor existingToUpdate) throws MalformedURLException, IOException;
 }

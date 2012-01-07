@@ -24,6 +24,7 @@ import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.plugin.PluginRegistryListenerCollection;
 import org.xaloon.core.api.plugin.resource.PluginResourceRepository;
 import org.xaloon.core.api.plugin.resource.ResourceRepositoryListenerCollection;
+import org.xaloon.core.api.security.external.OauthSecurityTokenProvider;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.model.User;
@@ -51,6 +52,8 @@ public class Configuration {
 	private BeanLocatorAdapter beanLocatorAdapter;
 
 	private AbsolutePathStrategy<FileDescriptor> fileDescriptorAbsolutePathStrategy;
+
+	private OauthSecurityTokenProvider oauthSecurityTokenProvider;
 
 	private Configuration() {
 	}
@@ -168,4 +171,17 @@ public class Configuration {
 	public void setFileDescriptorAbsolutePathStrategy(AbsolutePathStrategy<FileDescriptor> fileDescriptorAbsolutePathStrategy) {
 		this.fileDescriptorAbsolutePathStrategy = fileDescriptorAbsolutePathStrategy;
 	}
+
+	public OauthSecurityTokenProvider getOauthSecurityTokenProvider() {
+		if (oauthSecurityTokenProvider == null) {
+			throw new IllegalArgumentException("Application is not properly configured! Instance of OauthSecurityTokenProvider is not provided!");
+		}
+		return oauthSecurityTokenProvider;
+	}
+
+	public void setOauthSecurityTokenProvider(OauthSecurityTokenProvider oauthSecurityTokenProvider) {
+		this.oauthSecurityTokenProvider = oauthSecurityTokenProvider;
+	}
+
+
 }

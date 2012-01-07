@@ -70,6 +70,9 @@ public class JcrFileStorageService implements FileStorageService {
 	@Override
 	public InputStream getInputStreamByIdentifier(String uniqueIdentifier) {
 		if (!org.apache.commons.lang.StringUtils.isEmpty(uniqueIdentifier)) {
+			if (uniqueIdentifier.contains("/")) {
+				return getInputStreamByPath(uniqueIdentifier);
+			}
 			try {
 				Node fileContent = repositoryFacade.getDefaultSession().getNodeByIdentifier(uniqueIdentifier);
 				return fileContent.getProperty("jcr:data").getBinary().getStream();
@@ -78,6 +81,15 @@ public class JcrFileStorageService implements FileStorageService {
 			}
 		}
 		return null;
+	}
+
+	private InputStream getInputStreamByPath(String uniqueIdentifier) {
+		try {
+			Node fileContent = repositoryFacade.getDefaultSession().getRootNode().getNode(uniqueIdentifier);
+			return fileContent.getNode("jcr:content").getProperty("jcr:data").getBinary().getStream();
+		} catch (Exception e) {
+			throw new RuntimeException("Error while retrieving file", e);
+		}
 	}
 
 	@Override
