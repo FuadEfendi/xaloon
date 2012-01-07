@@ -29,10 +29,10 @@ import org.scribe.builder.api.Api;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.security.external.AuthenticationConsumer;
 import org.xaloon.wicket.component.plugin.auth.ExternalAuthenticationPluginBean;
 import org.xaloon.wicket.component.plugin.auth.oauth.google.TemporaryGoogleApi20;
-import org.xaloon.wicket.component.security.AuthenticatedWebSession;
 
 /**
  * @author vytautas.r
@@ -109,7 +109,7 @@ public class GoogleExternalAuthencitationConsumer extends OauthExternalAuthentic
 
 	@Override
 	protected void afterAccessTokenGot(Token accessToken) {
-		Session.get().setMetaData(AuthenticatedWebSession.METADATAKEY_AUTH_TOKEN, accessToken);
+		Configuration.get().getOauthSecurityTokenProvider().setSecurityToken(accessToken);
 	}
 
 	@Override

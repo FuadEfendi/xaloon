@@ -109,7 +109,7 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 
 	private FileDescriptor getFileDescriptor(FileDescriptor fileDescriptor, boolean isScheduled) throws InterruptedException {
 		if (isScheduled) {
-			return new RetryAction<FileDescriptor, FileDescriptor>() {
+			return new RetryAction<FileDescriptor, FileDescriptor>(true) {
 				private static final long serialVersionUID = 1L;
 
 				@Override

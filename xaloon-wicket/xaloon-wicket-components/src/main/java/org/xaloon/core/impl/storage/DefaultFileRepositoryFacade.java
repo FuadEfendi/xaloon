@@ -17,6 +17,7 @@
 package org.xaloon.core.impl.storage;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,9 +27,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.Session;
 import org.xaloon.core.api.asynchronous.ScheduledJobService;
 import org.xaloon.core.api.asynchronous.SchedulerServices;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
@@ -36,7 +37,6 @@ import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
-import org.xaloon.wicket.component.security.AuthenticatedWebSession;
 
 /**
  * This class is moved to wicket-components as it tries to access wicket session to retrieve access token, which might be used by external services.
@@ -87,7 +87,7 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 		FileStorageJobParameters fileStorageJobParameters = new FileStorageJobParameters().setFileDescriptor(fileDescriptor)
 			.setInputStreamContainer(inputStreamContainer)
 			.setUserEmail(securityFacade.getCurrentUserEmail())
-			.setToken(Session.get().getMetaData(AuthenticatedWebSession.METADATAKEY_AUTH_TOKEN));
+			.setToken(getSecurityToken());
 
 		if (getSchedulerServices() != null) {
 			// Schedule file storage as there is an existing scheduler in system
@@ -97,6 +97,10 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 			scheduledJobService.execute(fileStorageJobParameters, false);
 		}
 		return fileDescriptor;
+	}
+
+	private Serializable getSecurityToken() {
+		return Configuration.get().getOauthSecurityTokenProvider().getSecurityToken();
 	}
 
 	@Override

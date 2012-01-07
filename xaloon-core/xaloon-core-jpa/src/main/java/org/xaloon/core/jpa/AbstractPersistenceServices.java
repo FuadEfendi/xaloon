@@ -173,4 +173,14 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	public <T> T executeNativeQuerySingle(String query) {
 		return (T)getEm().createNativeQuery(query).getSingleResult();
 	}
+
+	@Override
+	public void flush() {
+		getEm().flush();
+	}
+
+	@Override
+	public int executeNativeUpdate(String query) {
+		return getEm().createNativeQuery(query).executeUpdate();
+	}
 }
