@@ -31,6 +31,7 @@ public class BlogEntryNoUserPage extends LayoutWebPage {
 		if (!pageParameters.get(BlogPageConstants.BLOG_PATH).isEmpty()) {
 			String blogPathString = pageParameters.get(BlogPageConstants.BLOG_PATH).toString();
 			if ("list".equalsIgnoreCase(blogPathString)) {
+				pageParameters.remove(BlogPageConstants.BLOG_PATH);
 				return new BlogEntryListPanel(id, pageParameters);
 			}
 		}

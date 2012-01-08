@@ -14,8 +14,8 @@ import org.xaloon.wicket.plugin.blog.panel.BlogEntryListPanel;
  * @author vytautas r.
  * 
  */
-@MountPageGroup(value = "/blog", plugin = BlogPlugin.class, order = 100)
-@MountPage(value = "/list", visible = true, order = 100)
+@MountPageGroup(value = "/blogs", plugin = BlogPlugin.class, order = 100)
+@MountPage(value = "/", visible = true, order = 100)
 public class BlogEntryListPage extends LayoutWebPage {
 
 	/**
