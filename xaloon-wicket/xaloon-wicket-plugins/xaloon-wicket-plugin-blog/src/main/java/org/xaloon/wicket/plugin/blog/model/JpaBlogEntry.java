@@ -61,9 +61,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Lob
 	private String descriptionClean;
 
-	@Column(name = "THUMBNAIL_REF")
-	private boolean referencedThumbnail;
-
 	@ManyToOne
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
@@ -245,25 +242,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 			return getOwner().getUsername();
 		}
 		return null;
-	}
-
-	/**
-	 * Gets referencedThumbnail.
-	 * 
-	 * @return referencedThumbnail
-	 */
-	public boolean isReferencedThumbnail() {
-		return referencedThumbnail;
-	}
-
-	/**
-	 * Sets referencedThumbnail.
-	 * 
-	 * @param referencedThumbnail
-	 *            referencedThumbnail
-	 */
-	public void setReferencedThumbnail(boolean referencedThumbnail) {
-		this.referencedThumbnail = referencedThumbnail;
 	}
 
 	/**

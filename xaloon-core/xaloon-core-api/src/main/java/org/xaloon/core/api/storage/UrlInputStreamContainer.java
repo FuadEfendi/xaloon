@@ -14,36 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.component.plugin.auth.oauth;
+package org.xaloon.core.api.storage;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Session;
-import org.xaloon.core.api.security.external.OauthSecurityTokenProvider;
+import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.util.HtmlElementEnum;
 
 /**
  * @author vytautas r.
  */
-public class WicketSessionSecurityTokenProvider implements OauthSecurityTokenProvider {
+public class UrlInputStreamContainer implements InputStreamContainer {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Access token, stored in wicket session for external authentications
-	 */
-	private static final MetaDataKey<Serializable> METADATAKEY_AUTH_TOKEN = new MetaDataKey<Serializable>() {
-		private static final long serialVersionUID = 1L;
-	};
 
-	@Override
-	public Serializable getSecurityToken() {
-		return Session.get().getMetaData(METADATAKEY_AUTH_TOKEN);
+	private String url;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param url
+	 */
+	public UrlInputStreamContainer(String url) {
+		this.url = url;
 	}
 
 	@Override
-	public void setSecurityToken(Serializable securityAccessToken) {
-		Session.get().setMetaData(METADATAKEY_AUTH_TOKEN, securityAccessToken);
+	public InputStream getInputStream() throws IOException {
+		return new URL(url).openStream();
+	}
+
+	@Override
+	public void close() {
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return StringUtils.isEmpty(url) || !url.toLowerCase().startsWith(HtmlElementEnum.PROTOCOL_HTTP.value());
 	}
 }

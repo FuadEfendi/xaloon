@@ -103,6 +103,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication {
 		config.getPluginRegistryListenerCollection().add(categoryGroupPluginRegistryListener);
 		config.setPersistedUserClass(getPersistedUserImplementation());
 		config.setFileDescriptorAbsolutePathStrategy(new DefaultFileDescriptorAbsolutePathStrategy());
+		config.setOauthSecurityTokenProvider(new WicketSessionSecurityTokenProvider());
 		onLoadConfiguration(config);
 	}
 

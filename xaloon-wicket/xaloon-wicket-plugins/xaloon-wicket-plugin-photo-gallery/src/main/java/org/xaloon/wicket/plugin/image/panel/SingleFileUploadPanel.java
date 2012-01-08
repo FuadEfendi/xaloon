@@ -37,7 +37,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.image.model.Image;
-import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.wicket.component.resource.WicketInputStreamContainer;
 
 /**
@@ -49,9 +49,6 @@ public class SingleFileUploadPanel extends Panel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private FileRepositoryFacade fileRepository;
 
 	@Inject
 	private AlbumFacade albumFacade;
@@ -151,6 +148,7 @@ public class SingleFileUploadPanel extends Panel {
 
 
 		protected void fillImageProperties(Image temporaryImage) {
+			temporaryImage.setImageInputStreamContainer(new UrlInputStreamContainer(temporaryImage.getPath()));
 			temporaryImage.setName(temporaryImage.getPath());
 		}
 

@@ -193,19 +193,11 @@ public interface BlogEntry extends Commentable, Bookmarkable, Album {
 	 * @return full blog entry, which is stored in repository as Blog or String
 	 */
 	String getContent();
-
+	
 	/**
-	 * Gets referencedThumbnail.
+	 * Sets the content of current blog entry
 	 * 
-	 * @return referencedThumbnail
+	 * @param content full blog entry, which is stored in repository as Blog or String
 	 */
-	boolean isReferencedThumbnail();
-
-	/**
-	 * Sets referencedThumbnail.
-	 * 
-	 * @param referencedThumbnail
-	 *            referencedThumbnail
-	 */
-	void setReferencedThumbnail(boolean referencedThumbnail);
+	void setContent(String content);
 }

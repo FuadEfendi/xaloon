@@ -95,10 +95,7 @@ public class JpaBlogFacade implements BlogFacade {
 		albumFacade.deleteImages(entry, imagesToDelete);
 
 		if (deleteThumbnail) {
-			if (!entry.isReferencedThumbnail()) {
-				fileRepositoryFacade.delete(entry.getThumbnail());
-			}
-			entry.setReferencedThumbnail(false);
+			fileRepositoryFacade.delete(entry.getThumbnail());
 			entry.setThumbnail(null);
 		}
 		// Set author of blog entry
