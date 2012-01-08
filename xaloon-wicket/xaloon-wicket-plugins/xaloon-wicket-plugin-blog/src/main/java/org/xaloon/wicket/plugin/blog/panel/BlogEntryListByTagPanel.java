@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.blog.ldm.BlogEntryDetachableModel;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
@@ -60,7 +61,7 @@ public class BlogEntryListByTagPanel extends BlogEntryListPanel {
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String tagPath = getPageRequestParameters().get(0).toString();
+		String tagPath = getPageRequestParameters().get(TagCloudPanel.QUERY_BY_TAG).toString();
 		if (StringUtils.isEmpty(tagPath)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);

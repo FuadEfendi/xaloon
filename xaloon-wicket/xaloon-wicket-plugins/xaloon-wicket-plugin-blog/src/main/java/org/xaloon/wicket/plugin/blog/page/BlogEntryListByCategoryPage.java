@@ -26,7 +26,7 @@ import org.xaloon.wicket.plugin.blog.panel.BlogEntryListByCategoryPanel;
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/blog/category/${" + BlogEntryListByCategoryPanel.CATEGORY_CODE + "}", visible = false, order = 100)
+@MountPage(value = "/blog-by-category/${" + BlogEntryListByCategoryPanel.CATEGORY_CODE + "}", visible = false, order = 100)
 public class BlogEntryListByCategoryPage extends LayoutWebPage {
 
 	/**

@@ -20,13 +20,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.blog.panel.BlogEntryListByTagPanel;
 
 
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/blog-by-tag", visible = false, order = 100)
+@MountPage(value = "/blog-by-tag/${" + TagCloudPanel.QUERY_BY_TAG + "}", visible = false, order = 100)
 public class BlogEntryListByTagPage extends LayoutWebPage {
 
 	/**
