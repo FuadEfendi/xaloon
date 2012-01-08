@@ -84,7 +84,7 @@ public class DecoratedPagingNavigatorContainer<T> extends WebMarkupContainer {
 		setVisible(dataView.getItemCount() > 0);
 		// Add data view
 		setDefaultModel(new Model<AbstractPageableView<T>>(dataView));
-		add(dataView);
+
 
 		// Add bookmarkable navigator
 		if (currentLink != null) {
@@ -99,6 +99,7 @@ public class DecoratedPagingNavigatorContainer<T> extends WebMarkupContainer {
 			addOrReplace(bookmarkablePagingNavigator);
 			bookmarkablePagingNavigator.setVisible(isNavigatorVisible);
 		}
+		add(dataView);
 	}
 
 	private int getCurrentPage() {

@@ -111,7 +111,9 @@ public abstract class AbstractEntity implements Persistable {
 
 	@PrePersist
 	protected void beforeCreate() {
-		setCreateDate(new Date());
-		setUpdateDate(new Date());
+		if (getCreateDate() == null) {
+			setCreateDate(new Date());
+			setUpdateDate(new Date());
+		}
 	}
 }
