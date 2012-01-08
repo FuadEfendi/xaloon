@@ -1,0 +1,1 @@
+mvn release:prepare -DreleaseVersion=1.5.1 -Dtag=1.5.1 -DdevelopmentVersion=1.5.2-SNAPSHOT --batch-mode -DdryRun=false -Drelease
