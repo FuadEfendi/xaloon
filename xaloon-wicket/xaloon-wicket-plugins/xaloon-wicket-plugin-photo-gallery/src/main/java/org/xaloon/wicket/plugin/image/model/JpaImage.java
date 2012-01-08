@@ -25,7 +25,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -57,8 +56,7 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	@Column(name = "TITLE")
 	private String title;
 
-	@Column(name = "DESCRIPTION")
-	@Lob
+	@Column(name = "DESCRIPTION", length=255)
 	private String description;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
