@@ -30,7 +30,6 @@ import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.util.DefaultKeyValue;
 import org.xaloon.core.api.util.UrlUtil;
 
-import com.google.gdata.client.GoogleAuthTokenFactory.UserToken;
 import com.google.gdata.client.photos.PicasawebService;
 import com.google.gdata.data.Kind.AdaptorException;
 import com.google.gdata.data.PlainTextConstruct;
@@ -159,13 +158,8 @@ public class PicasaFileStorageService implements FileStorageService {
 		}
 		if (accessTokenValue instanceof Token) {
 			picasawebService.setAuthSubToken(((Token)accessTokenValue).getToken());
-<<<<<<< HEAD
 		} else if (accessTokenValue instanceof String) {
 			picasawebService.setUserToken((String)accessTokenValue);
-=======
-		} else if (accessTokenValue instanceof UserToken) {
-			picasawebService.setUserToken(((UserToken)accessTokenValue).getValue());
->>>>>>> branch 'master' of git@github.com:turisto/xaloon.git
 		} else {
 			throw new RuntimeException(String.format("Authentication token is not supported: %s!", accessTokenValue.toString()));
 		}
