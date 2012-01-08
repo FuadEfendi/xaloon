@@ -61,10 +61,14 @@ class AnnotatedMountScanner implements Serializable {
 	}
 
 	private List<Class<?>> getPackagePatternMatches(String pattern, Class<? extends Annotation> annotation) {
-		AnnotatedMatcher annotatedMatcher = ServiceLocator.get().getInstance(AnnotatedMatcher.class);
+		AnnotatedMatcher annotatedMatcher = getAnnotatedMatcher();
 		if (annotatedMatcher == null) {
 			throw new RuntimeException("Could not find org.xaloon.wicket.component.mount.AnnotatedMatcher implementation!");
 		}
 		return annotatedMatcher.getAnnotatedMatches(pattern, annotation);
+	}
+
+	protected AnnotatedMatcher getAnnotatedMatcher() {
+		return ServiceLocator.get().getInstance(AnnotatedMatcher.class);
 	}
 }

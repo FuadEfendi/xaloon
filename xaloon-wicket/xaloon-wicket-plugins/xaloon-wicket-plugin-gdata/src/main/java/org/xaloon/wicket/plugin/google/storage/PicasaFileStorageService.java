@@ -17,10 +17,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.Session;
 import org.scribe.model.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.asynchronous.RetryAction;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
@@ -28,7 +29,6 @@ import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.util.DefaultKeyValue;
 import org.xaloon.core.api.util.UrlUtil;
-import org.xaloon.wicket.component.security.AuthenticatedWebSession;
 
 import com.google.gdata.client.photos.PicasawebService;
 import com.google.gdata.data.Kind.AdaptorException;
@@ -97,16 +97,14 @@ public class PicasaFileStorageService implements FileStorageService {
 			if (StringUtils.isEmpty(fileDescriptor.getLocation())) {
 				throw new IllegalArgumentException("location is not provided!");
 			}
-			PicasawebService picasawebService = new PicasawebService("xaloon-application");
-			Token accessToken = (Token)additionalProperties.get("authToken");
-			if (accessToken == null) {
-				accessToken = (Token) Session.get().getMetaData(AuthenticatedWebSession.METADATAKEY_AUTH_TOKEN);
+			final PicasawebService picasawebService = new PicasawebService("xaloon-application");
+			Object accessTokenValue = (Object)additionalProperties.get("authToken");
+			if (accessTokenValue == null) {
+				accessTokenValue = Configuration.get().getOauthSecurityTokenProvider().getSecurityToken();
 			}
-
-			if (accessToken == null) {
-				throw new IllegalArgumentException("Google access token was not found in session! Is user logged in using google login service?");
-			}
-			picasawebService.setAuthSubToken(accessToken.getToken());
+			
+			setSecurityToken(picasawebService, accessTokenValue);
+			
 			String albumsUrl = API_PREFIX + userEmail + "?kind=album";
 
 			UserFeed userFeed = getFeed(picasawebService, albumsUrl, UserFeed.class);
@@ -121,8 +119,27 @@ public class PicasaFileStorageService implements FileStorageService {
 			MediaStreamSource myMedia = new MediaStreamSource(inputStreamContainer.getInputStream(), "image/jpeg");
 			myPhoto.setMediaSource(myMedia);
 
-			PhotoEntry entry = picasawebService.insert(albumPostUrl, myPhoto);
+			PhotoEntry entry =new RetryAction<PhotoEntry, Void>(false) {
 
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected PhotoEntry onPerform(Void parameters) {
+					try {
+						return picasawebService.insert(albumPostUrl, myPhoto);
+					} catch (Exception e) {
+						LOGGER.error("Could not upload photo, due to picasa service error!", e);
+					}
+					return null;
+				}
+			}.perform(null);
+			 
+			if (entry == null) {
+				throw new RuntimeException("Could not finish action, because service is not relialible!");
+			}
 			String identifier = "/albumid/" + album.getGphotoId() + "/photoid/" + entry.getGphotoId();
 			KeyValue<String, String> result = new DefaultKeyValue<String, String>(entry.getMediaContents().get(0).getUrl(), identifier);
 			LOGGER.info("New image uploaded.");
@@ -132,6 +149,19 @@ public class PicasaFileStorageService implements FileStorageService {
 			throw new RuntimeException(e);
 		} finally {
 			inputStreamContainer.close();
+		}
+	}
+
+	private void setSecurityToken(PicasawebService picasawebService, Object accessTokenValue) {
+		if (accessTokenValue == null) {
+			throw new IllegalArgumentException("Google access token was not found in session! Is user logged in using google login service?");
+		}
+		if (accessTokenValue instanceof Token) {
+			picasawebService.setAuthSubToken(((Token)accessTokenValue).getToken());
+		} else if (accessTokenValue instanceof String) {
+			picasawebService.setUserToken((String)accessTokenValue);
+		} else {
+			throw new RuntimeException(String.format("Authentication token is not supported: %s!", accessTokenValue.toString()));
 		}
 	}
 
@@ -188,10 +218,8 @@ public class PicasaFileStorageService implements FileStorageService {
 		PicasawebService picasawebService = new PicasawebService("xaloon-application");
 		picasawebService.setHeader("If-Match", "*");
 		try {
-
-			Token accessToken = (Token) Session.get().getMetaData(AuthenticatedWebSession.METADATAKEY_AUTH_TOKEN);
-			picasawebService.setAuthSubToken(accessToken.getToken());
-
+			setSecurityToken(picasawebService, Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
+			
 			final URL photoPostUrl = new URL("https://picasaweb.google.com/data/entry/api/user/" + securityFacade.getCurrentUserEmail()
 					+ uniqueIdentifier);
 

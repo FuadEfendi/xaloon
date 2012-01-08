@@ -16,11 +16,8 @@
  */
 package org.xaloon.wicket.component.security;
 
-import java.io.Serializable;
-
 import javax.inject.Inject;
 
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.protocol.http.WebSession;
@@ -34,13 +31,6 @@ import org.xaloon.core.api.security.external.AuthenticationToken;
  */
 public class AuthenticatedWebSession extends WebSession {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Access token, stored in wicket session for external authentications
-	 */
-	public static final MetaDataKey<Serializable> METADATAKEY_AUTH_TOKEN = new MetaDataKey<Serializable>() {
-		private static final long serialVersionUID = 1L;
-	};
 
 	@Inject
 	private transient SecurityFacade securityFacade;

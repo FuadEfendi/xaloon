@@ -88,7 +88,7 @@ public class JcrFileStorageService implements FileStorageService {
 			Node fileContent = repositoryFacade.getDefaultSession().getRootNode().getNode(uniqueIdentifier);
 			return fileContent.getNode("jcr:content").getProperty("jcr:data").getBinary().getStream();
 		} catch (Exception e) {
-			throw new RuntimeException("Error while retrieving file", e);
+			throw new JcrException("Error while retrieving file", e);
 		}
 	}
 
