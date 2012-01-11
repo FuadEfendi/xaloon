@@ -13,8 +13,7 @@
 -DarchetypeArtifactId=xaloon-archetype-wicket-jpa-spring \
 -DarchetypeVersion=1.5.0 \
 -DgroupId=com.mycompany \
--DartifactId=myproject \
--DarchetypeRepository=http://xaloon.googlecode.com/svn/maven2/releases/]]></programlisting>
+-DartifactId=myproject]]></programlisting>
 			<para>
 				This will create ready-to-deploy web application, which can be started using web application container, such Apache Tomcat, Jetty. Created project contains these dependencies:	
 			</para>
@@ -40,9 +39,7 @@
 -DarchetypeArtifactId=xaloon-archetype-wicket-jpa-glassfish \
 -DarchetypeVersion=1.5.0 \
 -DgroupId=com.mycompany \
--DartifactId=myproject-j2ee \
--DarchetypeRepository=http://xaloon.googlecode.com/svn/maven2/releases/
-			]]></programlisting>
+-DartifactId=myproject-j2ee]]></programlisting>
 			<para>
 				This will create ready-to-deploy web application, which can be started using Glassfish 3.1. Created project will contain these dependencies:</para>
 			<itemizedlist>
