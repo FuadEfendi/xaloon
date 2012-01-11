@@ -73,6 +73,13 @@
 				<emphasis>pom.xml</emphasis> file</para>
 			<programlisting><![CDATA[[xaloon/myproject-j2ee/myproject-j2ee-ear]$ mvn glassfish:deploy]]></programlisting>
 		</section>
+		<section>
+			<title>Default username/password</title>
+			<para>Default username/password is created when generating demo application or application from
+				archtype: <emphasis>demo/demo</emphasis>. This is done by class
+				TemporaryFacadeImpl.java which is invoked on application startup. You should use
+				this class only for test purposes.</para>
+		</section>
 	</section>
 	<section>
 		<title>Configuration</title>
