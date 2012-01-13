@@ -132,7 +132,10 @@ public class JpaAuditFacade implements AuditFacade {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AuditEntity> search(List<String> auditableEntityNames, int first, int count) {
-		return em.createQuery("select a from " + JpaAuditEntity.class.getSimpleName() + " a").getResultList();
+		return em.createQuery("select a from " + JpaAuditEntity.class.getSimpleName() + " a")
+			.setFirstResult(first)
+			.setMaxResults(count)
+			.getResultList();
 	}
 
 	private QueryBuilder createQuery(String selectQuery, List<String> objectNames) {
