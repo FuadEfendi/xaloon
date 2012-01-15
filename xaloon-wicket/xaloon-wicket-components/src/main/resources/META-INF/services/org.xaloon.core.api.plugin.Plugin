@@ -1,8 +1,0 @@
-org.xaloon.wicket.plugin.system.SystemPlugin
-org.xaloon.wicket.plugin.google.GoogleAnalyticsPlugin
-org.xaloon.wicket.plugin.google.GoogleWebMasterPlugin
-org.xaloon.wicket.plugin.addthis.AddThisPlugin
-org.xaloon.wicket.plugin.menu.DynamicMenuPlugin
-org.xaloon.wicket.plugin.email.EmailPlugin
-org.xaloon.wicket.plugin.captcha.RecaptchaPlugin
-org.xaloon.wicket.plugin.comment.CommentPlugin

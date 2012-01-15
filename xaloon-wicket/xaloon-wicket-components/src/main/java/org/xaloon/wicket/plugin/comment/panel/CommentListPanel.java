@@ -21,6 +21,11 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -62,6 +67,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 	 */
 	public CommentListPanel(String id, IModel<Commentable> commentableModel, PageParameters pageRequestParameters) {
 		super(id, commentableModel, pageRequestParameters);
+		setOutputMarkupId(true);
 	}
 
 	@Override
@@ -76,7 +82,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 			@Override
 			protected void populateItem(Item<Comment> item) {
-				Comment comment = item.getModelObject();
+				final Comment comment = item.getModelObject();
 				WebMarkupContainer externalLink;
 				if (getPluginBean().isWebsiteVisible() && !StringUtils.isEmpty(comment.getFromUser().getWebsite())) {
 					externalLink = new ExternalLink("external-link", comment.getFromUser().getWebsite());
@@ -90,6 +96,27 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 				externalLink.add(new Label("displayName", new Model<String>(comment.getFromUser().getDisplayName())));
 				item.add(new Label("message", new Model<String>(TextUtil.prepareStringForHTML(comment.getMessage()))));
 				item.add(new Label("comment-timestamp", new Model<String>(comment.getCreateDate().toString())));// TODO fix date format
+				item.add(new AjaxLink<Void>("delete-comment") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						commentDao.delete(comment);
+						target.add(CommentListPanel.this);
+					}
+
+					@Override
+					protected IAjaxCallDecorator getAjaxCallDecorator() {
+						return new AjaxCallDecorator() {
+							private static final long serialVersionUID = 1L;
+
+							@Override
+							public CharSequence decorateScript(Component c, CharSequence script) {
+								return "if(!confirm('" + CommentListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;" + script;
+							}
+						};
+					}
+				}.setVisible(getSecurityFacade().isAdministrator()));
 			}
 		};
 		dataContainer.addAbstractPageableView(commentListDataView);

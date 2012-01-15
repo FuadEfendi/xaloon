@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
-import java.util.ServiceLoader;
 
 import javax.inject.Named;
 
@@ -31,12 +30,11 @@ import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 
 /**
- * A simple service-provider loading facility using {@link ServiceLoader}
+ * A simple service-provider loading facility using {@link BeanLocatorAdapter}
  * 
  * @author vytautas r.
  * @since 1.5
  * 
- * @see ServiceLoader
  */
 public class ServiceLocator implements Serializable {
 
@@ -54,7 +52,7 @@ public class ServiceLocator implements Serializable {
 	private Properties injectorProperties;
 
 	/**
-	 * Simple method to load class instance using default SDK 1.6 {@link ServiceLoader} class.
+	 * Simple method to load class instance using {@link BeanLocatorAdapter} class.
 	 * <p>
 	 * First entry will be taken if several implementations is found.
 	 * 
@@ -62,7 +60,7 @@ public class ServiceLocator implements Serializable {
 	 *            class type to load
 	 * @param classForInstance
 	 *            class to be loaded
-	 * @return instance loaded by {@link ServiceLoader}
+	 * @return instance loaded by {@link BeanLocatorAdapter}
 	 */
 	public <T> T getInstance(Class<T> classForInstance) {
 		String beanName = getServiceProviderName(classForInstance);
@@ -84,7 +82,7 @@ public class ServiceLocator implements Serializable {
 	 *            class type to load
 	 * @param classForInstance
 	 *            class to be loaded
-	 * @return list of instances loaded by {@link ServiceLoader}. Empty list if there are no implementations
+	 * @return list of instances loaded by {@link BeanLocatorAdapter}. Empty list if there are no implementations
 	 */
 	public <T> List<T> getInstances(Class<T> classForInstance) {
 		BeanLocatorAdapter adapter = Configuration.get().getBeanLocatorAdapter();

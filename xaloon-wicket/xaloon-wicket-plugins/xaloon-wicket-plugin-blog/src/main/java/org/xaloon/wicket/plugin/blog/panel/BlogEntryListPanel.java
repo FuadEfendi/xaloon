@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -166,40 +165,36 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 				item.add(link_edit);
 
 				// Add delete link
-				WebMarkupContainer link_delete = null;
+				WebMarkupContainer link_delete = new AjaxLink<BlogEntry>("link-delete", item.getModel()) {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected IAjaxCallDecorator getAjaxCallDecorator() {
+						return new AjaxCallDecorator() {
+							private static final long serialVersionUID = 1L;
+
+							@Override
+							public CharSequence decorateScript(Component c, CharSequence script) {
+								return "if(!confirm('" + BlogEntryListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;" + script;
+							}
+						};
+					}
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						BlogEntry blogEntry = getModelObject();
+						getBlogFacade().deleteBlogEntryByPath(blogEntry.getOwner().getUsername(), blogEntry.getPath());
+						setResponsePage(getBlogEntryListPageClass());
+					}
+				};
 				boolean isDeleteLinkVisible = (getSecurityFacade().isAdministrator() || getSecurityFacade().isOwnerOfObject(
 					blogEntry.getOwner().getUsername()));
 
-				if (isDeleteLinkVisible) {
-					link_delete = new AjaxLink<BlogEntry>("link-delete", item.getModel()) {
-
-						/**
-						 * 
-						 */
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						protected IAjaxCallDecorator getAjaxCallDecorator() {
-							return new AjaxCallDecorator() {
-								private static final long serialVersionUID = 1L;
-
-								@Override
-								public CharSequence decorateScript(Component c, CharSequence script) {
-									return "if(!confirm('" + BlogEntryListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;" + script;
-								}
-							};
-						}
-
-						@Override
-						public void onClick(AjaxRequestTarget target) {
-							BlogEntry blogEntry = getModelObject();
-							getBlogFacade().deleteBlogEntryByPath(blogEntry.getOwner().getUsername(), blogEntry.getPath());
-							setResponsePage(getBlogEntryListPageClass());
-						}
-					};
-				} else {
-					link_delete = new EmptyPanel("link-delete");
-				}
+				
 				// Check security of link
 				link_delete.setVisible(isDeleteLinkVisible);
 				item.add(link_delete);
