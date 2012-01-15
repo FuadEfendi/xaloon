@@ -2,6 +2,8 @@ package org.xaloon.wicket.plugin.blog.panel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,8 +13,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.wicket.application.page.LayoutWebPage;
+import org.xaloon.wicket.component.html.MetaTagWebContainer;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.addthis.panel.AddThisPanel;
@@ -144,10 +148,45 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		if (getParent() instanceof LayoutWebPage) {
 			BlogEntry blogEntry = (BlogEntry)getDefaultModelObject();
 			getParent().addOrReplace(new Label(LayoutWebPage.PAGE_TITLE, new Model<String>(blogEntry.getTitle())));
-			getParent().addOrReplace(new Label(LayoutWebPage.PAGE_DESCRIPTION, new Model<String>(blogEntry.getDescriptionClean())));
+			getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_DESCRIPTION, blogEntry.getDescription()));
+			addOrReplaceKeywords(blogEntry);
+			
 			if (!blogEntry.getTags().isEmpty()) {
-				String keysAsString = StringUtils.join(blogEntry.getTags(), SEPARATOR);
-				getParent().addOrReplace(new Label(LayoutWebPage.PAGE_KEYWORDS, new Model<String>(keysAsString)));
+				Collection<String> keywords = new ArrayList<String>();
+				keywords.add(StringUtils.join(blogEntry.getTags(), SEPARATOR));
+				
+				
+				
+			}
+		}
+		
+	}
+
+	private void addOrReplaceKeywords(BlogEntry blogEntry) {
+		Collection<Object> keywords = new ArrayList<Object>();
+		
+		//Add title
+		
+		splitAndFilterTitle(keywords, blogEntry.getTitle());
+		//Add category if exists
+		if (blogEntry.getCategory() != null) {
+			keywords.add(blogEntry.getCategory().getName());
+		}
+		
+		//Add tags if exist
+		if (!blogEntry.getTags().isEmpty()) {
+			keywords.addAll(blogEntry.getTags());
+		}
+		
+		//Add all as single string
+		String keysAsString = StringUtils.join(keywords, SEPARATOR);
+		getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_KEYWORDS, keysAsString));
+	}
+
+	private void splitAndFilterTitle(Collection<Object> keywords, String title) {
+		for (String item : title.split(DelimiterEnum.SPACE.value())) {
+			if (item.length() > 3) {
+				keywords.add(item);
 			}
 		}
 	}
