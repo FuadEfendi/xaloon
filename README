@@ -17,30 +17,30 @@ Required dependencies
 Add external repository to your settings.xml:
 
 <profiles>
-	<profile>
-		<id>xaloon-external-repositories</id>
-		<activation>
-			<activeByDefault>true</activeByDefault>				
-		</activation>
-		<repositories>
-			<repository>
-				<id>jboss-repository</id>
-				<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			</repository>
-			<repository>
-				<id>EclipseLink Repo</id>
-				<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-			</repository>  
-			<repository> 
-				<id>googlecode-jqwicket</id> 
-				<url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url> 
-			</repository> 
-			<repository>
-				<id>mandubian-mvn</id>
-				<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
-			</repository>
-		</repositories>
-	</profile>
+ <profile>
+  <id>xaloon-external-repositories</id>
+  <activation>
+   <activeByDefault>true</activeByDefault>				
+  </activation>
+  <repositories>
+   <repository>
+    <id>jboss-repository</id>
+    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+   </repository>
+   <repository>
+    <id>EclipseLink Repo</id>
+    <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+   </repository>  
+   <repository> 
+    <id>googlecode-jqwicket</id> 
+    <url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url> 
+   </repository> 
+   <repository>
+    <id>mandubian-mvn</id>
+    <url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
+   </repository>
+  </repositories>
+ </profile>
 </profiles>	
 
 These repositories include:
