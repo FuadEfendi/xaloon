@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.image.AlbumFacade;
-import org.xaloon.core.api.image.ImageResizer;
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.persistence.PersistenceServices;
@@ -44,6 +43,8 @@ import org.xaloon.core.api.storage.DefaultInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.InputStreamContainer;
+import org.xaloon.core.api.storage.InputStreamContainerOptions;
+import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.image.model.JpaAlbum;
 import org.xaloon.wicket.plugin.image.model.JpaImage;
@@ -61,7 +62,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlbumFacade.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(DefaultAlbumFacade.class);
 
 	@Inject
 	@Named("persistenceServices")
@@ -69,10 +71,6 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
-
-	@Inject
-	@Named("imageResizer")
-	private ImageResizer imageResizer;
 
 	public Album newAlbum() {
 		return new JpaAlbum();
@@ -84,7 +82,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public Album createNewAlbum(User owner, String title, String description, Album parent) {
+	public Album createNewAlbum(User owner, String title, String description,
+			Album parent) {
 		Album album = newAlbum();
 		album.setOwner(owner);
 		album.setTitle(title);
@@ -95,11 +94,12 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void addNewImagesToAlbum(Album album, List<Image> imagesToAdd, String imageLocation, String thumbnailLocation) {
+	public void addNewImagesToAlbum(final Album album, List<Image> imagesToAdd,
+			final String imageLocation, final String thumbnailLocation) {
 		if (album == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			throw new IllegalArgumentException("Missing arguments!");
 		}
-		for (Image image : imagesToAdd) {
+		for (final Image image : imagesToAdd) {
 			if (image.getId() == null) {
 				createImage(album, image, imageLocation, thumbnailLocation);
 			}
@@ -111,7 +111,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		deleteImages(album, imagesToDelete, false);
 	}
 
-	private void deleteImages(Album album, List<Image> imagesToDelete, boolean deleteAlbum) {
+	private void deleteImages(Album album, List<Image> imagesToDelete,
+			boolean deleteAlbum) {
 		if (album == null || imagesToDelete == null || imagesToDelete.isEmpty()) {
 			return;
 		}
@@ -138,7 +139,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public FileDescriptor createPhysicalFile(Image temporaryImage) throws MalformedURLException, IOException {
+	public FileDescriptor createPhysicalFile(Image temporaryImage)
+			throws MalformedURLException, IOException {
 		return createPhysicalFile(temporaryImage, null);
 	}
 
@@ -153,9 +155,12 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	public FileDescriptor createPhysicalFile(Image temporaryImage, FileDescriptor existingToUpdate) throws MalformedURLException, IOException {
+	public FileDescriptor createPhysicalFile(Image temporaryImage,
+			FileDescriptor existingToUpdate) throws MalformedURLException,
+			IOException {
 		FileDescriptor result = fileRepositoryFacade.newFileDescriptor();
-		temporaryImage.setGenerateUuid(temporaryImage.isGenerateUuid() || result != null);
+		temporaryImage.setGenerateUuid(temporaryImage.isGenerateUuid()
+				|| result != null);
 		if (existingToUpdate != null) {
 			result = existingToUpdate;
 		}
@@ -165,40 +170,25 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			return result;
 		}
 		InputStreamContainer inputStreamContainer = null;
+		InputStreamContainerOptions options = new InputStreamContainerOptions()
+				.setHeight(temporaryImage.getHeight())
+				.setWidth(temporaryImage.getWidth())
+				.setResize(temporaryImage.isResize());
+
 		if (temporaryImage.isExternal()) {
-			inputStreamContainer = getExternalInputStream(temporaryImage);
+			inputStreamContainer = new UrlInputStreamContainer(temporaryImage.getExternalImage());
 		} else {
-			inputStreamContainer = getFileInputStream(temporaryImage);
+			inputStreamContainer = temporaryImage.getImageInputStreamContainer();
 		}
+		inputStreamContainer.setOptions(options);
 		if (inputStreamContainer != null && !inputStreamContainer.isEmpty()) {
 			return fileRepositoryFacade.storeFile(result, inputStreamContainer);
 		}
 		return result;
 	}
 
-	private InputStreamContainer getFileInputStream(Image temporaryImage) throws IOException {
-		if (temporaryImage.getImageInputStreamContainer() == null) {
-			return new DefaultInputStreamContainer();
-		}
-		InputStreamContainer result = temporaryImage.getImageInputStreamContainer();
-		if (temporaryImage.isResize()) {
-			InputStream is = imageResizer.resize(result.getInputStream(), temporaryImage.getWidth(), temporaryImage.getHeight(), true);
-			result = new DefaultInputStreamContainer(is);
-		}
-		return result;
-	}
-
-	private InputStreamContainer getExternalInputStream(Image temporaryImage) throws MalformedURLException, IOException {
-		InputStream is = null;
-		if (temporaryImage.isResize()) {
-			is = imageResizer.resize(temporaryImage.getExternalImage(), temporaryImage.getWidth(), temporaryImage.getHeight(), true);
-		} else {
-			is = temporaryImage.getExternalImage().openStream();
-		}
-		return new DefaultInputStreamContainer(is);
-	}
-
-	private void updateFileDescriptor(Image temporaryImage, FileDescriptor result) {
+	private void updateFileDescriptor(Image temporaryImage,
+			FileDescriptor result) {
 
 		result.setSize(temporaryImage.getSize());
 		result.setMimeType(temporaryImage.getMimeType());
@@ -210,9 +200,12 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			result.setName(temporaryImage.getPath());
 		}
 		if (temporaryImage.isModifyPath()) {
-			result.setPath(Configuration.get()
-				.getFileDescriptorAbsolutePathStrategy()
-				.generateAbsolutePath(result, temporaryImage.isGenerateUuid(), temporaryImage.getPathPrefix()));
+			result.setPath(Configuration
+					.get()
+					.getFileDescriptorAbsolutePathStrategy()
+					.generateAbsolutePath(result,
+							temporaryImage.isGenerateUuid(),
+							temporaryImage.getPathPrefix()));
 		} else {
 			result.setPath(temporaryImage.getPath());
 		}
@@ -224,7 +217,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	public void createImage(Album album, Image newImage, String imageLocation, String thumbnailLocation) {
+	public void createImage(Album album, Image newImage, String imageLocation,
+			String thumbnailLocation) {
 		newImage.setOwner(album.getOwner());
 		album.getImages().add(newImage);
 		try {
@@ -233,25 +227,32 @@ public class DefaultAlbumFacade implements AlbumFacade {
 				newImage.setModifyPath(true);
 			}
 			// Make a copy of input stream for thumbnail processing
-			InputStream copy = new ByteArrayInputStream(IOUtils.toByteArray(newImage.getImageInputStreamContainer().getInputStream()));
-			InputStreamContainer inputStreamContainer = new DefaultInputStreamContainer(copy);
+			InputStream copy = new ByteArrayInputStream(
+					IOUtils.toByteArray(newImage.getImageInputStreamContainer()
+							.getInputStream()));
+			InputStreamContainer inputStreamContainer = new DefaultInputStreamContainer(
+					copy);
 
-			// Threats image as original file descriptor and modifies required properties
+			// Threats image as original file descriptor and modifies required
+			// properties
 			newImage.setLocation(imageLocation);
 			createPhysicalFile(newImage, newImage);
 
 			// Always create thumbnail
 			createThumbnail(newImage, thumbnailLocation, inputStreamContainer);
 		} catch (MalformedURLException e) {
-			LOGGER.error(String.format("URL exception: %s", newImage.getPath()), e);
+			LOGGER.error(
+					String.format("URL exception: %s", newImage.getPath()), e);
 		} catch (IOException e) {
 			LOGGER.error("Could not store file.", e);
 		}
 	}
 
-	private void createThumbnail(Image newImage, String thumbnailLocation, InputStreamContainer thumbnailInputStreamContainer)
-		throws MalformedURLException, IOException {
-		FileDescriptor fileDescriptor = fileRepositoryFacade.newFileDescriptor();
+	private void createThumbnail(Image newImage, String thumbnailLocation,
+			InputStreamContainer thumbnailInputStreamContainer)
+			throws MalformedURLException, IOException {
+		FileDescriptor fileDescriptor = fileRepositoryFacade
+				.newFileDescriptor();
 		fileDescriptor.setLocation(thumbnailLocation);
 		newImage.setResize(true);
 		newImage.setModifyPath(true);

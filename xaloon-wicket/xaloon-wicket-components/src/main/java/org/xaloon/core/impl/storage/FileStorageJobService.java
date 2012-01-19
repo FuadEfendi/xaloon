@@ -16,6 +16,8 @@
  */
 package org.xaloon.core.impl.storage;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,19 +32,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.asynchronous.RetryAction;
 import org.xaloon.core.api.asynchronous.ScheduledJobService;
+import org.xaloon.core.api.image.ImageResizer;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.persistence.PersistenceServices;
+import org.xaloon.core.api.storage.DefaultInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
+import org.xaloon.core.api.storage.InputStreamContainerOptions;
 
 /**
  * @author vytautas r.
  */
 @Named("fileStorageJobService")
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class FileStorageJobService implements ScheduledJobService<FileStorageJobParameters> {
 
@@ -55,6 +60,10 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 	private PersistenceServices persistenceServices;
 
 	private FileStorageService fileStorageService;
+
+	@Inject
+	@Named("imageResizer")
+	private ImageResizer imageResizer;
 
 	@Override
 	public <V> V execute(FileStorageJobParameters jobParameters, boolean isScheduled) {
@@ -78,7 +87,7 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 				return null;
 			}
 			// Load parameters
-			InputStreamContainer inputStreamContainer = jobParameters.getInputStreamContainer();
+			InputStreamContainer inputStreamContainer = resizeIfRequired(jobParameters.getInputStreamContainer());
 			String userEmail = jobParameters.getUserEmail();
 
 			Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -105,6 +114,15 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 			LOGGER.debug("Finished: scheduleInMemory()");
 		}
 		return null;
+	}
+
+	private InputStreamContainer resizeIfRequired(InputStreamContainer inputStreamContainer) throws IOException {
+		InputStreamContainerOptions options = inputStreamContainer.getOptions();
+		if (!options.isResize()) {
+			return inputStreamContainer;
+		}
+		InputStream is = imageResizer.resize(inputStreamContainer.getInputStream(), options.getWidth(), options.getHeight(), true);
+		return new DefaultInputStreamContainer(is);
 	}
 
 	private FileDescriptor getFileDescriptor(FileDescriptor fileDescriptor, boolean isScheduled) throws InterruptedException {

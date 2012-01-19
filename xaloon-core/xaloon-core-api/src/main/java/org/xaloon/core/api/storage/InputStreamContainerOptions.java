@@ -16,56 +16,50 @@
  */
 package org.xaloon.core.api.storage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.Serializable;
 
 /**
  * @author vytautas r.
  */
-public class UrlInputStreamContainer extends AbstractInputStreamContainer {
+public class InputStreamContainerOptions implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private URL url;
+	private int width;
 
-	/**
-	 * Construct.
-	 * 
-	 * @param url
-	 */
-	public UrlInputStreamContainer(String url) {
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("Could not create url", e);
-		}
+	private int height;
+
+	private boolean resize;
+
+	public int getWidth() {
+		return width;
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param url
-	 */
-	public UrlInputStreamContainer(URL url) {
-		this.url = url;
+	public InputStreamContainerOptions setWidth(int width) {
+		this.width = width;
+		return this;
 	}
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return url.openStream();
+	public int getHeight() {
+		return height;
 	}
 
-	@Override
-	public void close() {
+	public InputStreamContainerOptions setHeight(int height) {
+		this.height = height;
+		return this;
 	}
 
-	@Override
-	public boolean isEmpty() {
-		return url == null;
+	public boolean isResize() {
+		return resize;
 	}
+
+	public InputStreamContainerOptions setResize(boolean resize) {
+		this.resize = resize;
+		return this;
+	}
+
+
 }

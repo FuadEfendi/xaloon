@@ -88,7 +88,7 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#storeBlogEntry(BlogEntry, BlogPluginBean, List, List)
 	 */
 	@Override
-	public void storeBlogEntry(BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
+	public void storeBlogEntry(final BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
 		List<Image> imagesToAdd) throws IOException {
 
 		// Delete images if any
@@ -122,18 +122,11 @@ public class JpaBlogFacade implements BlogFacade {
 		blogDao.save(entry);
 	}
 
-	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, BlogEntry entry, List<Image> imagesToAdd) {
+	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, final BlogEntry entry, final List<Image> imagesToAdd) {
 		if (entry == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			return;
 		}
 		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, UrlUtil.encode(entry.getTitle()), BLOG_THUMBNAILS);
-	}
-
-	private boolean isNew(FileDescriptor newFileDescriptor, FileDescriptor originalFileDescriptor) {
-		if (originalFileDescriptor == null) {
-			return true;
-		}
-		return !originalFileDescriptor.getId().equals(newFileDescriptor.getId());
 	}
 
 	private String createDescription(BlogEntry entry, BlogPluginBean pluginBean) {

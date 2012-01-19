@@ -39,4 +39,8 @@ public interface InputStreamContainer extends Serializable {
 	 * @return true if there is no input stream found
 	 */
 	boolean isEmpty();
+
+	InputStreamContainerOptions getOptions();
+
+	void setOptions(InputStreamContainerOptions options);
 }

@@ -22,7 +22,7 @@ import java.io.InputStream;
 /**
  * @author vytautas r.
  */
-public class DefaultInputStreamContainer implements InputStreamContainer {
+public class DefaultInputStreamContainer extends AbstractInputStreamContainer {
 
 	/**
 	 * 

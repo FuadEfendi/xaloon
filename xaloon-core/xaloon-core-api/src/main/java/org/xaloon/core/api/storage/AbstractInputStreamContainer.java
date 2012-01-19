@@ -16,56 +16,23 @@
  */
 package org.xaloon.core.api.storage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * @author vytautas r.
  */
-public class UrlInputStreamContainer extends AbstractInputStreamContainer {
+public abstract class AbstractInputStreamContainer implements InputStreamContainer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private URL url;
+	private InputStreamContainerOptions options;
 
-	/**
-	 * Construct.
-	 * 
-	 * @param url
-	 */
-	public UrlInputStreamContainer(String url) {
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("Could not create url", e);
-		}
+	public InputStreamContainerOptions getOptions() {
+		return options;
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param url
-	 */
-	public UrlInputStreamContainer(URL url) {
-		this.url = url;
-	}
-
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return url.openStream();
-	}
-
-	@Override
-	public void close() {
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return url == null;
+	public void setOptions(InputStreamContainerOptions options) {
+		this.options = options;
 	}
 }

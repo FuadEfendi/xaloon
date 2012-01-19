@@ -26,6 +26,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,9 @@ import org.xaloon.core.api.asynchronous.SchedulerServices;
 /**
  * @author vytautas r.
  */
+@Singleton
 @Named("schedulerServices")
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class DefaultSchedulerServices implements SchedulerServices {
 
@@ -48,14 +50,17 @@ public class DefaultSchedulerServices implements SchedulerServices {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSchedulerServices.class);
 
+	private ExecutorService executor;
+
+	private int fixedThreadCount = 20;
+
 	@SuppressWarnings("unchecked")
 	public <V, T extends JobParameters> java.util.concurrent.Future<V> runAsynchronous(final ScheduledJobService<T> scheduledJobService,
 		final T jobParameters) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug(String.format("%s.runAsynchronous() start", DefaultSchedulerServices.class.getName()));
 		}
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<V> f = executor.submit(new Callable<V>() {
+		Future<V> f = getExecutor().submit(new Callable<V>() {
 			@Override
 			public V call() throws Exception {
 				return (V)scheduledJobService.execute(jobParameters, true);
@@ -66,4 +71,18 @@ public class DefaultSchedulerServices implements SchedulerServices {
 		}
 		return f;
 	};
+
+	ExecutorService getExecutor() {
+		if (executor == null) {
+			executor = Executors.newFixedThreadPool(fixedThreadCount);
+		}
+		return executor;
+	}
+
+	public DefaultSchedulerServices setFixedThreadCount(int fixedThreadCount) {
+		this.fixedThreadCount = fixedThreadCount;
+		return this;
+	}
+
+
 }
