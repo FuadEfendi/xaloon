@@ -14,8 +14,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator.MaximumLengthValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.exception.CreateClassInstanceException;
 import org.xaloon.core.api.image.model.Album;
@@ -39,10 +37,6 @@ import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
  */
 public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateBlogEntryPanel.class);
-
-	private static final String THUMBNAIL_LOCATION = "/images/blog/thumbnail";
 
 	/**
 	 * Construct.
@@ -130,7 +124,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			addBlogEntryImagePanel();
 
 			// Add content
-			add(new CKEditorTextArea<String>("content", new CKEditorOptions().width(620)).setRequired(true));
+			add(new CKEditorTextArea<String>("content", new CKEditorOptions()).setRequired(true));
 
 			// Add tags
 			List<KeyValue<String, String>> tags = (List<KeyValue<String, String>>)getModelObject().getTags();
@@ -190,6 +184,8 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			}
 			thumbnailManagementPanel = new AlbumAdministrationPanel("image-administration-panel", thumbnailImages);
 			thumbnailManagementPanel.setMaxImagesAllowed(1);
+			thumbnailManagementPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
+			thumbnailManagementPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
 			add(thumbnailManagementPanel);
 		}
 
@@ -200,6 +196,8 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			}
 
 			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", destination);
+			albumAdministrationPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
+			albumAdministrationPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
 			add(albumAdministrationPanel);
 			return albumAdministrationPanel;
 		}

@@ -16,8 +16,6 @@
  */
 package org.xaloon.wicket.plugin.image.panel;
 
-import javax.inject.Inject;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,9 +25,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.util.HtmlElementEnum;
 import org.xaloon.wicket.component.resource.ImageLink;
 
@@ -43,14 +38,9 @@ public class ImagePanel extends Panel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImagePanel.class);
-
 	private int imageWidth = 200;
 
 	private int imageHeight = 100;
-
-	@Inject
-	private FileRepositoryFacade fileRepositoryFacade;
 
 	/**
 	 * Construct.
@@ -70,11 +60,7 @@ public class ImagePanel extends Panel {
 		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image)getDefaultModelObject();
 
 
-		// Add show existing image
-		ImageLink imageLink = new ImageLink("display-image", (image.getPath() != null) ? image.getPath() : null);
-		imageLink.setWidth(imageWidth);
-		imageLink.setHeight(imageHeight);
-		add(imageLink);
+		
 
 		// Add show temporary image
 		TemporaryResource temporaryResource = new TemporaryResource((image.getThumbnail() != null) ? image.getThumbnail() : image);
