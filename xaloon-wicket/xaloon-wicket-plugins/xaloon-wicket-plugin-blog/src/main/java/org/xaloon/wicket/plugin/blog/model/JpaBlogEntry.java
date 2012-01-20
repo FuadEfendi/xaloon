@@ -57,10 +57,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Column(name = "CUSTOM_PATH")
 	private String customPath;
 
-	@Column(name = "DESCRIPTION_CLEAN")
-	@Lob
-	private String descriptionClean;
-
 	@ManyToOne
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
@@ -92,17 +88,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = "XAL_BLOG_ENTRY_IMAGES", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
 	private List<JpaImage> images = new ArrayList<JpaImage>();
-
-	public String getDescriptionClean() {
-		return descriptionClean;
-	}
-
-	/**
-	 * @param descriptionClean
-	 */
-	public void setDescriptionClean(String descriptionClean) {
-		this.descriptionClean = descriptionClean;
-	}
 
 	public JpaClassifierItem getCategory() {
 		return category;
