@@ -61,15 +61,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
 
-	@Column(name = "VIEW_COUNT")
-	private Long viewCount;
-
-	@Column(name = "COMMENT_COUNT")
-	private Long commentCount;
-
-	@Column(name = "RATING")
-	private Long rating;
-
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinTable(name = "XAL_BLOG_ENTRY_TAGS", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
 	private List<JpaBlogEntryTag> tags = new ArrayList<JpaBlogEntryTag>();
@@ -98,39 +89,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	 */
 	public void setCategory(JpaClassifierItem category) {
 		this.category = category;
-	}
-
-	public Long getViewCount() {
-		return viewCount;
-	}
-
-	/**
-	 * @param viewCount
-	 */
-	public void setViewCount(Long viewCount) {
-		this.viewCount = viewCount;
-	}
-
-	public Long getCommentCount() {
-		return commentCount;
-	}
-
-	/**
-	 * @param commentCount
-	 */
-	public void setCommentCount(Long commentCount) {
-		this.commentCount = commentCount;
-	}
-
-	public Long getRating() {
-		return rating;
-	}
-
-	/**
-	 * @param rating
-	 */
-	public void setRating(Long rating) {
-		this.rating = rating;
 	}
 
 	public List<JpaBlogEntryTag> getTags() {
@@ -198,7 +156,7 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	}
 
 	@Override
-	public Long getComponentId() {
+	public Long getTrackingCategoryId() {
 		return 1000L;// TODO FIX return CommentComponentContainer.COMPONENT_BLOG_ENTRY;
 	}
 

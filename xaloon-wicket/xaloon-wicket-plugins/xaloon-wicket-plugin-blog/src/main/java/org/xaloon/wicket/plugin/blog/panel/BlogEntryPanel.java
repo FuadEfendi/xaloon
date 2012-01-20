@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -13,6 +15,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.counting.CounterDao;
 import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.wicket.application.page.LayoutWebPage;
@@ -43,6 +46,9 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BlogEntryPanel.class);
 
+	@Inject
+	private CounterDao counterDao;
+	
 	/**
 	 * Construct.
 	 * 
@@ -76,13 +82,20 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 			setResponsePage(getBlogEntryListPageClass());
 			return;
 		}
-
+		
+		//Increment view count of blog entry
+		counterDao.increment("BLOG_ENTRY_VIEW_COUNT", blogEntry.getTrackingCategoryId(), blogEntry.getId());
+		
 		setDefaultModel(new Model<BlogEntry>(blogEntry));
 		DateFormat dateFormat = new SimpleDateFormat(getPluginBean().getDateFormat());
 
 		// Add blog entry title
 		add(new Label("title", new Model<String>(blogEntry.getTitle())));
 
+		//Comment count
+		Long commentCount = commentDao.count(blogEntry);
+		add(new Label("comment-count", new Model<Long>(commentCount)));
+		
 		// Add blog entry create date
 		add(new Label("createDate", new Model<String>(dateFormat.format(blogEntry.getCreateDate()))));
 

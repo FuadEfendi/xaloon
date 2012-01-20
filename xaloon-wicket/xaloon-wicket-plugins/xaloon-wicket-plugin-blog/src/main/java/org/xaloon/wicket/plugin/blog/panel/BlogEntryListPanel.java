@@ -110,6 +110,10 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 				}
 				link.add(new Label("title", new Model<String>(title)));
 
+				//Comment count
+				Long commentCount = commentDao.count(blogEntry);
+				item.add(new Label("comment-count", new Model<Long>(commentCount)));
+				
 				// Add description
 				String description = blogEntry.getDescription();
 				int descriptionLength = blogListOptions.getDescriptionLength();

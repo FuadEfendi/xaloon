@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
+import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
 import org.xaloon.wicket.plugin.blog.BlogFacade;
@@ -57,6 +58,9 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 	@Inject
 	protected BlogFacade blogFacade;
 
+	@Inject
+	protected CommentDao commentDao;
+	
 	@Inject
 	@Named("blogEntryKeyValueDao")
 	protected KeyValueDao<String, String, JpaBlogEntryTag> keyValueDao;

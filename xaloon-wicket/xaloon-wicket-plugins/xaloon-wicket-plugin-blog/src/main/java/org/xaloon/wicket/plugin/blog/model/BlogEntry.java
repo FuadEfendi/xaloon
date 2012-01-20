@@ -124,27 +124,6 @@ public interface BlogEntry extends Commentable, Bookmarkable, Album {
 	ClassifierItem getCategory();
 
 	/**
-	 * Returns how many times blog entry was read.
-	 * 
-	 * @return long value of view count. This is a required element
-	 */
-	Long getViewCount();
-
-	/**
-	 * Returns how many comments has selected blog entry
-	 * 
-	 * @return long value of comments count. This is a required element
-	 */
-	Long getCommentCount();
-
-	/**
-	 * Returns rating of blog entry - how positive blog entry is according readers
-	 * 
-	 * @return long value of blog entry rating. Optional
-	 */
-	Long getRating();
-
-	/**
 	 * Returns list of tags, related to blog entry
 	 * 
 	 * @return empty list if there are no tags added to blog entry

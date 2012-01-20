@@ -69,8 +69,8 @@ public class NewCommentPanel extends AbstractPluginPanel<CommentPluginBean, Comm
 	protected void onInitialize(CommentPlugin plugin, CommentPluginBean pluginBean) {
 		Commentable commentable = (Commentable)getDefaultModelObject();
 		Comment comment = commentDao.newComment();
-		comment.setObjectId(commentable.getId());
-		comment.setComponentId(commentable.getComponentId());
+		comment.setEntityId(commentable.getId());
+		comment.setCategoryId(commentable.getTrackingCategoryId());
 		NewCommentForm newCommentForm = new NewCommentForm("new-comment-form", new CompoundPropertyModel<Comment>(comment));
 		newCommentForm.setAuthorUsername(commentable.getOwnerUsername());
 		add(newCommentForm);

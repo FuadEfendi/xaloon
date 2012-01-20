@@ -24,6 +24,11 @@ import java.util.List;
  */
 public interface CommentDao extends Serializable {
 	/**
+	 * Property for counter to identify that comment count should be incremented
+	 */
+	String COMMENT_COUNT = "comment_count";
+
+	/**
 	 * Save comment to storage
 	 * 
 	 * @param comment

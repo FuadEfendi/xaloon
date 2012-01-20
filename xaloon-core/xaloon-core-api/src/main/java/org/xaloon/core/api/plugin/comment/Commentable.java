@@ -16,21 +16,14 @@
  */
 package org.xaloon.core.api.plugin.comment;
 
-import org.xaloon.core.api.persistence.Persistable;
+import org.xaloon.core.api.counting.Countable;
 
 /**
  * Interface is used to identify the object which is commentable
  * 
  * @author vytautas r.
  */
-public interface Commentable extends Persistable {
-	/**
-	 * Commentable object may have the same id if there are many implementations. Component + id should ensure uniqueness
-	 * 
-	 * @return unique identifier for the same group of commentable objects
-	 */
-	Long getComponentId();
-
+public interface Commentable extends Countable {
 	/**
 	 * Returns the author username of commentable object. This might be required to check if current user is the same as author of commentable object.
 	 * 

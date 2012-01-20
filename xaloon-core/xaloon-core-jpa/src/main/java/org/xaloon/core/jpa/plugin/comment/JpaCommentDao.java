@@ -25,6 +25,7 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.xaloon.core.api.counting.CounterDao;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.plugin.comment.Comment;
@@ -46,8 +47,13 @@ public class JpaCommentDao implements CommentDao {
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
 
+	@Inject
+	private CounterDao counterDao;
+
+
 	@Override
 	public void save(Comment comment) {
+		counterDao.increment(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
 		boolean merge = comment.getFromUser() != null && comment.getFromUser().getId() != null;
 		if (merge) {
 			persistenceServices.edit(comment);
@@ -62,8 +68,8 @@ public class JpaCommentDao implements CommentDao {
 	@Override
 	public List<Comment> getComments(Commentable commentable, int first, int count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select c from " + JpaComment.class.getSimpleName() + " c");
-		queryBuilder.addParameter("c.componentId", "COMPONENT_ID", commentable.getComponentId());
-		queryBuilder.addParameter("c.objectId", "ID", commentable.getId());
+		queryBuilder.addParameter("c.categoryId", "COMPONENT_ID", commentable.getTrackingCategoryId());
+		queryBuilder.addParameter("c.entityId", "ID", commentable.getId());
 		queryBuilder.addParameter("c.enabled", "_ENABLED", true);
 		queryBuilder.setFirstRow(first);
 		queryBuilder.setCount(count);
@@ -79,11 +85,7 @@ public class JpaCommentDao implements CommentDao {
 
 	@Override
 	public Long count(Commentable commentable) {
-		QueryBuilder queryBuilder = new QueryBuilder("select count(c) from " + JpaComment.class.getSimpleName() + " c");
-		queryBuilder.addParameter("c.componentId", "COMPONENT_ID", commentable.getComponentId());
-		queryBuilder.addParameter("c.objectId", "ID", commentable.getId());
-		queryBuilder.addParameter("c.enabled", "_ENABLED", true);
-		return persistenceServices.executeQuerySingle(queryBuilder);
+		return counterDao.count(COMMENT_COUNT, commentable.getTrackingCategoryId(), commentable.getId());
 	}
 
 	@Override
