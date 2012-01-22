@@ -43,7 +43,9 @@ public abstract class AbstractSignInPage extends LayoutWebPage {
 		if (StringUtils.isEmpty(refereUrl)) {
 			HttpServletRequest req = (HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest();
 			refereUrl = req.getHeader("referer");
-			WebSession.get().setMetaData(SignInPanel.METADATAKEY_REFERER, refereUrl);
+			if (!StringUtils.isEmpty(refereUrl) && !refereUrl.contains("login")) {
+				WebSession.get().setMetaData(SignInPanel.METADATAKEY_REFERER, refereUrl);
+			}
 		}
 		return onGetContentPanel(id, pageParameters);
 	}
