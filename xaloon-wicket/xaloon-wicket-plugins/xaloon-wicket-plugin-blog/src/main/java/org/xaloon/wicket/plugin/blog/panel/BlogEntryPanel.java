@@ -1,7 +1,6 @@
 package org.xaloon.wicket.plugin.blog.panel;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +34,8 @@ import org.xaloon.wicket.plugin.image.galleria.panel.GalleriaImagesPanel;
 /**
  * Required PagePamaters:
  * 
- * BlogEntryPanel.BLOG_AUTHOR - username of author BlogEntryPanel.BLOG_PATH - url of encoded title. this would be BlogEntry.getPath();
+ * BlogEntryPanel.BLOG_AUTHOR - username of author BlogEntryPanel.BLOG_PATH -
+ * url of encoded title. this would be BlogEntry.getPath();
  * 
  * 
  */
@@ -48,7 +48,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 
 	@Inject
 	private CounterDao counterDao;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -82,20 +82,21 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 			setResponsePage(getBlogEntryListPageClass());
 			return;
 		}
-		
-		//Increment view count of blog entry
+
+		// Increment view count of blog entry
 		counterDao.increment("BLOG_ENTRY_VIEW_COUNT", blogEntry.getTrackingCategoryId(), blogEntry.getId());
-		
+
 		setDefaultModel(new Model<BlogEntry>(blogEntry));
-		DateFormat dateFormat = new SimpleDateFormat(getPluginBean().getDateFormat());
+		// Create date formatter
+		final DateFormat dateFormat = dateService.getLongDateFormat();
 
 		// Add blog entry title
 		add(new Label("title", new Model<String>(blogEntry.getTitle())));
 
-		//Comment count
+		// Comment count
 		Long commentCount = commentDao.count(blogEntry);
 		add(new Label("comment-count", new Model<Long>(commentCount)));
-		
+
 		// Add blog entry create date
 		add(new Label("createDate", new Model<String>(dateFormat.format(blogEntry.getCreateDate()))));
 
@@ -131,9 +132,8 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		add(new AddThisPanel("add-this-panel"));
 
 		// Add comment plugin
-		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters()).setCommentPageClass(getBlogFacade().getBlogEntrylink(
-			blogEntry)
-			.getKey()));
+		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters())
+				.setCommentPageClass(getBlogFacade().getBlogEntrylink(blogEntry).getKey()));
 
 		// Add tag cloud panel
 		TagCloudPanel<JpaBlogEntryTag> tagCloudPanel = new TagCloudPanel<JpaBlogEntryTag>("tag-cloud-panel", KEY_VALUE_BLOG_TAG) {
@@ -146,7 +146,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 
 		};
 		add(tagCloudPanel);
-		List<JpaBlogEntryTag> tags = (List<JpaBlogEntryTag>)blogEntry.getTags();
+		List<JpaBlogEntryTag> tags = (List<JpaBlogEntryTag>) blogEntry.getTags();
 		tagCloudPanel.setHighlightTagCloudList(tags);
 		tagCloudPanel.setPageClass(BlogEntryListByTagPage.class);
 
@@ -159,39 +159,37 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		if (getParent() instanceof LayoutWebPage) {
-			BlogEntry blogEntry = (BlogEntry)getDefaultModelObject();
+			BlogEntry blogEntry = (BlogEntry) getDefaultModelObject();
 			getParent().addOrReplace(new Label(LayoutWebPage.PAGE_TITLE, new Model<String>(blogEntry.getTitle())));
 			getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_DESCRIPTION, blogEntry.getDescription()));
 			addOrReplaceKeywords(blogEntry);
-			
+
 			if (!blogEntry.getTags().isEmpty()) {
 				Collection<String> keywords = new ArrayList<String>();
 				keywords.add(StringUtils.join(blogEntry.getTags(), SEPARATOR));
-				
-				
-				
+
 			}
 		}
-		
+
 	}
 
 	private void addOrReplaceKeywords(BlogEntry blogEntry) {
 		Collection<Object> keywords = new ArrayList<Object>();
-		
-		//Add title
-		
+
+		// Add title
+
 		splitAndFilterTitle(keywords, blogEntry.getTitle());
-		//Add category if exists
+		// Add category if exists
 		if (blogEntry.getCategory() != null) {
 			keywords.add(blogEntry.getCategory().getName());
 		}
-		
-		//Add tags if exist
+
+		// Add tags if exist
 		if (!blogEntry.getTags().isEmpty()) {
 			keywords.addAll(blogEntry.getTags());
 		}
-		
-		//Add all as single string
+
+		// Add all as single string
 		String keysAsString = StringUtils.join(keywords, SEPARATOR);
 		getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_KEYWORDS, keysAsString));
 	}
