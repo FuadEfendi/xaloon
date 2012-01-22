@@ -1,7 +1,6 @@
 package org.xaloon.wicket.plugin.blog.panel;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,7 +47,7 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 	private static final long serialVersionUID = 1L;
 
 	private BlogListOptions blogListOptions;
-
+	
 	/**
 	 * Construct.
 	 * 
@@ -79,9 +78,10 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 		final DecoratedPagingNavigatorContainer<BlogEntry> dataContainer = new DecoratedPagingNavigatorContainer<BlogEntry>("container",
 			getCurrentRedirectLink());
 		addOrReplace(dataContainer);
+		
 		// Create date formatter
-		final DateFormat dateFormat = new SimpleDateFormat(getPluginBean().getDateFormat());
-
+		final DateFormat dateFormat = dateService.getShortDateFormat();
+		
 		// Add blog list data view
 		final DataView<BlogEntry> blogEntryDataView = new DataView<BlogEntry>("blog-entry-list", getBlogEntryDataProvider()) {
 

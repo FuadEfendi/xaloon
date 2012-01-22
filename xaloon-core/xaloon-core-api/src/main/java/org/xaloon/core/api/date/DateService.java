@@ -14,38 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.blog.panel.admin;
+package org.xaloon.core.api.date;
 
-import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.xaloon.wicket.plugin.admin.AbstractPluginAdministrationPanel;
-import org.xaloon.wicket.plugin.blog.BlogPlugin;
-import org.xaloon.wicket.plugin.blog.BlogPluginBean;
-
+import java.io.Serializable;
+import java.text.DateFormat;
 
 /**
  * @author vytautas r.
  */
-public class BlogPluginAdministrationPanel extends AbstractPluginAdministrationPanel<BlogPluginBean, BlogPlugin> {
+public interface DateService extends Serializable {
 
+	/**
+	 * @return instance of the {@link DateFormat} with short date format
+	 */
+	DateFormat getShortDateFormat();
 
 	/**
 	 * 
+	 * @return instance of the {@link DateFormat} with long date format
 	 */
-	private static final long serialVersionUID = 1L;
+	DateFormat getLongDateFormat();
 
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 */
-	public BlogPluginAdministrationPanel(String id) {
-		super(id);
-	}
-
-	@Override
-	protected void onInitialize(BlogPlugin plugin, BlogPluginBean pluginBean) {
-		add(new RequiredTextField<Integer>("blogImageWidth"));
-		add(new RequiredTextField<Integer>("blogImageHeight"));
-		add(new RequiredTextField<Integer>("blogDescriptionLengthInSentences"));
-	}
 }
