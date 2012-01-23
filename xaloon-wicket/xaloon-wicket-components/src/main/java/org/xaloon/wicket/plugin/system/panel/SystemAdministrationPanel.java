@@ -17,6 +17,7 @@
 package org.xaloon.wicket.plugin.system.panel;
 
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.xaloon.wicket.plugin.admin.AbstractPluginAdministrationPanel;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
 import org.xaloon.wicket.plugin.system.SystemPluginBean;
@@ -43,5 +44,7 @@ public class SystemAdministrationPanel extends AbstractPluginAdministrationPanel
 	@Override
 	protected void onInitialize(SystemPlugin plugin, SystemPluginBean pluginBean) {
 		add(new CheckBox("userRegistrationEnabled"));
+		add(new RequiredTextField<String>("shortDateFormat"));
+		add(new RequiredTextField<String>("longDateFormat"));
 	}
 }
