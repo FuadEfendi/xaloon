@@ -16,8 +16,15 @@
  */
 package org.xaloon.core.jpa.security.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -33,6 +40,52 @@ public class JpaGroup extends AbstractEntity {
 
 	@Column(name = "GROUP_NAME", nullable = false)
 	private String name;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_GROUP_ROLES", joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+	private List<JpaRole> roles = new ArrayList<JpaRole>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_USER_GROUPS", joinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
+	private List<JpaUserDetails> users = new ArrayList<JpaUserDetails>();
+
+	/**
+	 * Gets users.
+	 * 
+	 * @return users
+	 */
+	public List<JpaUserDetails> getUsers() {
+		return users;
+	}
+
+	/**
+	 * Sets users.
+	 * 
+	 * @param users
+	 *            users
+	 */
+	public void setUsers(List<JpaUserDetails> users) {
+		this.users = users;
+	}
+
+	/**
+	 * Gets roles.
+	 * 
+	 * @return roles
+	 */
+	public List<JpaRole> getRoles() {
+		return roles;
+	}
+
+	/**
+	 * Sets roles.
+	 * 
+	 * @param roles
+	 *            roles
+	 */
+	public void setRoles(List<JpaRole> roles) {
+		this.roles = roles;
+	}
 
 	/**
 	 * @return group name

@@ -21,7 +21,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -42,8 +45,13 @@ public class JpaRole extends AbstractEntity {
 	@Column(name = "ROLE_NAME", nullable = false)
 	private String name;
 
-	@OneToMany
-	private List<JpaRoleMembers> users = new ArrayList<JpaRoleMembers>();
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_USER_ROLES", joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
+	private List<JpaUserDetails> users = new ArrayList<JpaUserDetails>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_ROLE_AUTHORITIES", joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"))
+	private List<JpaAuthority> authorities = new ArrayList<JpaAuthority>();
 
 	/**
 	 * @return role name
@@ -64,7 +72,7 @@ public class JpaRole extends AbstractEntity {
 	 * 
 	 * @return users
 	 */
-	public List<JpaRoleMembers> getUsers() {
+	public List<JpaUserDetails> getUsers() {
 		return users;
 	}
 
@@ -74,7 +82,26 @@ public class JpaRole extends AbstractEntity {
 	 * @param users
 	 *            users
 	 */
-	public void setUsers(List<JpaRoleMembers> users) {
+	public void setUsers(List<JpaUserDetails> users) {
 		this.users = users;
+	}
+
+	/**
+	 * Gets authorities.
+	 * 
+	 * @return authorities
+	 */
+	public List<JpaAuthority> getAuthorities() {
+		return authorities;
+	}
+
+	/**
+	 * Sets authorities.
+	 * 
+	 * @param authorities
+	 *            authorities
+	 */
+	public void setAuthorities(List<JpaAuthority> authorities) {
+		this.authorities = authorities;
 	}
 }

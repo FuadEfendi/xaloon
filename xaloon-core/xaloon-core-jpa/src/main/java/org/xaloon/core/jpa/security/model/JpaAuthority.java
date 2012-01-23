@@ -16,8 +16,15 @@
  */
 package org.xaloon.core.jpa.security.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -36,6 +43,29 @@ public class JpaAuthority extends AbstractEntity implements Authority {
 
 	@Column(name = "AUTHORITY", nullable = false)
 	private String authority;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
+	private List<JpaUserDetails> users = new ArrayList<JpaUserDetails>();
+
+	/**
+	 * Gets users.
+	 * 
+	 * @return users
+	 */
+	public List<JpaUserDetails> getUsers() {
+		return users;
+	}
+
+	/**
+	 * Sets users.
+	 * 
+	 * @param users
+	 *            users
+	 */
+	public void setUsers(List<JpaUserDetails> users) {
+		this.users = users;
+	}
 
 	/**
 	 * @return authority

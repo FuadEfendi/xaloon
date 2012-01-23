@@ -16,6 +16,8 @@
  */
 package org.xaloon.wicket.plugin.user;
 
+import java.util.List;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
@@ -209,5 +211,10 @@ public class DefaultUserFacade implements UserFacade {
 	@Override
 	public <T extends User> T newAnonymousUser(T currentUser) {
 		return userDao.newAnonymousUser(currentUser);
+	}
+
+	@Override
+	public List<String> getAuthoritiesByUsername(String username) {
+		return loginService.getAuthoritiesByUsername(username);
 	}
 }

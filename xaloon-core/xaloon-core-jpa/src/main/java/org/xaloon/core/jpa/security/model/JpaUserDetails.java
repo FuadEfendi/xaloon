@@ -69,8 +69,9 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"))
 	private List<JpaAuthority> authorities = new ArrayList<JpaAuthority>();
 
-	@OneToMany
-	private List<JpaRoleMembers> roles = new ArrayList<JpaRoleMembers>();
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_USER_ROLES", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+	private List<JpaRole> roles = new ArrayList<JpaRole>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "XAL_SECURITY_USER_GROUPS", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"))
@@ -171,8 +172,11 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 		this.enabled = enabled;
 	}
 
+
 	/**
-	 * @see UserDetails#getAuthorities()
+	 * Gets authorities.
+	 * 
+	 * @return authorities
 	 */
 	public List<JpaAuthority> getAuthorities() {
 		return authorities;
@@ -218,7 +222,7 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	 * 
 	 * @return roles
 	 */
-	public List<JpaRoleMembers> getRoles() {
+	public List<JpaRole> getRoles() {
 		return roles;
 	}
 
@@ -228,7 +232,7 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	 * @param roles
 	 *            roles
 	 */
-	public void setRoles(List<JpaRoleMembers> roles) {
+	public void setRoles(List<JpaRole> roles) {
 		this.roles = roles;
 	}
 

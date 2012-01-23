@@ -16,7 +16,11 @@
  */
 package org.xaloon.core.jpa.security;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -36,6 +40,8 @@ import org.xaloon.core.api.security.PasswordEncoder;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
+import org.xaloon.core.jpa.security.model.JpaGroup;
+import org.xaloon.core.jpa.security.model.JpaRole;
 import org.xaloon.core.jpa.security.model.JpaUserAlias;
 import org.xaloon.core.jpa.security.model.JpaUserDetails;
 
@@ -79,10 +85,7 @@ public class LocalDatabaseLoginService implements LoginService {
 		JpaUserDetails jpaUserDetails = new JpaUserDetails();
 		jpaUserDetails.setUsername(username);
 		jpaUserDetails.setPassword(encode(username, password));
-		JpaAuthority authority = findRole(SecurityRoles.AUTHENTICATED_USER);
-		if (authority != null) {
-			jpaUserDetails.getAuthorities().add(authority);
-		}
+
 		String activationKey = org.xaloon.core.api.util.KeyFactory.generateKey();
 		jpaUserDetails.setActivationKey(activationKey);
 		jpaUserDetails.setAccountNonLocked(true);
@@ -93,6 +96,7 @@ public class LocalDatabaseLoginService implements LoginService {
 			createAlias(alias, jpaUserDetails);
 		}
 		persistenceServices.create(jpaUserDetails);
+		assignRole(username, SecurityRoles.AUTHENTICATED_USER);
 		return activationKey;
 	}
 
@@ -149,11 +153,11 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public void assignRole(String username, String role) {
+	public void assignRole(String username, String role) {// TODO role or permission?
 		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
 		if (userDetails != null) {
 			JpaAuthority authority = findOrCreateAuthority(role);
-			if (authority != null && !userDetails.getAuthorities().contains(authority)) {
+			if (authority != null && !userDetails.getAuthorities().contains(authority)) {// TODO fix this
 				userDetails.getAuthorities().add(authority);
 				persistenceServices.edit(userDetails);
 			}
@@ -240,5 +244,41 @@ public class LocalDatabaseLoginService implements LoginService {
 		queryBuilder.addParameter("ua.key", "KEY", loginType);
 		queryBuilder.addParameter("ua.value", "VALUE", aliasValue);
 		return persistenceServices.executeQuerySingle(queryBuilder);
+	}
+
+	@Override
+	public List<String> getAuthoritiesByUsername(String username) {
+		List<String> result = new ArrayList<String>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
+		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<String> items = new HashSet<String>();
+		addByAuthorityMember(userDetails.getAuthorities(), items);
+		addByRoleMember(userDetails.getRoles(), items);
+		addByGroupMember(userDetails.getGroups(), items);
+		return new ArrayList<String>(items);
+	}
+
+	private void addByAuthorityMember(List<JpaAuthority> authorities, Set<String> items) {
+		for (JpaAuthority authority : authorities) {
+			items.add(authority.getAuthority());
+		}
+	}
+
+
+	private void addByRoleMember(List<JpaRole> roles, Set<String> items) {
+		for (JpaRole role : roles) {
+			addByAuthorityMember(role.getAuthorities(), items);
+		}
+	}
+
+	private void addByGroupMember(List<JpaGroup> groups, Set<String> items) {
+		for (JpaGroup group : groups) {
+			addByRoleMember(group.getRoles(), items);
+		}
 	}
 }

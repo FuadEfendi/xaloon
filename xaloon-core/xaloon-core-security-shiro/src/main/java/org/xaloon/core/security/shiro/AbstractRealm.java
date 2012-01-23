@@ -18,6 +18,7 @@ package org.xaloon.core.security.shiro;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -92,8 +93,9 @@ public abstract class AbstractRealm extends AuthorizingRealm {
 	}
 
 	protected void addInternalUserRoles(SimpleAuthorizationInfo info, org.xaloon.core.api.security.UserDetails userDetails) {
-		for (Authority authority : userDetails.getAuthorities()) {
-			info.addRole(authority.getAuthority());
+		List<String> authorities = loginService.getAuthoritiesByUsername(userDetails.getUsername());
+		for (String authority : authorities) {
+			info.addRole(authority);//TODO check
 		}
 	}
 }

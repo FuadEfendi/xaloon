@@ -17,6 +17,7 @@
 package org.xaloon.core.api.security;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.xaloon.core.api.keyvalue.KeyValue;
 
@@ -122,4 +123,6 @@ public interface LoginService extends Serializable {
 	 * @return user details object
 	 */
 	UserDetails loadUserDetails(String username);
+
+	List<String> getAuthoritiesByUsername(String username);
 }

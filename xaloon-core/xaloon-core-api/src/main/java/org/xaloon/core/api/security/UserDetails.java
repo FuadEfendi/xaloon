@@ -56,11 +56,6 @@ public interface UserDetails extends Serializable {
 	boolean isEnabled();
 
 	/**
-	 * @return authorities
-	 */
-	List<? extends Authority> getAuthorities();
-
-	/**
 	 * @return list of available user aliases.
 	 */
 	List<? extends KeyValue<String, String>> getAliases();
