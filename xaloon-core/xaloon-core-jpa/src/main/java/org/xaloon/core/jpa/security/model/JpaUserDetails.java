@@ -69,6 +69,13 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"))
 	private List<JpaAuthority> authorities = new ArrayList<JpaAuthority>();
 
+	@OneToMany
+	private List<JpaRoleMembers> roles = new ArrayList<JpaRoleMembers>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "XAL_SECURITY_USER_GROUPS", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"))
+	private List<JpaGroup> groups = new ArrayList<JpaGroup>();
+
 	/**
 	 * @see UserDetails#getUsername()
 	 */
@@ -204,6 +211,44 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	 */
 	public void setAliases(List<JpaUserAlias> aliases) {
 		this.aliases = aliases;
+	}
+
+	/**
+	 * Gets roles.
+	 * 
+	 * @return roles
+	 */
+	public List<JpaRoleMembers> getRoles() {
+		return roles;
+	}
+
+	/**
+	 * Sets roles.
+	 * 
+	 * @param roles
+	 *            roles
+	 */
+	public void setRoles(List<JpaRoleMembers> roles) {
+		this.roles = roles;
+	}
+
+	/**
+	 * Gets groups.
+	 * 
+	 * @return groups
+	 */
+	public List<JpaGroup> getGroups() {
+		return groups;
+	}
+
+	/**
+	 * Sets groups.
+	 * 
+	 * @param groups
+	 *            groups
+	 */
+	public void setGroups(List<JpaGroup> groups) {
+		this.groups = groups;
 	}
 
 	@Override
