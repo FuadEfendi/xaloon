@@ -16,17 +16,12 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
-import javax.annotation.security.RolesAllowed;
-
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.SecurityRoles;
 
 /**
  * @author vytautas r.
  */
-@RolesAllowed({ SecurityRoles.SYSTEM_ADMINISTRATOR })
-public class UserSecurityPanel extends Panel {
+public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 	/**
 	 * 

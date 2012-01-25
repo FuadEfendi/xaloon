@@ -17,12 +17,17 @@
 package org.xaloon.wicket.plugin.user.admin.panel;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
+import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
@@ -45,11 +50,21 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 	public void testGroupPanelAuthorized() throws Exception {
 		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
-		
+
+		// Set security to True by default
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+
+		// Return at least one group
+		when(roleGroupService.getGroupCount()).thenReturn(1);
+
+		SecurityGroup group = mock(SecurityGroup.class);
+		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
+		groups.add(group);
+		when(roleGroupService.getGroupList(0, 1)).thenReturn(groups);
 
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));
 		assertNotNull(tester.getTagByWicketId("security-groups"));
+		assertEquals(1, tester.getTagsByWicketId("name").size());
 	}
 }

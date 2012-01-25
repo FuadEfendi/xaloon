@@ -28,4 +28,12 @@ public interface RoleGroupService extends Serializable {
 
 	List<SecurityGroup> getGroupList(int first, int count);
 
+	List<SecurityRole> getRoleList(int first, int count);
+
+	int getRoleCount();
+
+	SecurityGroup newGroup();
+
+	void saveGroup(SecurityGroup group);
+
 }

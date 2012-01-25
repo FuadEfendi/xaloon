@@ -18,15 +18,27 @@ package org.xaloon.core.jpa.security;
 
 import java.util.List;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.xaloon.core.api.persistence.PersistenceServices;
+import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
+import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.jpa.security.model.JpaGroup;
+import org.xaloon.core.jpa.security.model.JpaRole;
 
 /**
  * @author vytautas r.
  */
 @Named
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class JpaRoleGroupService implements RoleGroupService {
 
 	/**
@@ -34,14 +46,45 @@ public class JpaRoleGroupService implements RoleGroupService {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Inject
+	private PersistenceServices persistenceServices;
+
 	@Override
 	public int getGroupCount() {
-		return 0;
+		QueryBuilder queryBuilder = new QueryBuilder("select count(g) from " + JpaGroup.class.getSimpleName() + " g");
+		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
 	}
 
 	@Override
 	public List<SecurityGroup> getGroupList(int first, int count) {
-		return null;
+		QueryBuilder queryBuilder = new QueryBuilder("select g from " + JpaGroup.class.getSimpleName() + " g");
+		queryBuilder.setCount(count);
+		queryBuilder.setFirstRow(first);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
+	public List<SecurityRole> getRoleList(int first, int count) {
+		QueryBuilder queryBuilder = new QueryBuilder("select g from " + JpaRole.class.getSimpleName() + " g");
+		queryBuilder.setCount(count);
+		queryBuilder.setFirstRow(first);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
+	public int getRoleCount() {
+		QueryBuilder queryBuilder = new QueryBuilder("select count(g) from " + JpaRole.class.getSimpleName() + " g");
+		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
+	}
+
+	@Override
+	public SecurityGroup newGroup() {
+		return new JpaGroup();
+	}
+
+	@Override
+	public void saveGroup(SecurityGroup group) {
+		persistenceServices.create(group);
 	}
 
 }

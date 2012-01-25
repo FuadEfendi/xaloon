@@ -19,15 +19,16 @@
 </head>
 <body>
 <wicket:panel  xmlns:wicket>
-	<h2>Roles security administration</h2>
-	<div wicket:id="container">
-		<wicket:container wicket:id="security-roles">
-			<div wicket:id="name"></div>
-		</wicket:container>
+	<h2>New group</h2>
+	<form wicket:id="new-group">
+		<div wicket:id="feedback"></div>
 		<div>
-			<span wicket:id="navigator"></span>
+			<input type="text" wicket:id="name"/>
 		</div>
-	</div>
+		<div>
+			<input type="button" value="Save group" wicket:id="submit"/>
+		</div>
+	</form>
 </wicket:panel>
 </body>
 </html>

@@ -16,19 +16,31 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
+import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
+import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
 /**
  * @author vytautas r.
  */
-public class RolesPanelTest extends TestCase {
+public class RolesPanelTest extends AbstractUserAdminTestCase {
+
+	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
 		try {
@@ -39,11 +51,25 @@ public class RolesPanelTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPanelAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
+
+		// Set security to True by default
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
+		// Return at least one role
+		when(roleGroupService.getRoleCount()).thenReturn(1);
+
+		SecurityRole role = mock(SecurityRole.class);
+		List<SecurityRole> roles = new ArrayList<SecurityRole>();
+		roles.add(role);
+		when(roleGroupService.getRoleList(0, 1)).thenReturn(roles);
+
 		tester.startComponentInPage(new RolesPanel("id", new PageParameters()));
+		assertNotNull(tester.getTagByWicketId("container"));
+		assertNotNull(tester.getTagByWicketId("security-roles"));
+		assertEquals(1, tester.getTagsByWicketId("name").size());
 	}
 }

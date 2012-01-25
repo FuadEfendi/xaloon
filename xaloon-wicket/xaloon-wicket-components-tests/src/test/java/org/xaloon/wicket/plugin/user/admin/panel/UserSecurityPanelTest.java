@@ -16,19 +16,22 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import junit.framework.TestCase;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
+import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
 /**
  * @author vytautas r.
  */
-public class UserSecurityPanelTest extends TestCase {
+public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
+	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
 		try {
@@ -39,8 +42,9 @@ public class UserSecurityPanelTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPanelAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 

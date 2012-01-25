@@ -18,9 +18,12 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 
 import java.util.Iterator;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -30,9 +33,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
-import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
 import org.xaloon.wicket.plugin.system.SystemPluginBean;
 import org.xaloon.wicket.plugin.user.admin.page.GroupsPage;
@@ -41,8 +43,7 @@ import org.xaloon.wicket.util.Link;
 /**
  * @author vytautas r.
  */
-@RolesAllowed({ SecurityRoles.SYSTEM_ADMINISTRATOR })
-public class GroupsPanel extends AbstractPluginPanel<SystemPluginBean, SystemPlugin> {
+public class GroupsPanel extends AbstractAdministrationPanel {
 
 	/**
 	 * 
@@ -67,6 +68,7 @@ public class GroupsPanel extends AbstractPluginPanel<SystemPluginBean, SystemPlu
 		// Add paging navigation container with navigation toolbar
 		final DecoratedPagingNavigatorContainer<SecurityGroup> dataContainer = new DecoratedPagingNavigatorContainer<SecurityGroup>("container",
 			getCurrentRedirectLink());
+		dataContainer.setOutputMarkupId(true);
 		addOrReplace(dataContainer);
 
 		// Add blog list data view
@@ -81,6 +83,28 @@ public class GroupsPanel extends AbstractPluginPanel<SystemPluginBean, SystemPlu
 
 		};
 		dataContainer.addAbstractPageableView(securityGroupDataView);
+
+		// Add the modal window to create new group
+		final ModalWindow addNewGroupModalWindow = new CustomModalWindow("modal-new-group", "New group") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return dataContainer;
+			}
+		};
+		addNewGroupModalWindow.setContent(new NewGroupPanel(addNewGroupModalWindow.getContentId()).setModalWindow(addNewGroupModalWindow));
+		add(addNewGroupModalWindow);
+
+		// add new group link
+		add(new AjaxLink<Void>("add-new-group") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				addNewGroupModalWindow.show(target);
+			}
+		});
 	}
 
 	protected Link getCurrentRedirectLink() {

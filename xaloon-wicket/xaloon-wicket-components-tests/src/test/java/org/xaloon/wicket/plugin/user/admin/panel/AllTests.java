@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ GroupsPanelTest.class, RolesPanelTest.class, UserSecurityPanelTest.class })
+@SuiteClasses({ GroupsPanelTest.class, RolesPanelTest.class, UserSecurityPanelTest.class, NewGroupPanelTest.class })
 public class AllTests {
 
 }
