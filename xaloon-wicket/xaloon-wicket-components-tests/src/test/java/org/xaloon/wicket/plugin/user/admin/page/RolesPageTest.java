@@ -14,33 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.user.admin.panel;
+package org.xaloon.wicket.plugin.user.admin.page;
 
-import javax.annotation.security.RolesAllowed;
+import static org.mockito.Mockito.when;
+import junit.framework.TestCase;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.WicketTester;
 import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.wicket.component.test.MockedApplication;
 
 /**
  * @author vytautas r.
  */
-@RolesAllowed({ SecurityRoles.SYSTEM_ADMINISTRATOR })
-public class UserSecurityPanel extends Panel {
+public class RolesPageTest extends TestCase {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	public void testPage() throws Exception {
+		MockedApplication app = new MockedApplication();
 
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 * @param parameters
-	 */
-	public UserSecurityPanel(String id, PageParameters parameters) {
-		super(id);
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
+				.thenReturn(true);
+
+		WicketTester tester = new WicketTester(app);
+		tester.startPage(RolesPage.class);
+		tester.assertRenderedPage(RolesPage.class);
 	}
-
 }
