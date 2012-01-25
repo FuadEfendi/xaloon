@@ -16,35 +16,40 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import junit.framework.TestCase;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
+import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
 /**
  * @author vytautas r.
  */
-public class GroupsPanelTest extends TestCase {
+public class GroupsPanelTest extends AbstractUserAdminTestCase {
+	@Test
 	public void testGroupPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
 		try {
 			tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
-			fail();
 		} catch (UnauthorizedInstantiationException e) {
 			assertEquals("Not authorized to instantiate class org.xaloon.wicket.plugin.user.admin.panel.GroupsPanel", e.getMessage());
 		}
 	}
 
+	@Test
 	public void testGroupPanelAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
 		
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
+		assertNotNull(tester.getTagByWicketId("container"));
+		assertNotNull(tester.getTagByWicketId("security-groups"));
 	}
 }

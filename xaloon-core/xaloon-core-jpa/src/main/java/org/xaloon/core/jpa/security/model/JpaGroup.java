@@ -28,6 +28,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.jpa.model.AbstractEntity;
 
 /**
@@ -35,7 +36,7 @@ import org.xaloon.core.jpa.model.AbstractEntity;
  */
 @Entity
 @Table(name = "XAL_SECURITY_GROUP", uniqueConstraints = @UniqueConstraint(columnNames = { "GROUP_NAME" }))
-public class JpaGroup extends AbstractEntity {
+public class JpaGroup extends AbstractEntity implements SecurityGroup {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "GROUP_NAME", nullable = false)

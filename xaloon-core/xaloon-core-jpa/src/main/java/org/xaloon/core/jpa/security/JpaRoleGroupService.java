@@ -14,30 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.user.admin.page;
+package org.xaloon.core.jpa.security;
 
-import static org.mockito.Mockito.when;
+import java.util.List;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-import org.xaloon.core.api.security.SecurityRoles;
-import org.xaloon.wicket.component.test.MockedApplication;
-import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
+import javax.inject.Named;
+
+import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.SecurityGroup;
 
 /**
  * @author vytautas r.
  */
-public class GroupsPageTest extends AbstractUserAdminTestCase {
+@Named
+public class JpaRoleGroupService implements RoleGroupService {
 
-	@Test
-	public void testGroupPage() throws Exception {
-		MockedApplication app = createMockedApplication();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
-				.thenReturn(true);
-
-		WicketTester tester = new WicketTester(app);
-		tester.startPage(GroupsPage.class);
-		tester.assertRenderedPage(GroupsPage.class);
+	@Override
+	public int getGroupCount() {
+		return 0;
 	}
+
+	@Override
+	public List<SecurityGroup> getGroupList(int first, int count) {
+		return null;
+	}
+
 }

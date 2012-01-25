@@ -26,6 +26,7 @@ import org.apache.wicket.injection.Injector;
 import org.xaloon.core.api.annotation.AnnotatedMatcher;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.plugin.PluginLoader;
+import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
@@ -45,6 +46,8 @@ public class MockedApplication extends AuthenticatedWebApplication {
 
 	private SecurityFacade securityFacade = mock(SecurityFacade.class);
 	
+	private PluginRegistry pluginRegistry = mock(PluginRegistry.class);
+	
 	public MockedApplication() {
 		DynamicMenuMountScannerListener dynamicMenuMountScannerListener = mock(DynamicMenuMountScannerListener.class);
 		mockedServices.put(DynamicMenuMountScannerListener.class.getName(), dynamicMenuMountScannerListener);
@@ -55,6 +58,7 @@ public class MockedApplication extends AuthenticatedWebApplication {
 		CategoryGroupPluginRegistryListener categoryGroupPluginRegistryListener = mock(CategoryGroupPluginRegistryListener.class);
 		mockedServices.put(CategoryGroupPluginRegistryListener.class.getName(), categoryGroupPluginRegistryListener);
 
+		mockedServices.put(PluginRegistry.class.getName(), pluginRegistry);
 		
 		mockedServices.put(SecurityFacade.class.getName(), securityFacade);
 
@@ -72,6 +76,10 @@ public class MockedApplication extends AuthenticatedWebApplication {
 
 		LayoutComponentInitializer layoutComponentInitializer = mock(LayoutComponentInitializer.class);
 		mockedServices.put(LayoutComponentInitializer.class.getName(), layoutComponentInitializer);
+	}
+	
+	@Override
+	protected void initMarkupSettings() {
 	}
 	
 	@Override
@@ -107,5 +115,12 @@ public class MockedApplication extends AuthenticatedWebApplication {
 	 */
 	public SecurityFacade getSecurityFacade() {
 		return securityFacade;
+	}
+
+	/**
+	 * @return the pluginRegistry
+	 */
+	public PluginRegistry getPluginRegistry() {
+		return pluginRegistry;
 	}
 }
