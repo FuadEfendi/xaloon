@@ -14,6 +14,7 @@
 		<module>xaloon-wicket-components-resources</module>
 		<module>xaloon-wicket-components-spring</module>
 		<module>xaloon-wicket-components-jee</module>
+		<module>xaloon-wicket-components-tests</module>
 		<module>xaloon-wicket-plugins</module>
 		<module>xaloon-wicket-profiles</module>
 	</modules>

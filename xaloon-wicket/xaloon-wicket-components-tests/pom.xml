@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>xaloon-wicket-parent</artifactId>
@@ -12,4 +13,51 @@
 	<description>
 		wicket components junit tests
 	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<artifactId>xaloon-wicket-components</artifactId>
+			<groupId>org.xaloon.wicket</groupId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<artifactId>xaloon-wicket-components-resources</artifactId>
+			<groupId>org.xaloon.wicket</groupId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- jqWicket -->
+		<dependency>
+			<groupId>com.google.code.jqwicket</groupId>
+			<artifactId>jqwicket</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- needs extra dependencies: objenesis & hamcrest TODO move to root pom -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
