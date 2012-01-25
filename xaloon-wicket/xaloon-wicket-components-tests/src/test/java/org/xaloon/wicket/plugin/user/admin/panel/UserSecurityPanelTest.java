@@ -29,11 +29,11 @@ import org.xaloon.wicket.component.test.MockedApplication;
  * @author vytautas r.
  */
 public class UserSecurityPanelTest extends TestCase {
+	private MockedApplication app = new MockedApplication();
+
+	private WicketTester tester = new WicketTester(app);
 
 	public void testPanelNotAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
-
-		WicketTester tester = new WicketTester(app);
 		try {
 			tester.startComponentInPage(new UserSecurityPanel("id", new PageParameters()));
 			fail();
@@ -43,12 +43,8 @@ public class UserSecurityPanelTest extends TestCase {
 	}
 
 	public void testPanelAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
-				.thenReturn(true);
-
-		WicketTester tester = new WicketTester(app);
 		tester.startComponentInPage(new UserSecurityPanel("id", new PageParameters()));
 	}
 }

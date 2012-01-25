@@ -30,10 +30,12 @@ import org.xaloon.wicket.component.test.MockedApplication;
  */
 public class GroupsPanelTest extends TestCase {
 
-	public void testGroupPanelNotAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+	private MockedApplication app = new MockedApplication();
 
-		WicketTester tester = new WicketTester(app);
+	private WicketTester tester = new WicketTester(app);
+
+	public void testGroupPanelNotAuthorized() throws Exception {
+
 		try {
 			tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
 			fail();
@@ -43,12 +45,8 @@ public class GroupsPanelTest extends TestCase {
 	}
 
 	public void testGroupPanelAuthorized() throws Exception {
-		MockedApplication app = new MockedApplication();
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
-				.thenReturn(true);
-
-		WicketTester tester = new WicketTester(app);
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
 	}
 }
