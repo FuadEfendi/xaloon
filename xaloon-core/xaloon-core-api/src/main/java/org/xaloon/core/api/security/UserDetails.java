@@ -59,4 +59,6 @@ public interface UserDetails extends Serializable {
 	 * @return list of available user aliases.
 	 */
 	List<? extends KeyValue<String, String>> getAliases();
+
+	<T extends SecurityGroup> List<T> getGroups();
 }

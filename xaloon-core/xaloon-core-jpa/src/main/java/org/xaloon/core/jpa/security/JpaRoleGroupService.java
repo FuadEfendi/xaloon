@@ -28,9 +28,11 @@ import javax.inject.Named;
 import org.xaloon.core.api.persistence.Persistable;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.core.jpa.security.model.JpaRole;
 
@@ -49,6 +51,9 @@ public class JpaRoleGroupService implements RoleGroupService {
 
 	@Inject
 	private PersistenceServices persistenceServices;
+
+	@Inject
+	private LoginService loginService;
 
 	@Override
 	public int getGroupCount() {
@@ -107,4 +112,10 @@ public class JpaRoleGroupService implements RoleGroupService {
 		return persistenceServices.executeQuery(queryBuilder);
 	}
 
+	@Override
+	public <T extends SecurityGroup> void assignGroups(String username, List<T> selections) {
+		UserDetails details = loginService.loadUserDetails(username);
+		details.getGroups().addAll(selections);
+		persistenceServices.edit(details);
+	}
 }

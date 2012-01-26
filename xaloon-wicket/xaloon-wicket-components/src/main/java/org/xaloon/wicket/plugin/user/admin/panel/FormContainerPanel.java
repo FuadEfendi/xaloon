@@ -14,35 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.security;
+package org.xaloon.wicket.plugin.user.admin.panel;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.xaloon.core.api.persistence.Persistable;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * @author vytautas r.
  */
-public interface RoleGroupService extends Serializable {
+public class FormContainerPanel extends Panel {
 
-	int getGroupCount();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	List<SecurityGroup> getGroupList(int first, int count);
+	private Form form;
 
-	List<SecurityRole> getRoleList(int first, int count);
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public FormContainerPanel(String id) {
+		super(id);
+	}
 
-	int getRoleCount();
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		addOrReplace(form);
+	}
 
-	SecurityGroup newGroup();
+	/**
+	 * Sets form.
+	 * 
+	 * @param form
+	 *            form
+	 */
+	public void setForm(Form form) {
+		this.form = form;
+	}
 
-	<T extends Persistable> void save(T entity);
 
-	SecurityRole newRole();
-
-	List<SecurityRole> getRolesByUsername(String username);
-
-	List<SecurityGroup> getGroupsByUsername(String username);
-
-	<T extends SecurityGroup> void assignGroups(String username, List<T> selections);
 }

@@ -28,6 +28,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.jpa.model.AbstractEntity;
 
@@ -100,5 +102,24 @@ public class JpaGroup extends AbstractEntity implements SecurityGroup {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof JpaGroup)) {
+			return false;
+		}
+		JpaGroup entity = (JpaGroup)obj;
+
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(getName(), entity.getName());
+		return equalsBuilder.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(getName());
+		return hashCodeBuilder.hashCode();
 	}
 }

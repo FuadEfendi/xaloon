@@ -27,11 +27,11 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -103,10 +103,10 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 		// Add user groups
 		List<SecurityGroup> userGroups = roleGroupService.getGroupsByUsername(username);
-		addGroups(userGroups);
+		addGroups(userGroups, userDetails);
 	}
 
-	private void addGroups(List<SecurityGroup> userGroups) {
+	private void addGroups(List<SecurityGroup> userGroups, final UserDetails details) {
 		// Add the modal window to assign a group
 		final ModalWindow addGroupModalWindow = new CustomModalWindow("modal-assign-group", "Assign group") {
 			private static final long serialVersionUID = 1L;
@@ -117,22 +117,49 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			}
 		};
 
-		Panel panel = new EmptyPanel(addGroupModalWindow.getContentId());
+		FormContainerPanel formContainerPanel = new FormContainerPanel(addGroupModalWindow.getContentId());
+		final List<SecurityGroup> selections = details.getGroups();
+		List<SecurityGroup> availableSecurityGroups = roleGroupService.getGroupList(0, -1);
+		availableSecurityGroups.removeAll(selections);
+
 		Form form = new Form("form");
-		form.add(new GroupsPanel("inner-panel", getPageRequestParameters()));
+		formContainerPanel.setForm(form);
+
+		CheckBoxMultipleChoice choices = new CheckBoxMultipleChoice("choices", Model.of(selections), availableSecurityGroups,
+			new IChoiceRenderer<SecurityGroup>() {
+
+				@Override
+				public Object getDisplayValue(SecurityGroup object) {
+					return object.getName();
+				}
+
+				@Override
+				public String getIdValue(SecurityGroup object, int index) {
+					return object.getId().toString();
+				}
+			});
+		form.add(choices);
 		form.add(new AjaxButton("submit") {
+
+			/**
+			 * 
+			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println("test" + selections.size());
+				roleGroupService.assignGroups(details.getUsername(), selections);
+				addGroupModalWindow.close(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 			}
+
 		});
 
-		addGroupModalWindow.setContent(panel);
+		addGroupModalWindow.setContent(formContainerPanel);
 		add(addGroupModalWindow);
 		// Add assign group link
 		add(new AjaxLink<Void>("assign-group") {

@@ -112,8 +112,8 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public String getFullNameForUser(String username) {
-		QueryBuilder query = new QueryBuilder("select firstName, lastName from " + JpaUser.class.getSimpleName());
-		query.addParameter("username", "USERNAME", username);
+		QueryBuilder query = new QueryBuilder("select u.firstName, u.lastName from " + JpaUser.class.getSimpleName() + " u ");
+		query.addParameter("u.username", "USERNAME", username);
 		Object[] queryResult = persistenceServices.executeQuerySingle(query);
 		if (queryResult != null && queryResult.length == 2) {
 			StringBuilder fullName = new StringBuilder((String)queryResult[1]);

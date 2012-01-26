@@ -19,30 +19,11 @@
 </head>
 <body>
 <wicket:panel  xmlns:wicket>
-	<h2>Users</h2>
-	<div wicket:id="container">
-		<table>
-			<tr>
-				<td style="width:150px;">username</td>
-				<td>enabled</td>
-				<td>account not expired</td>
-				<td>account not locked</td>
-				<td>credentials not expired</td>
-			</tr>
-			<tr wicket:id="security-users">
-				<td>
-					<a href="#" wicket:id="details-link"><span wicket:id="username"/></a>
-				</td>
-				<td><input type="checkbox" wicket:id="accountEnabled"/></td>
-				<td><input type="checkbox" wicket:id="accountNonExpired"/></td>
-				<td><input type="checkbox" wicket:id="accountNonLocked"/></td>
-				<td><input type="checkbox" wicket:id="credentialsNonExpired"/></td>
-			</tr>
-		</table>
-		<div>
-			<span wicket:id="navigator"></span>
-		</div>
-	</div>
+	<h2>Selection</h2>
+	<form wicket:id="form">
+         <div wicket:id="choices">choices</div>
+         <input type="submit" value="submit" wicket:id="submit"/>
+     </form>	
 </wicket:panel>
 </body>
 </html>
