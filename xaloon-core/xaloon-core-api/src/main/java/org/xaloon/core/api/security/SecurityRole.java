@@ -16,11 +16,11 @@
  */
 package org.xaloon.core.api.security;
 
-import java.io.Serializable;
+import org.xaloon.core.api.persistence.Persistable;
 
 /**
  * @author vytautas r.
  */
-public interface SecurityRole extends Serializable {
+public interface SecurityRole extends Persistable {
 	String getName();
 }

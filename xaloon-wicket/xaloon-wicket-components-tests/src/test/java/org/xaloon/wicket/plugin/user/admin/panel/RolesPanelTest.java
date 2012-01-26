@@ -19,7 +19,6 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,11 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.jpa.security.model.JpaRole;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -66,10 +69,41 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 		List<SecurityRole> roles = new ArrayList<SecurityRole>();
 		roles.add(role);
 		when(roleGroupService.getRoleList(0, 1)).thenReturn(roles);
-
+		
+		SecurityRole securityRole = new JpaRole();
+		when(roleGroupService.newRole()).thenReturn(securityRole);
+		
 		tester.startComponentInPage(new RolesPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));
 		assertNotNull(tester.getTagByWicketId("security-roles"));
 		assertEquals(1, tester.getTagsByWicketId("name").size());
+
+		// Test creating new role
+		tester.clickLink("id:add-new-role");
+		tester.assertNoErrorMessage();
+
+		// Get the modal window and submit the form
+		ModalWindow modal = (ModalWindow) tester.getComponentFromLastRenderedPage("id:modal-new-role");
+		tester.isVisible(modal.getPageRelativePath());
+		
+		//Close and re-open modal window
+		closeModalWindow(modal, tester);
+		tester.clickLink("id:add-new-role");
+		tester.assertNoErrorMessage();
+		modal = (ModalWindow) tester.getComponentFromLastRenderedPage("id:modal-new-role");
+		
+		//Take the form
+		String modalPath = modal.getPageRelativePath() + ":" + modal.getContentId();
+		String formPath = modalPath + ":new-entity";
+		FormTester form = tester.newFormTester(formPath);
+		form.setValue("name", "testValue");
+
+		// Submit ajax form
+		tester.executeAjaxEvent(formPath + ":submit", "onclick");
+
+		// Validate result
+		tester.assertNoErrorMessage();
+
+		Assert.assertEquals("testValue", securityRole.getName());
 	}
 }

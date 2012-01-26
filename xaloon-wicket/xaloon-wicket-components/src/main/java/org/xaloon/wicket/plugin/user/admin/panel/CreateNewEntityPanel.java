@@ -16,48 +16,44 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
-import javax.inject.Inject;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.xaloon.core.api.security.RoleGroupService;
-import org.xaloon.core.api.security.SecurityGroup;
+import org.apache.wicket.model.Model;
 
 
 /**
  * @author vytautas r.
+ * @param <T>
+ *            group/role
  */
-public class NewGroupPanel extends AbstractAdministrationPanel {
+public abstract class CreateNewEntityPanel<T> extends Panel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Inject
-	private RoleGroupService roleGroupService;
-
-	private ModalWindow modalWindow;
-
 	/**
 	 * Construct.
 	 * 
 	 * @param id
+	 * @param model
 	 */
-	public NewGroupPanel(String id) {
-		super(id);
+	public CreateNewEntityPanel(String id, Model<?> model) {
+		super(id, model);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
 
-		Form<SecurityGroup> groupForm = new Form<SecurityGroup>("new-group", new CompoundPropertyModel<SecurityGroup>(roleGroupService.newGroup()));
+		Form<T> groupForm = new Form<T>("new-entity", new CompoundPropertyModel<T>((T)getDefaultModel()));
 		add(groupForm);
 
 		// Add feedback panel
@@ -78,10 +74,10 @@ public class NewGroupPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				SecurityGroup group = (SecurityGroup)form.getModelObject();
-				roleGroupService.saveGroup(group);
-				modalWindow.close(target);
+				T entity = (T)form.getModelObject();
+				onNewEntitySubmit(target, entity);
 			}
+
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
@@ -91,15 +87,5 @@ public class NewGroupPanel extends AbstractAdministrationPanel {
 		});
 	}
 
-	/**
-	 * Sets modalWindow.
-	 * 
-	 * @param modalWindow
-	 *            modalWindow
-	 * @return
-	 */
-	public NewGroupPanel setModalWindow(ModalWindow modalWindow) {
-		this.modalWindow = modalWindow;
-		return this;
-	}
+	protected abstract void onNewEntitySubmit(AjaxRequestTarget target, T entity);
 }

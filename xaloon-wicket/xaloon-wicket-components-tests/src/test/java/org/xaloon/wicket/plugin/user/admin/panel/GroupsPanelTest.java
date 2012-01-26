@@ -16,7 +16,8 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,11 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -61,10 +66,42 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
 		groups.add(group);
 		when(roleGroupService.getGroupList(0, 1)).thenReturn(groups);
-
+		SecurityGroup securityGroup = new JpaGroup();
+		when(roleGroupService.newGroup()).thenReturn(securityGroup);
+		
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
+
+		// Test if there are any items displayed
 		assertNotNull(tester.getTagByWicketId("container"));
 		assertNotNull(tester.getTagByWicketId("security-groups"));
 		assertEquals(1, tester.getTagsByWicketId("name").size());
+
+		// Test creating new group
+		tester.clickLink("id:add-new-group");
+		tester.assertNoErrorMessage();
+
+		//Get the modal window and submit the form
+		ModalWindow modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-group");
+		tester.isVisible(modal.getPageRelativePath());
+		String modalPath = modal.getPageRelativePath() + ":" + modal.getContentId();
+		
+		//Close and re-open form
+		closeModalWindow(modal, tester);
+		tester.clickLink("id:add-new-group");
+		tester.assertNoErrorMessage();
+		modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-group");
+		
+		//Submit the form
+		String formPath = modalPath + ":new-entity";
+		FormTester form = tester.newFormTester(formPath);
+		form.setValue("name", "testValue");
+		
+		// Submit ajax form
+		tester.executeAjaxEvent(formPath + ":submit", "onclick");
+
+		// Validate result
+		tester.assertNoErrorMessage();
+		
+		Assert.assertEquals("testValue", securityGroup.getName());
 	}
 }

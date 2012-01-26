@@ -25,6 +25,7 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.xaloon.core.api.persistence.Persistable;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.security.RoleGroupService;
@@ -83,8 +84,13 @@ public class JpaRoleGroupService implements RoleGroupService {
 	}
 
 	@Override
-	public void saveGroup(SecurityGroup group) {
-		persistenceServices.create(group);
+	public <T extends Persistable> void save(T entity) {
+		persistenceServices.create(entity);
+	}
+
+	@Override
+	public SecurityRole newRole() {
+		return new JpaRole();
 	}
 
 }

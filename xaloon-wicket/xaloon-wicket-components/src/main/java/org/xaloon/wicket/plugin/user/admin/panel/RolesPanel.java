@@ -20,6 +20,10 @@ import java.util.Iterator;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -29,9 +33,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
-import org.xaloon.wicket.plugin.system.SystemPlugin;
-import org.xaloon.wicket.plugin.system.SystemPluginBean;
 import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
 import org.xaloon.wicket.util.Link;
 
@@ -56,10 +59,14 @@ public class RolesPanel extends AbstractAdministrationPanel {
 	 */
 	public RolesPanel(String id, PageParameters parameters) {
 		super(id);
+		setOutputMarkupId(true);
 	}
 
 	@Override
-	protected void onInitialize(SystemPlugin plugin, SystemPluginBean pluginBean) {
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		removeAll();
+
 		// Add paging navigation container with navigation toolbar
 		final DecoratedPagingNavigatorContainer<SecurityRole> dataContainer = new DecoratedPagingNavigatorContainer<SecurityRole>("container",
 			getCurrentRedirectLink());
@@ -77,6 +84,37 @@ public class RolesPanel extends AbstractAdministrationPanel {
 
 		};
 		dataContainer.addAbstractPageableView(securityGroupDataView);
+
+		// Add the modal window to create new group
+		final ModalWindow addNewGroupModalWindow = new CustomModalWindow("modal-new-role", "New role") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return RolesPanel.this;
+			}
+		};
+		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityRole>(addNewGroupModalWindow.getContentId(), new Model<SecurityRole>(
+			roleGroupService.newRole())) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onNewEntitySubmit(AjaxRequestTarget target, SecurityRole entity) {
+				roleGroupService.save(entity);
+				addNewGroupModalWindow.close(target);
+			}
+		});
+		add(addNewGroupModalWindow);
+
+		// add new group link
+		add(new AjaxLink<Void>("add-new-role") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				addNewGroupModalWindow.show(target);
+			}
+		});
 	}
 
 	protected Link getCurrentRedirectLink() {

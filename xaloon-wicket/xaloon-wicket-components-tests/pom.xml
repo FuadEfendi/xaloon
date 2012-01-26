@@ -28,6 +28,12 @@
 		</dependency>
 
 		<dependency>
+			<artifactId>xaloon-core-jpa</artifactId>
+			<groupId>org.xaloon.core</groupId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<artifactId>xaloon-wicket-components</artifactId>
 			<groupId>org.xaloon.wicket</groupId>
 			<version>${project.version}</version>

@@ -3,6 +3,11 @@ package org.xaloon.wicket.plugin.user.admin;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.util.tester.WicketTester;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
@@ -21,5 +26,16 @@ public abstract class AbstractUserAdminTestCase {
 		when(app.getPluginRegistry().isEnabled(SystemPlugin.class)).thenReturn(true);
 		
 		return app;
+	}
+	
+	protected void closeModalWindow(ModalWindow modal, WicketTester tester) {
+		for (Behavior behavior : modal.getBehaviors()) {
+			if (behavior instanceof AbstractDefaultAjaxBehavior) {
+					String name = behavior.getClass().getSimpleName();
+					if (name.startsWith("WindowClosedBehavior")) {
+						tester.executeBehavior((AbstractAjaxBehavior)behavior);
+					}
+			}
+		}
 	}
 }

@@ -42,5 +42,4 @@ public abstract class AbstractAdministrationPanel extends AbstractPluginPanel<Sy
 	public AbstractAdministrationPanel(String id) {
 		super(id);
 	}
-
 }

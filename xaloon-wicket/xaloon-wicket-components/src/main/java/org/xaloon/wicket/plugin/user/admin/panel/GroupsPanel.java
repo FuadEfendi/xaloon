@@ -35,8 +35,6 @@ import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
-import org.xaloon.wicket.plugin.system.SystemPlugin;
-import org.xaloon.wicket.plugin.system.SystemPluginBean;
 import org.xaloon.wicket.plugin.user.admin.page.GroupsPage;
 import org.xaloon.wicket.util.Link;
 
@@ -61,10 +59,14 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 	 */
 	public GroupsPanel(String id, PageParameters parameters) {
 		super(id);
+		setOutputMarkupId(true);
 	}
 
 	@Override
-	protected void onInitialize(SystemPlugin plugin, SystemPluginBean pluginBean) {
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		removeAll();
+
 		// Add paging navigation container with navigation toolbar
 		final DecoratedPagingNavigatorContainer<SecurityGroup> dataContainer = new DecoratedPagingNavigatorContainer<SecurityGroup>("container",
 			getCurrentRedirectLink());
@@ -90,10 +92,19 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected Component getOnCloseComponent() {
-				return dataContainer;
+				return GroupsPanel.this;
 			}
 		};
-		addNewGroupModalWindow.setContent(new NewGroupPanel(addNewGroupModalWindow.getContentId()).setModalWindow(addNewGroupModalWindow));
+		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityGroup>(addNewGroupModalWindow.getContentId(), new Model<SecurityGroup>(
+			roleGroupService.newGroup())) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onNewEntitySubmit(AjaxRequestTarget target, SecurityGroup entity) {
+				roleGroupService.save(entity);
+				addNewGroupModalWindow.close(target);
+			}
+		});
 		add(addNewGroupModalWindow);
 
 		// add new group link
@@ -106,6 +117,7 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 			}
 		});
 	}
+
 
 	protected Link getCurrentRedirectLink() {
 		return new Link(GroupsPage.class, getPageRequestParameters());
