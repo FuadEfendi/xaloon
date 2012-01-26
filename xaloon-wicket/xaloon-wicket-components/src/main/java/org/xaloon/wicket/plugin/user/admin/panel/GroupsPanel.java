@@ -58,7 +58,7 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 	 * @param parameters
 	 */
 	public GroupsPanel(String id, PageParameters parameters) {
-		super(id);
+		super(id, parameters);
 		setOutputMarkupId(true);
 	}
 

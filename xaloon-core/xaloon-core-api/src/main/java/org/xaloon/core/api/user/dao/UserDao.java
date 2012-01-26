@@ -34,7 +34,7 @@ public interface UserDao extends Serializable {
 	 * @return user instance found in database
 	 */
 	<T extends User> T getUserByUsername(String username);
-	
+
 	/**
 	 * @param email
 	 * @return user instance found in database
@@ -60,4 +60,13 @@ public interface UserDao extends Serializable {
 	 * @return new instance of anonymous user
 	 */
 	<T extends User> T newAnonymousUser(T currentUser);
+
+	/**
+	 * Concatenates first and last name into single string and returns it as a full user name
+	 * 
+	 * @param username
+	 *            username to lookup for a full name
+	 * @return concatenated first and last name for provided username
+	 */
+	String getFullNameForUser(String username);
 }

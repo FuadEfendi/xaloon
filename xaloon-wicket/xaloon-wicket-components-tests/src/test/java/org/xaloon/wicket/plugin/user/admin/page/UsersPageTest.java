@@ -16,24 +16,28 @@
  */
 package org.xaloon.wicket.plugin.user.admin.page;
 
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.wicket.component.mount.annotation.MountPage;
-import org.xaloon.wicket.plugin.user.admin.panel.UserSecurityPanel;
+import static org.mockito.Mockito.when;
+
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
+import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.wicket.component.test.MockedApplication;
+import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/user-details/${" + UsersPage.PARAM_USER_ID + "}", order = 10, visible = false)
-public class UserSecurityPage extends SecurityGroupPage {
+public class UsersPageTest extends AbstractUserAdminTestCase {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	@Test
+	public void testPage() throws Exception {
+		MockedApplication app = createMockedApplication();
 
-	@Override
-	protected Panel getContentPanel(String id, PageParameters pageParameters) {
-		return new UserSecurityPanel(id, pageParameters);
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
+				.thenReturn(true);
+
+		WicketTester tester = new WicketTester(app);
+		tester.startPage(UsersPage.class);
+		tester.assertRenderedPage(UsersPage.class);
 	}
 }

@@ -40,4 +40,7 @@ public interface RoleGroupService extends Serializable {
 
 	SecurityRole newRole();
 
+	List<SecurityRole> getRolesByUsername(String username);
+
+	List<SecurityGroup> getGroupsByUsername(String username);
 }

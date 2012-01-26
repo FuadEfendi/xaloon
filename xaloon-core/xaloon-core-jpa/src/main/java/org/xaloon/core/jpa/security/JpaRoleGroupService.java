@@ -93,4 +93,18 @@ public class JpaRoleGroupService implements RoleGroupService {
 		return new JpaRole();
 	}
 
+	@Override
+	public List<SecurityRole> getRolesByUsername(String username) {
+		QueryBuilder queryBuilder = new QueryBuilder("select r from " + JpaRole.class.getSimpleName() + " r join r.users u");
+		queryBuilder.addParameter("u.username", "USERNAME", username);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
+	public List<SecurityGroup> getGroupsByUsername(String username) {
+		QueryBuilder queryBuilder = new QueryBuilder("select g from " + JpaGroup.class.getSimpleName() + " g join g.users u");
+		queryBuilder.addParameter("u.username", "USERNAME", username);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
 }

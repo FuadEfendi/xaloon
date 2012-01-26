@@ -281,4 +281,18 @@ public class LocalDatabaseLoginService implements LoginService {
 			addByRoleMember(group.getRoles(), items);
 		}
 	}
+
+	@Override
+	public int count() {
+		QueryBuilder query = new QueryBuilder("select count(u) from " + JpaUserDetails.class.getSimpleName() + " u");
+		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
+	}
+
+	@Override
+	public List<UserDetails> findUsers(int first, int count) {
+		QueryBuilder query = new QueryBuilder("select u from " + JpaUserDetails.class.getSimpleName() + " u");
+		query.setFirstRow(first);
+		query.setCount(count);
+		return persistenceServices.executeQuery(query);
+	}
 }

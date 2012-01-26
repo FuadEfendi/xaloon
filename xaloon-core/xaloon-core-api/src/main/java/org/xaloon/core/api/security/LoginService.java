@@ -125,4 +125,22 @@ public interface LoginService extends Serializable {
 	UserDetails loadUserDetails(String username);
 
 	List<String> getAuthoritiesByUsername(String username);
+
+	/**
+	 * Returns total count of users in the system
+	 * 
+	 * @return integer value for total existing users in system
+	 */
+	int count();
+
+	/**
+	 * Returns sublist of system users
+	 * 
+	 * @param first
+	 *            starting position
+	 * @param count
+	 *            how many users to fetch
+	 * @return sublist of users starting first and max count
+	 */
+	List<UserDetails> findUsers(int first, int count);
 }

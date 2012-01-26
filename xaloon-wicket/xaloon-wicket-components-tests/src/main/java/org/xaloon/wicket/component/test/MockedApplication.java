@@ -30,6 +30,7 @@ import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.impl.plugin.category.CategoryGroupPluginRegistryListener;
 import org.xaloon.core.impl.plugin.category.CategoryMenuPluginRegistryListener;
@@ -48,6 +49,8 @@ public class MockedApplication extends AuthenticatedWebApplication {
 	
 	private PluginRegistry pluginRegistry = mock(PluginRegistry.class);
 	
+	private UserFacade userFacade = mock(UserFacade.class);
+	
 	public MockedApplication() {
 		DynamicMenuMountScannerListener dynamicMenuMountScannerListener = mock(DynamicMenuMountScannerListener.class);
 		mockedServices.put(DynamicMenuMountScannerListener.class.getName(), dynamicMenuMountScannerListener);
@@ -61,6 +64,8 @@ public class MockedApplication extends AuthenticatedWebApplication {
 		mockedServices.put(PluginRegistry.class.getName(), pluginRegistry);
 		
 		mockedServices.put(SecurityFacade.class.getName(), securityFacade);
+		
+		mockedServices.put("userFacade", userFacade);
 
 		PluginLoader pluginLoader = mock(PluginLoader.class);
 		mockedServices.put(PluginLoader.class.getName(), pluginLoader);
@@ -122,5 +127,12 @@ public class MockedApplication extends AuthenticatedWebApplication {
 	 */
 	public PluginRegistry getPluginRegistry() {
 		return pluginRegistry;
+	}
+
+	/**
+	 * @return the userFacade
+	 */
+	public UserFacade getUserFacade() {
+		return userFacade;
 	}
 }

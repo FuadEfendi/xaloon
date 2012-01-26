@@ -109,4 +109,18 @@ public class JpaUserDao implements UserDao {
 	private Class<? extends User> getDiscriminator() {
 		return Configuration.get().getPersistedUserClass();
 	}
+
+	@Override
+	public String getFullNameForUser(String username) {
+		QueryBuilder query = new QueryBuilder("select firstName, lastName from " + JpaUser.class.getSimpleName());
+		query.addParameter("username", "USERNAME", username);
+		Object[] queryResult = persistenceServices.executeQuerySingle(query);
+		if (queryResult != null && queryResult.length == 2) {
+			StringBuilder fullName = new StringBuilder((String)queryResult[1]);
+			fullName.append(" ");
+			fullName.append(queryResult[0]);
+			return fullName.toString();
+		}
+		return null;
+	}
 }

@@ -58,7 +58,7 @@ public class RolesPanel extends AbstractAdministrationPanel {
 	 * @param parameters
 	 */
 	public RolesPanel(String id, PageParameters parameters) {
-		super(id);
+		super(id, parameters);
 		setOutputMarkupId(true);
 	}
 

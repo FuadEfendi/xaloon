@@ -174,7 +174,7 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Override
 	public UserDetails loadUserDetails(String username) {
-		return null;
+		return loginService.loadUserDetails(username);
 	}
 
 	@Override
@@ -216,5 +216,20 @@ public class DefaultUserFacade implements UserFacade {
 	@Override
 	public List<String> getAuthoritiesByUsername(String username) {
 		return loginService.getAuthoritiesByUsername(username);
+	}
+
+	@Override
+	public int count() {
+		return loginService.count();
+	}
+
+	@Override
+	public List<UserDetails> findUsers(int first, int count) {
+		return loginService.findUsers(first, count);
+	}
+
+	@Override
+	public String getFullNameForUser(String username) {
+		return userDao.getFullNameForUser(username);
 	}
 }

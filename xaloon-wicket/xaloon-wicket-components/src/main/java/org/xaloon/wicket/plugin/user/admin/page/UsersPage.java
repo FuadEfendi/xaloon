@@ -19,21 +19,26 @@ package org.xaloon.wicket.plugin.user.admin.page;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
-import org.xaloon.wicket.plugin.user.admin.panel.UserSecurityPanel;
+import org.xaloon.wicket.plugin.user.admin.panel.UsersPanel;
 
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/user-details/${" + UsersPage.PARAM_USER_ID + "}", order = 10, visible = false)
-public class UserSecurityPage extends SecurityGroupPage {
+@MountPage(value = "/users", order = 5)
+public class UsersPage extends SecurityGroupPage {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Parameter to pass user id to details page
+	 */
+	public static final String PARAM_USER_ID = "userId";
+
 	@Override
 	protected Panel getContentPanel(String id, PageParameters pageParameters) {
-		return new UserSecurityPanel(id, pageParameters);
+		return new UsersPanel(id, pageParameters);
 	}
 }

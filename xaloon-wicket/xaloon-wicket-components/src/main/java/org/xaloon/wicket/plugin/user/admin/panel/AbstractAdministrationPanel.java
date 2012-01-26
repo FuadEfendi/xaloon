@@ -18,6 +18,7 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 
 import javax.annotation.security.RolesAllowed;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
@@ -38,8 +39,9 @@ public abstract class AbstractAdministrationPanel extends AbstractPluginPanel<Sy
 	 * Construct.
 	 * 
 	 * @param id
+	 * @param parameters
 	 */
-	public AbstractAdministrationPanel(String id) {
-		super(id);
+	public AbstractAdministrationPanel(String id, PageParameters parameters) {
+		super(id, parameters);
 	}
 }

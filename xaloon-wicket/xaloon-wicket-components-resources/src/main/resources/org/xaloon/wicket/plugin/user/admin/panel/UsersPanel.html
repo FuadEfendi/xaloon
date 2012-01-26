@@ -19,18 +19,29 @@
 </head>
 <body>
 <wicket:panel  xmlns:wicket>
-	<h2>User security administration</h2>
-	<h3>Permissions</h3>
-	<div wicket:id="user-authorities">
-		<div wicket:id="name"></div>
-	</div>
-	<h3>Roles</h3>
-	<div wicket:id="user-roles">
-		<div wicket:id="name"></div>
-	</div>
-	<h3>Groups</h3>
-	<div wicket:id="user-groups">
-		<div wicket:id="name"></div>
+	<h2>Users</h2>
+	<div wicket:id="container">
+		<table wicket:id="security-users">
+			<tr>
+				<td style="width:150px;">username</td>
+				<td>enabled</td>
+				<td>account not expired</td>
+				<td>account not locked</td>
+				<td>credentials not expired</td>
+			</tr>
+			<tr>
+				<td>
+					<a href="#" wicket:id="details-link"><span wicket:id="username"/></a>
+				</td>
+				<td><input type="checkbox" wicket:id="accountEnabled"/></td>
+				<td><input type="checkbox" wicket:id="accountNonExpired"/></td>
+				<td><input type="checkbox" wicket:id="accountNonLocked"/></td>
+				<td><input type="checkbox" wicket:id="credentialsNonExpired"/></td>
+			</tr>
+		</table>
+		<div>
+			<span wicket:id="navigator"></span>
+		</div>
 	</div>
 </wicket:panel>
 </body>

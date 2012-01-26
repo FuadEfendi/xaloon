@@ -16,29 +16,36 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.jpa.security.model.JpaUserDetails;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
 /**
  * @author vytautas r.
  */
-public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
+public class UsersPanelTest extends AbstractUserAdminTestCase {
 	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
 		try {
-			tester.startComponentInPage(new UserSecurityPanel("id", new PageParameters()));
+			tester.startComponentInPage(new UsersPanel("id", new PageParameters()));
 			fail();
 		} catch (UnauthorizedInstantiationException e) {
-			assertEquals("Not authorized to instantiate class org.xaloon.wicket.plugin.user.admin.panel.UserSecurityPanel", e.getMessage());
+			assertEquals("Not authorized to instantiate class org.xaloon.wicket.plugin.user.admin.panel.UsersPanel", e.getMessage());
 		}
 	}
 
@@ -48,8 +55,17 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
-		tester.startComponentInPage(new UserSecurityPanel("id", new PageParameters()));
+		when(app.getUserFacade().count()).thenReturn(1);
 		
-		tester.assertNoErrorMessage();
+		List<UserDetails> users = new ArrayList<UserDetails>();
+		JpaUserDetails user = new JpaUserDetails();
+		user.setUsername("test");
+		users.add(user);
+		when(app.getUserFacade().findUsers(0, 1)).thenReturn(users);
+		
+		tester.startComponentInPage(new UsersPanel("id", new PageParameters()));
+		assertNotNull(tester.getTagByWicketId("container"));
+		assertNotNull(tester.getTagByWicketId("security-users"));
+		assertEquals(1, tester.getTagsByWicketId("details-link").size());
 	}
 }
