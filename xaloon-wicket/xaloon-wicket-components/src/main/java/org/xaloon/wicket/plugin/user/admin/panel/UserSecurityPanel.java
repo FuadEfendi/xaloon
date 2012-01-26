@@ -21,9 +21,17 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -33,6 +41,7 @@ import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
+import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.util.UrlUtils;
 
@@ -64,6 +73,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		if (getPageRequestParameters().isEmpty() || getPageRequestParameters().get(UsersPage.PARAM_USER_ID).isEmpty()) {
 			setResponsePage(UsersPage.class);
 		}
+		setOutputMarkupId(true);
 	}
 
 	@Override
@@ -97,12 +107,50 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	}
 
 	private void addGroups(List<SecurityGroup> userGroups) {
+		// Add the modal window to assign a group
+		final ModalWindow addGroupModalWindow = new CustomModalWindow("modal-assign-group", "Assign group") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return UserSecurityPanel.this;
+			}
+		};
+
+		Panel panel = new EmptyPanel(addGroupModalWindow.getContentId());
+		Form form = new Form("form");
+		form.add(new GroupsPanel("inner-panel", getPageRequestParameters()));
+		form.add(new AjaxButton("submit") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			}
+		});
+
+		addGroupModalWindow.setContent(panel);
+		add(addGroupModalWindow);
+		// Add assign group link
+		add(new AjaxLink<Void>("assign-group") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				addGroupModalWindow.show(target);
+			}
+		});
 		add(new ListView<SecurityGroup>("user-groups", userGroups) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<SecurityGroup> item) {
 				SecurityGroup group = item.getModelObject();
+
+				// Add name
 				item.add(new Label("name", new Model<String>(group.getName())));
 			}
 		});
