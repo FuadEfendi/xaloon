@@ -18,6 +18,7 @@ package org.xaloon.core.impl.date;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
@@ -84,5 +85,10 @@ public class DefaultDateService implements DateService {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String formatWithLongDate(Date dateToFormat) {
+		return getLongDateFormat().format(dateToFormat);
 	}
 }

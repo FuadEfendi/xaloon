@@ -18,6 +18,7 @@ package org.xaloon.core.api.date;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * @author vytautas r.
@@ -34,5 +35,11 @@ public interface DateService extends Serializable {
 	 * @return instance of the {@link DateFormat} with long date format
 	 */
 	DateFormat getLongDateFormat();
+
+	/**
+	 * @param dateToFormat
+	 * @return formatted date with long date format
+	 */
+	String formatWithLongDate(Date dateToFormat);
 
 }

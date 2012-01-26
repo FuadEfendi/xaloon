@@ -1,6 +1,5 @@
 package org.xaloon.wicket.plugin.blog.panel;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -87,9 +86,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		counterDao.increment("BLOG_ENTRY_VIEW_COUNT", blogEntry.getTrackingCategoryId(), blogEntry.getId());
 
 		setDefaultModel(new Model<BlogEntry>(blogEntry));
-		// Create date formatter
-		final DateFormat dateFormat = dateService.getLongDateFormat();
-
+		
 		// Add blog entry title
 		add(new Label("title", new Model<String>(blogEntry.getTitle())));
 
@@ -98,7 +95,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		add(new Label("comment-count", new Model<Long>(commentCount)));
 
 		// Add blog entry create date
-		add(new Label("createDate", new Model<String>(dateFormat.format(blogEntry.getCreateDate()))));
+		add(new Label("createDate", new Model<String>(dateService.formatWithLongDate(blogEntry.getCreateDate()))));
 
 		// Add image
 		String imageLinkPath = (blogEntry.getThumbnail() != null) ? blogEntry.getThumbnail().getPath() : null;

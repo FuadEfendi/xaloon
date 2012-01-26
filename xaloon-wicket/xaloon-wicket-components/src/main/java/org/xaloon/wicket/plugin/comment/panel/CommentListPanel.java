@@ -36,6 +36,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.date.DateService;
 import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.CommentPluginBean;
@@ -57,6 +58,9 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 	@Inject
 	private CommentDao commentDao;
+
+	@Inject
+	private DateService dateService;
 
 	/**
 	 * Construct.
@@ -95,7 +99,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 				item.add(new ImageLink("image-link", (authorPhoto != null) ? authorPhoto.getPath() : null).setVisible(authorPhoto != null));
 				externalLink.add(new Label("displayName", new Model<String>(comment.getFromUser().getDisplayName())));
 				item.add(new Label("message", new Model<String>(TextUtil.prepareStringForHTML(comment.getMessage()))));
-				item.add(new Label("comment-timestamp", new Model<String>(comment.getCreateDate().toString())));// TODO fix date format
+				item.add(new Label("comment-timestamp", new Model<String>(dateService.formatWithLongDate(comment.getCreateDate()))));
 				item.add(new AjaxLink<Void>("delete-comment") {
 					private static final long serialVersionUID = 1L;
 
