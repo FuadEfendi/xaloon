@@ -116,8 +116,13 @@ public class JpaUserDao implements UserDao {
 		query.addParameter("u.username", "USERNAME", username);
 		Object[] queryResult = persistenceServices.executeQuerySingle(query);
 		if (queryResult != null && queryResult.length == 2) {
-			StringBuilder fullName = new StringBuilder((String)queryResult[1]);
-			fullName.append(" ");
+			StringBuilder fullName = new StringBuilder();
+			Object o = queryResult[1];
+
+			if (o != null) {
+				fullName.append(o);
+				fullName.append(" ");
+			}
 			fullName.append(queryResult[0]);
 			return fullName.toString();
 		}
