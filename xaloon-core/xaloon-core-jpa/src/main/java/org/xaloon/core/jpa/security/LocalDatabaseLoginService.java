@@ -35,8 +35,10 @@ import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.persistence.QueryBuilder.Condition;
+import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
+import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
@@ -57,6 +59,9 @@ public class LocalDatabaseLoginService implements LoginService {
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
+
+	@Inject
+	private RoleGroupService roleGroupService;
 
 	@Override
 	public boolean performLogin(String username, String password) {
@@ -154,9 +159,9 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	@Override
 	public void assignRole(String username, String role) {// TODO role or permission?
-		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		UserDetails userDetails = loadUserDetails(username);
 		if (userDetails != null) {
-			JpaAuthority authority = findOrCreateAuthority(role);
+			Authority authority = findOrCreateAuthority(role);
 			if (authority != null && !userDetails.getAuthorities().contains(authority)) {// TODO fix this
 				userDetails.getAuthorities().add(authority);
 				persistenceServices.edit(userDetails);
@@ -207,16 +212,10 @@ public class LocalDatabaseLoginService implements LoginService {
 		return PasswordEncoder.get().encode(username, password);
 	}
 
-	private JpaAuthority findRole(String roleName) {
-		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
-		queryBuilder.addParameter("a.authority", "_ROLE_NAME", roleName);
-		return persistenceServices.executeQuerySingle(queryBuilder);
-	}
-
-	private JpaAuthority findOrCreateAuthority(String role) {
-		JpaAuthority authority = findRole(role);
+	private Authority findOrCreateAuthority(String role) {
+		Authority authority = roleGroupService.findAuthority(role);
 		if (authority == null) {
-			authority = new JpaAuthority();
+			authority = roleGroupService.newAuthority();
 			authority.setAuthority(role);
 			persistenceServices.create(authority);
 		}

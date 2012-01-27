@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.security;
+package org.xaloon.wicket.plugin.user.admin.renderer;
 
-import org.xaloon.core.api.persistence.Persistable;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.xaloon.core.api.security.Authority;
 
 /**
  * @author vytautas r.
  */
-public interface Authority extends Persistable {
-	/**
-	 * @return authority
-	 */
-	String getAuthority();
+public class AuthorityChoiceRenderer implements IChoiceRenderer<Authority> {
 
 	/**
-	 * @param authority
+	 * 
 	 */
-	void setAuthority(String authority);
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public Object getDisplayValue(Authority object) {
+		return object.getAuthority();
+	}
+
+	@Override
+	public String getIdValue(Authority object, int index) {
+		return object.getId().toString();
+	}
 }

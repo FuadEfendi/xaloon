@@ -22,6 +22,8 @@ import java.io.Serializable;
  * @author vytautas r.
  */
 public interface Bookmarkable extends Serializable {
+	String PARAM_PATH = "path";
+
 	/**
 	 * Returns bookmarkable representation of value
 	 * 

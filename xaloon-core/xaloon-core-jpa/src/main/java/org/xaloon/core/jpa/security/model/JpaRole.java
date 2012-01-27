@@ -25,18 +25,22 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.xaloon.core.api.security.SecurityRole;
-import org.xaloon.core.jpa.model.AbstractEntity;
+import org.xaloon.core.api.util.UrlUtil;
+import org.xaloon.core.jpa.model.BookmarkableEntity;
 
 /**
  * @author vytautas r.
  */
 @Entity
 @Table(name = "XAL_SECURITY_ROLE", uniqueConstraints = @UniqueConstraint(columnNames = { "ROLE_NAME" }))
-public class JpaRole extends AbstractEntity implements SecurityRole {
+public class JpaRole extends BookmarkableEntity implements SecurityRole {
 
 	/**
 	 * 
@@ -104,5 +108,30 @@ public class JpaRole extends AbstractEntity implements SecurityRole {
 	 */
 	public void setAuthorities(List<JpaAuthority> authorities) {
 		this.authorities = authorities;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof JpaRole)) {
+			return false;
+		}
+		JpaRole entity = (JpaRole)obj;
+
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(getName(), entity.getName());
+		return equalsBuilder.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(getName());
+		return hashCodeBuilder.hashCode();
+	}
+
+	@Override
+	@PrePersist
+	protected void beforeCreate() {
+		setPath(UrlUtil.encode(getName()));
 	}
 }

@@ -9,6 +9,8 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.util.tester.WicketTester;
 import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
 import org.xaloon.wicket.plugin.system.SystemPluginBean;
@@ -24,6 +26,12 @@ public abstract class AbstractUserAdminTestCase {
 		
 		when(app.getPluginRegistry().getPluginBean(SystemPlugin.class)).thenReturn(systemPluginBean);
 		when(app.getPluginRegistry().isEnabled(SystemPlugin.class)).thenReturn(true);
+		
+		UserDetails details = mock(UserDetails.class);
+		when(app.getUserFacade().loadUserDetails("demo")).thenReturn(details);
+		
+		User user = mock(User.class);
+		when(app.getUserFacade().getUserByUsername("demo")).thenReturn(user);
 		
 		return app;
 	}

@@ -23,26 +23,27 @@ import javax.inject.Named;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.bookmark.Bookmarkable;
+import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
-import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
+import org.xaloon.wicket.plugin.user.admin.page.GroupDetailPage;
+import org.xaloon.wicket.plugin.user.admin.page.RoleDetailPage;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
+import org.xaloon.wicket.plugin.user.admin.renderer.AuthorityChoiceRenderer;
+import org.xaloon.wicket.plugin.user.admin.renderer.GroupChoiceRenderer;
+import org.xaloon.wicket.plugin.user.admin.renderer.RoleChoiceRenderer;
 import org.xaloon.wicket.util.UrlUtils;
 
 /**
@@ -94,115 +95,139 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		}
 
 		// Add user authorities/permissions
-		List<String> userAuthorities = userFacade.getAuthoritiesByUsername(username);
-		addAuthorities(userAuthorities);
+		addAuthorities(userDetails.getAuthorities(), userDetails);
 
 		// Add user roles
-		List<SecurityRole> userRoles = roleGroupService.getRolesByUsername(username);
-		addRoles(userRoles);
+		addRoles(userDetails);
 
 		// Add user groups
-		List<SecurityGroup> userGroups = roleGroupService.getGroupsByUsername(username);
-		addGroups(userGroups, userDetails);
+		addGroups(userDetails);
 	}
 
-	private void addGroups(List<SecurityGroup> userGroups, final UserDetails details) {
-		// Add the modal window to assign a group
-		final ModalWindow addGroupModalWindow = new CustomModalWindow("modal-assign-group", "Assign group") {
+
+	private void addGroups(final UserDetails userDetails) {
+		final List<SecurityGroup> providedSelections = userDetails.getGroups();
+		List<SecurityGroup> availableItemsForSelection = roleGroupService.getGroupList(0, -1);
+
+		// Add role list
+		add(new AuthorityManagementContainer<SecurityGroup>("group-admin") {
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onItemAddedToView(ListItem<SecurityGroup> item) {
+				final SecurityGroup group = item.getModelObject();
+
+				// Add link to role details
+				PageParameters pageParams = new PageParameters();
+				pageParams.add(Bookmarkable.PARAM_PATH, group.getPath());
+				BookmarkablePageLink<Void> roleLink = new BookmarkablePageLink<Void>("groupDetails", GroupDetailPage.class, pageParams);
+				item.add(roleLink);
+				roleLink.add(new Label("name", new Model<String>(group.getName())));
+
+				item.add(new ConfirmationAjaxLink<Void>("revoke") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						roleGroupService.revokeGroup(userDetails, group);
+						target.add(UserSecurityPanel.this);
+					}
+				});
+			}
+
+			@Override
+			protected void onAssign(List<SecurityGroup> selections) {
+				roleGroupService.assignGroups(userDetails, selections);
+			}
 
 			@Override
 			protected Component getOnCloseComponent() {
 				return UserSecurityPanel.this;
 			}
-		};
-
-		FormContainerPanel formContainerPanel = new FormContainerPanel(addGroupModalWindow.getContentId());
-		final List<SecurityGroup> selections = details.getGroups();
-		List<SecurityGroup> availableSecurityGroups = roleGroupService.getGroupList(0, -1);
-		availableSecurityGroups.removeAll(selections);
-
-		Form form = new Form("form");
-		formContainerPanel.setForm(form);
-
-		CheckBoxMultipleChoice choices = new CheckBoxMultipleChoice("choices", Model.of(selections), availableSecurityGroups,
-			new IChoiceRenderer<SecurityGroup>() {
-
-				@Override
-				public Object getDisplayValue(SecurityGroup object) {
-					return object.getName();
-				}
-
-				@Override
-				public String getIdValue(SecurityGroup object, int index) {
-					return object.getId().toString();
-				}
-			});
-		form.add(choices);
-		form.add(new AjaxButton("submit") {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("test" + selections.size());
-				roleGroupService.assignGroups(details.getUsername(), selections);
-				addGroupModalWindow.close(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-			}
-
-		});
-
-		addGroupModalWindow.setContent(formContainerPanel);
-		add(addGroupModalWindow);
-		// Add assign group link
-		add(new AjaxLink<Void>("assign-group") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				addGroupModalWindow.show(target);
-			}
-		});
-		add(new ListView<SecurityGroup>("user-groups", userGroups) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void populateItem(ListItem<SecurityGroup> item) {
-				SecurityGroup group = item.getModelObject();
-
-				// Add name
-				item.add(new Label("name", new Model<String>(group.getName())));
-			}
-		});
+		}.setChoiceRenderer(new GroupChoiceRenderer())
+			.setAvailableItemsForSelection(availableItemsForSelection)
+			.setProvidedSelections(providedSelections));
 	}
 
-	private void addRoles(List<SecurityRole> userRoles) {
-		add(new ListView<SecurityRole>("user-roles", userRoles) {
+	private void addRoles(final UserDetails userDetails) {
+		List<SecurityRole> availableItemsForSelection = roleGroupService.getRoleList(0, -1);
+		List<SecurityRole> providedSelections = userDetails.getRoles();
+
+		// Add role list
+		add(new AuthorityManagementContainer<SecurityRole>("role-admin") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<SecurityRole> item) {
-				SecurityRole role = item.getModelObject();
-				item.add(new Label("name", new Model<String>(role.getName())));
+			protected void onItemAddedToView(ListItem<SecurityRole> item) {
+				final SecurityRole role = item.getModelObject();
+
+				// Add link to role details
+				PageParameters pageParams = new PageParameters();
+				pageParams.add(Bookmarkable.PARAM_PATH, role.getPath());
+				BookmarkablePageLink<Void> roleLink = new BookmarkablePageLink<Void>("roleDetails", RoleDetailPage.class, pageParams);
+				item.add(roleLink);
+				roleLink.add(new Label("name", new Model<String>(role.getName())));
+
+				item.add(new ConfirmationAjaxLink<Void>("revoke") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						roleGroupService.revokeRole(userDetails, role);
+						target.add(UserSecurityPanel.this);
+					}
+				});
 			}
-		});
+
+			@Override
+			protected void onAssign(List<SecurityRole> selections) {
+				roleGroupService.assignRoles(userDetails, selections);
+			}
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return UserSecurityPanel.this;
+			}
+		}.setChoiceRenderer(new RoleChoiceRenderer())
+			.setAvailableItemsForSelection(availableItemsForSelection)
+			.setProvidedSelections(providedSelections));
+
 	}
 
-	private void addAuthorities(List<String> userAuthorities) {
-		add(new ListView<String>("user-authorities", userAuthorities) {
+	private void addAuthorities(List<Authority> userAuthorities, final UserDetails userDetails) {
+		final List<Authority> providedSelections = userDetails.getAuthorities();
+		List<Authority> availableItemsForSelection = roleGroupService.getAuthorityList(0, -1);
+
+		// Add permission list
+		add(new AuthorityManagementContainer<Authority>("authority-admin") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<String> item) {
-				item.add(new Label("name", new Model<String>(item.getModelObject())));
+			protected void onItemAddedToView(ListItem<Authority> item) {
+				final Authority authority = item.getModelObject();
+				item.add(new Label("name", new Model<String>(authority.getAuthority())));
+				item.add(new ConfirmationAjaxLink<Void>("revoke") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						roleGroupService.revokeAuthority(userDetails, authority);
+						target.add(UserSecurityPanel.this);
+					}
+				});
 			}
-		});
+
+			@Override
+			protected void onAssign(List<Authority> selections) {
+				roleGroupService.assignAuthorities(userDetails, selections);
+			}
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return UserSecurityPanel.this;
+			}
+		}.setChoiceRenderer(new AuthorityChoiceRenderer())
+			.setAvailableItemsForSelection(availableItemsForSelection)
+			.setProvidedSelections(providedSelections));
 	}
 }

@@ -25,16 +25,19 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
+import org.xaloon.wicket.plugin.user.admin.page.RoleDetailPage;
 import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
 import org.xaloon.wicket.util.Link;
 
@@ -79,9 +82,13 @@ public class RolesPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void populateItem(Item<SecurityRole> item) {
 				SecurityRole role = item.getModelObject();
-				item.add(new Label("name", new Model<String>(role.getName())));
-			}
 
+				PageParameters pageParams = new PageParameters();
+				pageParams.add(Bookmarkable.PARAM_PATH, role.getPath());
+				BookmarkablePageLink<Void> roleLink = new BookmarkablePageLink<Void>("roleDetails", RoleDetailPage.class, pageParams);
+				item.add(roleLink);
+				roleLink.add(new Label("name", new Model<String>(role.getName())));
+			}
 		};
 		dataContainer.addAbstractPageableView(securityGroupDataView);
 

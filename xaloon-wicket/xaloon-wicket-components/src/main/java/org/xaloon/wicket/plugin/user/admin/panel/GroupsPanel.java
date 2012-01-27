@@ -25,16 +25,19 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
+import org.xaloon.wicket.plugin.user.admin.page.GroupDetailPage;
 import org.xaloon.wicket.plugin.user.admin.page.GroupsPage;
 import org.xaloon.wicket.util.Link;
 
@@ -80,7 +83,12 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void populateItem(Item<SecurityGroup> item) {
 				SecurityGroup group = item.getModelObject();
-				item.add(new Label("name", new Model<String>(group.getName())));
+
+				PageParameters pageParams = new PageParameters();
+				pageParams.add(Bookmarkable.PARAM_PATH, group.getPath());
+				BookmarkablePageLink<Void> groupLink = new BookmarkablePageLink<Void>("groupDetails", GroupDetailPage.class, pageParams);
+				item.add(groupLink);
+				groupLink.add(new Label("name", new Model<String>(group.getName())));
 			}
 
 		};

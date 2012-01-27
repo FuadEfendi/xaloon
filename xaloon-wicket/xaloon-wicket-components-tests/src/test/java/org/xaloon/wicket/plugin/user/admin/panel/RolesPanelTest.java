@@ -66,6 +66,8 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 		when(roleGroupService.getRoleCount()).thenReturn(1);
 
 		SecurityRole role = mock(SecurityRole.class);
+		when(role.getPath()).thenReturn("role-name");
+		
 		List<SecurityRole> roles = new ArrayList<SecurityRole>();
 		roles.add(role);
 		when(roleGroupService.getRoleList(0, 1)).thenReturn(roles);

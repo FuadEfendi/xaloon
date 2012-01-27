@@ -44,5 +44,33 @@ public interface RoleGroupService extends Serializable {
 
 	List<SecurityGroup> getGroupsByUsername(String username);
 
-	<T extends SecurityGroup> void assignGroups(String username, List<T> selections);
+	<T extends SecurityGroup> void assignGroups(UserDetails userDetails, List<T> selections);
+
+	<T extends SecurityRole> void assignRoles(UserDetails userDetails, List<T> selections);
+
+	List<Authority> getAuthorityList(int first, int count);
+
+	<T extends Authority> void assignAuthorities(UserDetails userDetails, List<T> selections);
+
+	UserDetails revokeAuthority(UserDetails userDetails, Authority authority);
+
+	Authority findAuthority(String authorityName);
+
+	Authority newAuthority();
+
+	UserDetails revokeGroup(UserDetails userDetails, SecurityGroup group);
+
+	UserDetails revokeRole(UserDetails userDetails, SecurityRole role);
+
+	SecurityRole getRoleByPath(String path);
+
+	SecurityRole assignAuthorities(SecurityRole role, List<Authority> selections);
+
+	SecurityRole revokeAuthority(SecurityRole role, Authority authority);
+
+	SecurityGroup getGroupByPath(String path);
+
+	SecurityGroup revokeRole(SecurityGroup group, SecurityRole role);
+
+	SecurityGroup assignRoles(SecurityGroup group, List<SecurityRole> selections);
 }

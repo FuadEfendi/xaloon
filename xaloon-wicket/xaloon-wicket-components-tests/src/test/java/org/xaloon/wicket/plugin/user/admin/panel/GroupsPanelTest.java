@@ -63,6 +63,8 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 		when(roleGroupService.getGroupCount()).thenReturn(1);
 
 		SecurityGroup group = mock(SecurityGroup.class);
+		when(group.getPath()).thenReturn("group-name");
+		
 		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
 		groups.add(group);
 		when(roleGroupService.getGroupList(0, 1)).thenReturn(groups);

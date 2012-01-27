@@ -16,11 +16,16 @@
  */
 package org.xaloon.core.api.security;
 
+import java.util.List;
+
+import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.persistence.Persistable;
 
 /**
  * @author vytautas r.
  */
-public interface SecurityGroup extends Persistable {
+public interface SecurityGroup extends Persistable, Bookmarkable {
 	String getName();
+
+	<T extends SecurityRole> List<T> getRoles();
 }

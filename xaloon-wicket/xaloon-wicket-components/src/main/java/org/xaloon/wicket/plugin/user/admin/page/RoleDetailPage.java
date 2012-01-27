@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.security;
+package org.xaloon.wicket.plugin.user.admin.page;
 
-import org.xaloon.core.api.persistence.Persistable;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.bookmark.Bookmarkable;
+import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.plugin.user.admin.panel.RoleDetailPanel;
 
 /**
  * @author vytautas r.
  */
-public interface Authority extends Persistable {
-	/**
-	 * @return authority
-	 */
-	String getAuthority();
+@MountPage(value = "/role-detail/${" + Bookmarkable.PARAM_PATH + "}", visible = false)
+public class RoleDetailPage extends SecurityGroupPage {
 
 	/**
-	 * @param authority
+	 * 
 	 */
-	void setAuthority(String authority);
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected Panel getContentPanel(String id, PageParameters pageParameters) {
+		return new RoleDetailPanel(id, pageParameters);
+	}
+
 }

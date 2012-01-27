@@ -16,15 +16,15 @@
  */
 package org.xaloon.core.api.security;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.persistence.Persistable;
 
 /**
  * @author vytautas r.
  */
-public interface UserDetails extends Serializable {
+public interface UserDetails extends Persistable {
 	/**
 	 * @return username
 	 */
@@ -61,4 +61,8 @@ public interface UserDetails extends Serializable {
 	List<? extends KeyValue<String, String>> getAliases();
 
 	<T extends SecurityGroup> List<T> getGroups();
+
+	<T extends SecurityRole> List<T> getRoles();
+
+	<T extends Authority> List<T> getAuthorities();
 }

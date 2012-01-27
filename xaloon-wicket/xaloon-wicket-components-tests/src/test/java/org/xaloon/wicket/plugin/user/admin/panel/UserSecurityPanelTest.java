@@ -16,7 +16,8 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
@@ -26,6 +27,7 @@ import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
+import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 
 /**
  * @author vytautas r.
@@ -47,8 +49,10 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
-
-		tester.startComponentInPage(new UserSecurityPanel("id", new PageParameters()));
+		
+		PageParameters params = new PageParameters();
+		params.add(UsersPage.PARAM_USER_ID, "demo");
+		tester.startComponentInPage(new UserSecurityPanel("id", params));
 		
 		tester.assertNoErrorMessage();
 	}
