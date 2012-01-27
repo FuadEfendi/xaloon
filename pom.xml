@@ -117,7 +117,7 @@
 			</plugins>
 			</build>
 		</profile>
-		 <!-- Jenkins by default defines a property BUILD_NUMBER which is used to enable the profile. -->
+		<!-- Jenkins by default defines a property BUILD_NUMBER which is used to enable the profile. -->
         <profile>
             <id>jenkins</id>
             <activation>
