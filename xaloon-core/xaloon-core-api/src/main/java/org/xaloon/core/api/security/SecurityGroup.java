@@ -27,5 +27,7 @@ import org.xaloon.core.api.persistence.Persistable;
 public interface SecurityGroup extends Persistable, Bookmarkable {
 	String getName();
 
+	void setName(String name);
+
 	<T extends SecurityRole> List<T> getRoles();
 }
