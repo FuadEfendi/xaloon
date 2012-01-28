@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -56,6 +57,9 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 	public RoleDetailPanel(String id, PageParameters parameters) {
 		super(id, parameters);
 		setOutputMarkupId(true);
+		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
+			throw new RestartResponseException(RolesPage.class);
+		}
 	}
 
 	@Override
@@ -63,8 +67,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 		super.onBeforeRender();
 		removeAll();
 		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
-			setResponsePage(RolesPage.class);
-			return;
+			throw new RestartResponseException(RolesPage.class);
 		}
 		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 

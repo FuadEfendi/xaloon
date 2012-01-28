@@ -4,9 +4,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * @author vytautas r.
+ */
 @RunWith(Suite.class)
-@SuiteClasses({ GroupsPanelTest.class, RolesPanelTest.class, UserSecurityPanelTest.class, 
-	CreateNewEntityPanelTest.class, UsersPanelTest.class })
+@SuiteClasses({ GroupsPanelTest.class, RolesPanelTest.class, UserSecurityPanelTest.class, CreateNewEntityPanelTest.class, UsersPanelTest.class })
 public class AllTests {
 
 }

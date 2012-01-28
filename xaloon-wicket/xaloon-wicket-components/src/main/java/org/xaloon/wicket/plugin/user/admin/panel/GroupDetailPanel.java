@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -32,8 +33,8 @@ import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
+import org.xaloon.wicket.plugin.user.admin.page.GroupsPage;
 import org.xaloon.wicket.plugin.user.admin.page.RoleDetailPage;
-import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
 import org.xaloon.wicket.plugin.user.admin.renderer.RoleChoiceRenderer;
 
 /**
@@ -58,6 +59,9 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 	public GroupDetailPanel(String id, PageParameters parameters) {
 		super(id, parameters);
 		setOutputMarkupId(true);
+		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
+			throw new RestartResponseException(GroupsPage.class);
+		}
 	}
 
 	@Override
@@ -65,8 +69,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 		super.onBeforeRender();
 		removeAll();
 		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
-			setResponsePage(RolesPage.class);
-			return;
+			throw new RestartResponseException(GroupsPage.class);
 		}
 		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 

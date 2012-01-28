@@ -14,6 +14,9 @@ import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
+/**
+ * @author vytautas r.
+ */
 public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 	@Test
 	public void testPanel() throws Exception {
