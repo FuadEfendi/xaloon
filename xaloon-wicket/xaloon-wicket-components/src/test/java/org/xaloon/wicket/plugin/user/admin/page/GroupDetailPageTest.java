@@ -18,9 +18,13 @@ package org.xaloon.wicket.plugin.user.admin.page;
 
 import static org.mockito.Mockito.when;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
+import org.xaloon.core.api.bookmark.Bookmarkable;
+import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -41,5 +45,25 @@ public class GroupDetailPageTest extends AbstractUserAdminTestCase {
 		WicketTester tester = new WicketTester(app);
 		tester.startPage(GroupDetailPage.class);
 		tester.assertRenderedPage(GroupsPage.class);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testPageWithParams() throws Exception {
+		MockedApplication app = createMockedApplication();
+
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+
+		SecurityGroup group = new JpaGroup();
+		group.setName("name");
+		when(roleGroupService.getGroupByPath("test")).thenReturn(group);
+
+		WicketTester tester = new WicketTester(app);
+		PageParameters params = new PageParameters();
+		params.add(Bookmarkable.PARAM_PATH, "test");
+		tester.startPage(GroupDetailPage.class, params);
+		tester.assertRenderedPage(GroupDetailPage.class);
 	}
 }
