@@ -67,14 +67,14 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 
 		SecurityRole role = mock(SecurityRole.class);
 		when(role.getPath()).thenReturn("role-name");
-		
+
 		List<SecurityRole> roles = new ArrayList<SecurityRole>();
 		roles.add(role);
 		when(roleGroupService.getRoleList(0, 1)).thenReturn(roles);
-		
+
 		SecurityRole securityRole = new JpaRole();
 		when(roleGroupService.newRole()).thenReturn(securityRole);
-		
+
 		tester.startComponentInPage(new RolesPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));
 		assertNotNull(tester.getTagByWicketId("security-roles"));
@@ -85,16 +85,16 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 		tester.assertNoErrorMessage();
 
 		// Get the modal window and submit the form
-		ModalWindow modal = (ModalWindow) tester.getComponentFromLastRenderedPage("id:modal-new-role");
+		ModalWindow modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-role");
 		tester.isVisible(modal.getPageRelativePath());
-		
-		//Close and re-open modal window
+
+		// Close and re-open modal window
 		closeModalWindow(modal, tester);
 		tester.clickLink("id:add-new-role");
 		tester.assertNoErrorMessage();
-		modal = (ModalWindow) tester.getComponentFromLastRenderedPage("id:modal-new-role");
-		
-		//Take the form
+		modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-role");
+
+		// Take the form
 		String modalPath = modal.getPageRelativePath() + ":" + modal.getContentId();
 		String formPath = modalPath + ":new-entity";
 		FormTester form = tester.newFormTester(formPath);

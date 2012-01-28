@@ -64,13 +64,13 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 
 		SecurityGroup group = mock(SecurityGroup.class);
 		when(group.getPath()).thenReturn("group-name");
-		
+
 		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
 		groups.add(group);
 		when(roleGroupService.getGroupList(0, 1)).thenReturn(groups);
 		SecurityGroup securityGroup = new JpaGroup();
 		when(roleGroupService.newGroup()).thenReturn(securityGroup);
-		
+
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
 
 		// Test if there are any items displayed
@@ -82,28 +82,28 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 		tester.clickLink("id:add-new-group");
 		tester.assertNoErrorMessage();
 
-		//Get the modal window and submit the form
+		// Get the modal window and submit the form
 		ModalWindow modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-group");
 		tester.isVisible(modal.getPageRelativePath());
 		String modalPath = modal.getPageRelativePath() + ":" + modal.getContentId();
-		
-		//Close and re-open form
+
+		// Close and re-open form
 		closeModalWindow(modal, tester);
 		tester.clickLink("id:add-new-group");
 		tester.assertNoErrorMessage();
 		modal = (ModalWindow)tester.getComponentFromLastRenderedPage("id:modal-new-group");
-		
-		//Submit the form
+
+		// Submit the form
 		String formPath = modalPath + ":new-entity";
 		FormTester form = tester.newFormTester(formPath);
 		form.setValue("name", "testValue");
-		
+
 		// Submit ajax form
 		tester.executeAjaxEvent(formPath + ":submit", "onclick");
 
 		// Validate result
 		tester.assertNoErrorMessage();
-		
+
 		Assert.assertEquals("testValue", securityGroup.getName());
 	}
 }

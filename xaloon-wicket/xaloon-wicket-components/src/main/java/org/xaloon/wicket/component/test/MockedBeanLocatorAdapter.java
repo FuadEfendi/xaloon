@@ -33,7 +33,6 @@ public class MockedBeanLocatorAdapter implements BeanLocatorAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getBean(String beanName, Class<T> clazz) {
-		System.out.println("Looking for: " + clazz.getName());
 		T item = (T)mockedServices.get(clazz.getName());
 		if (item == null) {
 			throw new IllegalArgumentException("Mocking interface not found: " + clazz.getName());

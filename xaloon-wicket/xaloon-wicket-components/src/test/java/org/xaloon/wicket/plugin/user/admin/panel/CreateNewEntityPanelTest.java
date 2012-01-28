@@ -53,7 +53,8 @@ public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Start panel
-		tester.startComponentInPage(new CreateNewEntityPanel<SecurityGroup>("id", new Model<SecurityGroup>(new JpaGroup())) {
+		SecurityGroup group = new JpaGroup();
+		tester.startComponentInPage(new CreateNewEntityPanel<SecurityGroup>("id", new Model<SecurityGroup>(group)) {
 			private static final long serialVersionUID = 1L;
 
 			@Override

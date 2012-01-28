@@ -19,6 +19,7 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
-import org.xaloon.core.jpa.security.model.JpaUserDetails;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -56,13 +56,14 @@ public class UsersPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		when(app.getUserFacade().count()).thenReturn(1);
-		
+
 		List<UserDetails> users = new ArrayList<UserDetails>();
-		JpaUserDetails user = new JpaUserDetails();
-		user.setUsername("test");
+
+		UserDetails user = mock(UserDetails.class);
 		users.add(user);
+		when(user.getUsername()).thenReturn("test");
 		when(app.getUserFacade().findUsers(0, 1)).thenReturn(users);
-		
+
 		tester.startComponentInPage(new UsersPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));
 		assertNotNull(tester.getTagByWicketId("security-users"));

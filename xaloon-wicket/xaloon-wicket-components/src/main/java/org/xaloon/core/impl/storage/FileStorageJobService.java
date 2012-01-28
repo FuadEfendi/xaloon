@@ -80,7 +80,6 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 
 			// Reload file descriptor
 			FileDescriptor fileDescriptor = getFileDescriptor(jobParameters.getFileDescriptor(), isScheduled);
-			System.out.println("DESCRIPTOR: " + fileDescriptor);
 			if (fileDescriptor == null) {
 				LOGGER.error(String.format("Could not store file into repository, because file descriptor was not found: %s",
 					jobParameters.getFileDescriptor().getName()));
