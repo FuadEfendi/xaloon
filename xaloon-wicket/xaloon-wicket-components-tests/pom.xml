@@ -57,6 +57,7 @@
 			<artifactId>xaloon-wicket-components</artifactId>
 			<groupId>org.xaloon.wicket</groupId>
 			<version>${project.version}</version>
+			<classifier>sources</classifier>
 		</dependency>
 
 		<dependency>
