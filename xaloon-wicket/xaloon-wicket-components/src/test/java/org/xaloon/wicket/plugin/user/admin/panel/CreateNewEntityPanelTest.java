@@ -18,6 +18,9 @@ import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
  * @author vytautas r.
  */
 public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanel() throws Exception {
 		final StringBuilder invocationResult = new StringBuilder();
@@ -35,6 +38,9 @@ public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertEquals("testValue", invocationResult.toString());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanelError() throws Exception {
 		final StringBuilder invocationResult = new StringBuilder();

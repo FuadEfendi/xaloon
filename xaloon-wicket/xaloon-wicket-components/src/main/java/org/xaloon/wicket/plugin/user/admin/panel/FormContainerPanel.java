@@ -29,7 +29,7 @@ public class FormContainerPanel extends Panel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
+	private Form<?> form;
 
 	/**
 	 * Construct.
@@ -51,9 +51,11 @@ public class FormContainerPanel extends Panel {
 	 * 
 	 * @param form
 	 *            form
+	 * @return this instance
 	 */
-	public void setForm(Form form) {
+	public FormContainerPanel setForm(Form<?> form) {
 		this.form = form;
+		return this;
 	}
 
 

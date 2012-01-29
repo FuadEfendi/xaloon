@@ -38,6 +38,9 @@ import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
  * @author vytautas r.
  */
 public class UsersPanelTest extends AbstractUserAdminTestCase {
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
@@ -49,6 +52,9 @@ public class UsersPanelTest extends AbstractUserAdminTestCase {
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanelAuthorized() throws Exception {
 		MockedApplication app = createMockedApplication();

@@ -68,9 +68,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
-			throw new RestartResponseException(GroupsPage.class);
-		}
+
 		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 
 		final SecurityGroup group = roleGroupService.getGroupByPath(path);
@@ -101,7 +99,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeRole(group, role);
+						roleGroupService.revokeRoleFromGroup(group, role);
 						target.add(GroupDetailPanel.this);
 					}
 				});
@@ -109,7 +107,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<SecurityRole> selections) {
-				roleGroupService.assignRoles(group, selections);
+				roleGroupService.assignRolesToGroup(group, selections);
 			}
 
 			@Override

@@ -33,6 +33,9 @@ import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
  * @author vytautas r.
  */
 public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
@@ -44,16 +47,19 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPanelAuthorized() throws Exception {
 		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
-		
+
 		PageParameters params = new PageParameters();
 		params.add(UsersPage.PARAM_USER_ID, "demo");
 		tester.startComponentInPage(new UserSecurityPanel("id", params));
-		
+
 		tester.assertNoErrorMessage();
 	}
 }

@@ -200,14 +200,14 @@ public class JpaRoleGroupService implements RoleGroupService {
 	}
 
 	@Override
-	public SecurityGroup revokeRole(SecurityGroup group, SecurityRole role) {
+	public SecurityGroup revokeRoleFromGroup(SecurityGroup group, SecurityRole role) {
 		group = persistenceServices.find(group.getClass(), group.getId());
 		group.getRoles().remove(role);
 		return persistenceServices.edit(group);
 	}
 
 	@Override
-	public SecurityGroup assignRoles(SecurityGroup group, List<SecurityRole> selections) {
+	public SecurityGroup assignRolesToGroup(SecurityGroup group, List<SecurityRole> selections) {
 		group = persistenceServices.find(group.getClass(), group.getId());
 		group.getRoles().addAll(selections);
 		return persistenceServices.edit(group);

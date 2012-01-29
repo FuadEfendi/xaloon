@@ -46,11 +46,11 @@ public class MockedApplication extends AuthenticatedWebApplication {
 	private Map<String, Object> mockedServices = new HashMap<String, Object>();
 
 	private SecurityFacade securityFacade = mock(SecurityFacade.class);
-	
+
 	private PluginRegistry pluginRegistry = mock(PluginRegistry.class);
-	
+
 	private UserFacade userFacade = mock(UserFacade.class);
-	
+
 	public MockedApplication() {
 		DynamicMenuMountScannerListener dynamicMenuMountScannerListener = mock(DynamicMenuMountScannerListener.class);
 		mockedServices.put(DynamicMenuMountScannerListener.class.getName(), dynamicMenuMountScannerListener);
@@ -62,9 +62,9 @@ public class MockedApplication extends AuthenticatedWebApplication {
 		mockedServices.put(CategoryGroupPluginRegistryListener.class.getName(), categoryGroupPluginRegistryListener);
 
 		mockedServices.put(PluginRegistry.class.getName(), pluginRegistry);
-		
+
 		mockedServices.put(SecurityFacade.class.getName(), securityFacade);
-		
+
 		mockedServices.put("userFacade", userFacade);
 
 		PluginLoader pluginLoader = mock(PluginLoader.class);
@@ -82,11 +82,11 @@ public class MockedApplication extends AuthenticatedWebApplication {
 		LayoutComponentInitializer layoutComponentInitializer = mock(LayoutComponentInitializer.class);
 		mockedServices.put(LayoutComponentInitializer.class.getName(), layoutComponentInitializer);
 	}
-	
+
 	@Override
 	protected void initMarkupSettings() {
 	}
-	
+
 	@Override
 	protected Class<? extends User> getPersistedUserImplementation() {
 		return null;

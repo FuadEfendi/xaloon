@@ -70,7 +70,7 @@ public interface RoleGroupService extends Serializable {
 
 	SecurityGroup getGroupByPath(String path);
 
-	SecurityGroup revokeRole(SecurityGroup group, SecurityRole role);
+	SecurityGroup revokeRoleFromGroup(SecurityGroup group, SecurityRole role);
 
-	SecurityGroup assignRoles(SecurityGroup group, List<SecurityRole> selections);
+	SecurityGroup assignRolesToGroup(SecurityGroup group, List<SecurityRole> selections);
 }
