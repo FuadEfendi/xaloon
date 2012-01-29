@@ -11,12 +11,14 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.util.tester.WicketTester;
+import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.api.util.UrlUtil;
+import org.xaloon.core.jpa.security.model.JpaAuthority;
 import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.core.jpa.security.model.JpaRole;
 import org.xaloon.wicket.component.test.MockedApplication;
@@ -66,6 +68,14 @@ public abstract class AbstractUserAdminTestCase {
 		return role;
 	}
 
+	protected Authority newAuthority(Long id, String name) {
+		Authority item = new JpaAuthority();
+		item.setId(id);
+		item.setAuthority(name);
+		item.setPath(UrlUtil.encode(name));
+		return item;
+	}
+
 	protected SecurityGroup newGroup(Long id, String name) {
 		SecurityGroup item = new JpaGroup();
 		item.setId(id);
@@ -90,14 +100,11 @@ public abstract class AbstractUserAdminTestCase {
 		return groups;
 	}
 
-	protected void executeModalWindowCloseButtonCallback(ModalWindow modalWindow, WicketTester tester) {
-		for (Behavior behavior : modalWindow.getBehaviors()) {
-			if (behavior instanceof AbstractDefaultAjaxBehavior) {
-				String name = behavior.getClass().getSimpleName();
-				if (name.startsWith("CloseButtonBehavior")) {
-					tester.executeBehavior((AbstractAjaxBehavior)behavior);
-				}
-			}
+	protected List<Authority> newSecurityAuthorityListWithItems(int count) {
+		List<Authority> items = new ArrayList<Authority>();
+		for (int i = 0; i < count; i++) {
+			items.add(newAuthority(new Long(i), "name" + i));
 		}
+		return items;
 	}
 }

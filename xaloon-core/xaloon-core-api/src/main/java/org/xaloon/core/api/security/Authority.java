@@ -16,12 +16,13 @@
  */
 package org.xaloon.core.api.security;
 
+import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.persistence.Persistable;
 
 /**
  * @author vytautas r.
  */
-public interface Authority extends Persistable {
+public interface Authority extends Persistable, Bookmarkable {
 	/**
 	 * @return authority
 	 */

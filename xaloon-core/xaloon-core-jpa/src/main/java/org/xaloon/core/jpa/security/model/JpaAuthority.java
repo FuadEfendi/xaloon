@@ -31,14 +31,14 @@ import javax.persistence.UniqueConstraint;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.xaloon.core.api.security.Authority;
-import org.xaloon.core.jpa.model.AbstractEntity;
+import org.xaloon.core.jpa.model.BookmarkableEntity;
 
 /**
  * @author vytautas r.
  */
 @Entity
 @Table(name = "XAL_SECURITY_AUTHORITY", uniqueConstraints = @UniqueConstraint(columnNames = { "AUTHORITY" }))
-public class JpaAuthority extends AbstractEntity implements Authority {
+public class JpaAuthority extends BookmarkableEntity implements Authority {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "AUTHORITY", nullable = false)
