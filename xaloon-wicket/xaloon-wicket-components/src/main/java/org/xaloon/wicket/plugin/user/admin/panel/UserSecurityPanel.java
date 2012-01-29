@@ -22,12 +22,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.Authority;
@@ -44,7 +44,6 @@ import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.plugin.user.admin.renderer.AuthorityChoiceRenderer;
 import org.xaloon.wicket.plugin.user.admin.renderer.GroupChoiceRenderer;
 import org.xaloon.wicket.plugin.user.admin.renderer.RoleChoiceRenderer;
-import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * @author vytautas r.
@@ -72,7 +71,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	public UserSecurityPanel(String id, PageParameters parameters) {
 		super(id, parameters);
 		if (getPageRequestParameters().isEmpty() || getPageRequestParameters().get(UsersPage.PARAM_USER_ID).isEmpty()) {
-			setResponsePage(UsersPage.class);
+			throw new RestartResponseException(UsersPage.class);
 		}
 		setOutputMarkupId(true);
 	}
@@ -90,8 +89,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 
 		if (userDetails == null || userInfo == null) {
-			String requestUrl = UrlUtils.toAbsolutePath(UsersPage.class, null);
-			throw new RedirectToUrlException(requestUrl);
+			throw new RestartResponseException(UsersPage.class);
 		}
 
 		// Add user authorities/permissions

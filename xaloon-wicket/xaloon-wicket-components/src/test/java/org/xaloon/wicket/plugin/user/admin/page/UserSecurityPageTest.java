@@ -18,6 +18,7 @@ package org.xaloon.wicket.plugin.user.admin.page;
 
 import static org.mockito.Mockito.when;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityRoles;
@@ -29,6 +30,23 @@ import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
  */
 public class UserSecurityPageTest extends AbstractUserAdminTestCase {
 
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testPageNoUser() throws Exception {
+		MockedApplication app = createMockedApplication();
+
+		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+
+		WicketTester tester = new WicketTester(app);
+		tester.startPage(UserSecurityPage.class);
+		tester.assertRenderedPage(UsersPage.class);
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testPage() throws Exception {
 		MockedApplication app = createMockedApplication();
@@ -36,7 +54,9 @@ public class UserSecurityPageTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		WicketTester tester = new WicketTester(app);
-		tester.startPage(UserSecurityPage.class);
+		PageParameters params = new PageParameters();
+		params.add(UsersPage.PARAM_USER_ID, "demo");
+		tester.startPage(UserSecurityPage.class, params);
 		tester.assertRenderedPage(UserSecurityPage.class);
 	}
 }

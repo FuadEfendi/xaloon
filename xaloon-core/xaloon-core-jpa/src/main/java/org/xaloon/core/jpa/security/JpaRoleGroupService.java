@@ -111,17 +111,17 @@ public class JpaRoleGroupService implements RoleGroupService {
 	}
 
 	@Override
-	public <T extends SecurityGroup> void assignGroups(UserDetails userDetails, List<T> selections) {
+	public <T extends SecurityGroup> UserDetails assignGroups(UserDetails userDetails, List<T> selections) {
 		userDetails = persistenceServices.find(userDetails.getClass(), userDetails.getId());
 		userDetails.getGroups().addAll(selections);
-		persistenceServices.edit(userDetails);
+		return persistenceServices.edit(userDetails);
 	}
 
 	@Override
-	public <T extends SecurityRole> void assignRoles(UserDetails userDetails, List<T> selections) {
+	public <T extends SecurityRole> UserDetails assignRoles(UserDetails userDetails, List<T> selections) {
 		userDetails = persistenceServices.find(userDetails.getClass(), userDetails.getId());
 		userDetails.getRoles().addAll(selections);
-		persistenceServices.edit(userDetails);
+		return persistenceServices.edit(userDetails);
 	}
 
 	@Override
@@ -133,10 +133,10 @@ public class JpaRoleGroupService implements RoleGroupService {
 	}
 
 	@Override
-	public <T extends Authority> void assignAuthorities(UserDetails userDetails, List<T> selections) {
+	public <T extends Authority> UserDetails assignAuthorities(UserDetails userDetails, List<T> selections) {
 		userDetails = persistenceServices.find(userDetails.getClass(), userDetails.getId());
 		userDetails.getAuthorities().addAll(selections);
-		persistenceServices.edit(userDetails);
+		return persistenceServices.edit(userDetails);
 	}
 
 	@Override

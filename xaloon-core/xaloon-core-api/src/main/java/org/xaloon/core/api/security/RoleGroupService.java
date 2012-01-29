@@ -44,13 +44,13 @@ public interface RoleGroupService extends Serializable {
 
 	List<SecurityGroup> getGroupsByUsername(String username);
 
-	<T extends SecurityGroup> void assignGroups(UserDetails userDetails, List<T> selections);
+	<T extends SecurityGroup> UserDetails assignGroups(UserDetails userDetails, List<T> selections);
 
-	<T extends SecurityRole> void assignRoles(UserDetails userDetails, List<T> selections);
+	<T extends SecurityRole> UserDetails assignRoles(UserDetails userDetails, List<T> selections);
 
 	List<Authority> getAuthorityList(int first, int count);
 
-	<T extends Authority> void assignAuthorities(UserDetails userDetails, List<T> selections);
+	<T extends Authority> UserDetails assignAuthorities(UserDetails userDetails, List<T> selections);
 
 	UserDetails revokeAuthority(UserDetails userDetails, Authority authority);
 

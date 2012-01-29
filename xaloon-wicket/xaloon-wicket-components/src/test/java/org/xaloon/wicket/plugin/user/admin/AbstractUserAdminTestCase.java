@@ -31,6 +31,8 @@ import org.xaloon.wicket.plugin.system.SystemPluginBean;
 public abstract class AbstractUserAdminTestCase {
 	protected RoleGroupService roleGroupService = mock(RoleGroupService.class);
 
+	protected UserDetails details = mock(UserDetails.class);
+
 	protected MockedApplication createMockedApplication() {
 		MockedApplication app = new MockedApplication();
 		app.getMockedServices().put(RoleGroupService.class.getName(), roleGroupService);
@@ -40,7 +42,7 @@ public abstract class AbstractUserAdminTestCase {
 		when(app.getPluginRegistry().getPluginBean(SystemPlugin.class)).thenReturn(systemPluginBean);
 		when(app.getPluginRegistry().isEnabled(SystemPlugin.class)).thenReturn(true);
 
-		UserDetails details = mock(UserDetails.class);
+
 		when(app.getUserFacade().loadUserDetails("demo")).thenReturn(details);
 
 		User user = mock(User.class);
@@ -84,7 +86,7 @@ public abstract class AbstractUserAdminTestCase {
 		return item;
 	}
 
-	protected List<SecurityGroup> newSecurityListWithItems(int count) {
+	protected List<SecurityGroup> newSecurityGroupListWithItems(int count) {
 		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
 		for (int i = 0; i < count; i++) {
 			groups.add(newGroup(new Long(i), "name" + i));
