@@ -89,6 +89,21 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 	 * @throws Exception
 	 */
 	@Test
+	public void testPanelEmptyParameter() throws Exception {
+		try {
+			PageParameters pageParam = new PageParameters();
+			pageParam.add(UsersPage.PARAM_USER_ID, "");
+			tester.startComponentInPage(new UserSecurityPanel("id", pageParam));
+			fail();
+		} catch (RestartResponseException e) {
+			Assert.assertTrue(true);
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
 	public void testPanelNotAuthorized() throws Exception {
 		WicketTester tester = new WicketTester(new MockedApplication());
 		try {
@@ -103,8 +118,23 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 	 * @throws Exception
 	 */
 	@Test
-	public void testPanelNoUserFound() throws Exception {
+	public void testPanelNoUserDetailsFound() throws Exception {
 		when(app.getUserFacade().loadUserDetails("test")).thenReturn(null);
+
+		PageParameters params = new PageParameters();
+		params.add(UsersPage.PARAM_USER_ID, "test");
+		tester.startComponentInPage(new UserSecurityPanel("id", params));
+		tester.assertNoErrorMessage();
+		tester.assertRenderedPage(UsersPage.class);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testPanelNoUserFound() throws Exception {
+		when(app.getUserFacade().loadUserDetails("test")).thenReturn(details);
+		when(app.getUserFacade().getUserByUsername("test")).thenReturn(null);
 
 		PageParameters params = new PageParameters();
 		params.add(UsersPage.PARAM_USER_ID, "test");
