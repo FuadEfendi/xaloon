@@ -16,7 +16,7 @@
  */
 package org.xaloon.core.impl.storage;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.ejb.TransactionAttribute;
@@ -26,7 +26,10 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.asynchronous.ScheduledJobService;
 import org.xaloon.core.api.asynchronous.SchedulerServices;
 import org.xaloon.core.api.config.Configuration;
@@ -54,6 +57,8 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFileRepositoryFacade.class);
 
 	@Inject
 	private FileDescriptorDao fileDescriptorDao;
@@ -104,7 +109,7 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 	}
 
 	@Override
-	public InputStream getFileByPath(String path) {
+	public byte[] getFileByPath(String path) {
 		// First retrieve file identifier
 		FileDescriptor fileDescriptor = fileDescriptorDao.getFileDescriptorByPath(path);
 		if (fileDescriptor == null) {
@@ -112,8 +117,7 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 		}
 		// and then load file stream by unique identifier
 
-		InputStream result = getFileStorageService(fileDescriptor.getFileStorageServiceProvider()).getInputStreamByIdentifier(
-			fileDescriptor.getIdentifier());
+		byte[] result = getFileStorageService(fileDescriptor.getFileStorageServiceProvider()).getByteArrayByIdentifier(fileDescriptor.getIdentifier());
 		if (result == null) {
 			// Load default picture with "Not available" information
 			result = getNotAvailable();
@@ -121,8 +125,13 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 		return result;
 	}
 
-	private InputStream getNotAvailable() {
-		return this.getClass().getResourceAsStream(NOT_AVAILABLE_JPG);
+	private byte[] getNotAvailable() {
+		try {
+			return IOUtils.toByteArray(this.getClass().getResourceAsStream(NOT_AVAILABLE_JPG));
+		} catch (IOException e) {
+			LOGGER.error("Could not convert input stream to byte array", e);
+		}
+		return null;
 	}
 
 	@Override

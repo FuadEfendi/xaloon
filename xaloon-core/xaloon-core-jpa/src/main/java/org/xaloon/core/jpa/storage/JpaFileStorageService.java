@@ -16,9 +16,7 @@
  */
 package org.xaloon.core.jpa.storage;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,13 +70,13 @@ public class JpaFileStorageService implements FileStorageService {
 	}
 
 	@Override
-	public InputStream getInputStreamByIdentifier(String identifier) {
+	public byte[] getByteArrayByIdentifier(String identifier) {
 		if (StringUtils.isEmpty(identifier)) {
 			return null;// TODO or return default empty image?
 		}
 		byte[] result = getFromCache(identifier);
 		if (result != null) {
-			return new ByteArrayInputStream(result);
+			return result;
 		}
 		JpaFileStorage jfs = persistenceServices.find(JpaFileStorage.class, Long.valueOf(identifier));// TODO fix save convert
 		if (jfs == null || jfs.getFile() == null) {
@@ -86,7 +84,7 @@ public class JpaFileStorageService implements FileStorageService {
 		}
 		result = jfs.getFile();
 		storeToCache(identifier, result);
-		return new ByteArrayInputStream(result);
+		return result;
 	}
 
 	@Override

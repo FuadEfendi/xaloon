@@ -16,6 +16,12 @@
  */
 package org.xaloon.core.api.storage;
 
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author vytautas r.
  */
@@ -26,6 +32,8 @@ public abstract class AbstractInputStreamContainer implements InputStreamContain
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractInputStreamContainer.class);
+
 	private InputStreamContainerOptions options;
 
 	public InputStreamContainerOptions getOptions() {
@@ -34,5 +42,15 @@ public abstract class AbstractInputStreamContainer implements InputStreamContain
 
 	public void setOptions(InputStreamContainerOptions options) {
 		this.options = options;
+	}
+
+	@Override
+	public byte[] asByteArray() {
+		try {
+			return IOUtils.toByteArray(getInputStream());
+		} catch (IOException e) {
+			LOGGER.error("Could not convert input stream into byte array", e);
+		}
+		return null;
 	}
 }

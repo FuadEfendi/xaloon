@@ -16,7 +16,7 @@
  */
 package org.xaloon.core.jcr.storage;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,10 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.jcr.Binary;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,16 +68,17 @@ public class JcrFileStorageService implements FileStorageService {
 	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer) {
 		return storeFile(fileDescriptor, inputStreamContainer, new HashMap<String, Object>());
 	}
-
+	
 	@Override
-	public InputStream getInputStreamByIdentifier(String uniqueIdentifier) {
+	public byte[] getByteArrayByIdentifier(String uniqueIdentifier) {
 		if (!org.apache.commons.lang.StringUtils.isEmpty(uniqueIdentifier)) {
 			if (uniqueIdentifier.contains("/")) {
 				return getInputStreamByPath(uniqueIdentifier);
 			}
 			try {
 				Node fileContent = repositoryFacade.getDefaultSession().getNodeByIdentifier(uniqueIdentifier);
-				return fileContent.getProperty("jcr:data").getBinary().getStream();
+				Binary binary = fileContent.getProperty("jcr:data").getBinary();
+				return toByteArray(binary);
 			} catch (Exception e) {
 				throw new RuntimeException("Error while retrieving file", e);
 			}
@@ -83,10 +86,17 @@ public class JcrFileStorageService implements FileStorageService {
 		return null;
 	}
 
-	private InputStream getInputStreamByPath(String uniqueIdentifier) {
+	private byte[] toByteArray(Binary binary) throws RepositoryException, IOException {
+		byte result[] = new byte[(int)binary.getSize()];
+		binary.read(result, 0);
+		return result;
+	}
+
+	private byte[] getInputStreamByPath(String uniqueIdentifier) {
 		try {
 			Node fileContent = repositoryFacade.getDefaultSession().getRootNode().getNode(uniqueIdentifier);
-			return fileContent.getNode("jcr:content").getProperty("jcr:data").getBinary().getStream();
+			Binary binary = fileContent.getNode("jcr:content").getProperty("jcr:data").getBinary();
+			return toByteArray(binary);
 		} catch (Exception e) {
 			throw new JcrException("Error while retrieving file", e);
 		}

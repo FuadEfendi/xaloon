@@ -16,6 +16,8 @@
  */
 package org.xaloon.wicket.plugin.image.panel;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,10 +25,14 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.xaloon.core.api.storage.ByteArrayAsInputStreamContainer;
+import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
-import org.xaloon.wicket.component.resource.ImageLink;
 
 /**
  * @author vytautas r.
@@ -42,6 +48,9 @@ public class ImagePanel extends Panel {
 
 	private int imageHeight = 100;
 
+	@Inject
+	private FileRepositoryFacade fileRepositoryFacade;
+	
 	/**
 	 * Construct.
 	 * 
@@ -63,8 +72,19 @@ public class ImagePanel extends Panel {
 		
 
 		// Add show temporary image
-		TemporaryResource temporaryResource = new TemporaryResource((image.getThumbnail() != null) ? image.getThumbnail() : image);
-		Image temporaryImage = new Image("temporary-image", temporaryResource);
+		FileDescriptor temporaryFiledeDescriptor = image.getThumbnail();
+		if (temporaryFiledeDescriptor == null) {
+			temporaryFiledeDescriptor = image;
+		}
+		if (temporaryFiledeDescriptor != null && temporaryFiledeDescriptor.getImageInputStreamContainer() == null) {
+			if (temporaryFiledeDescriptor.isExternal()) {
+				temporaryFiledeDescriptor.setImageInputStreamContainer(new UrlInputStreamContainer(temporaryFiledeDescriptor.getPath()));
+			} else {
+				temporaryFiledeDescriptor.setImageInputStreamContainer(new ByteArrayAsInputStreamContainer(fileRepositoryFacade.getFileByPath(temporaryFiledeDescriptor.getPath())));
+			}
+		}
+		TemporaryResource temporaryResource = new TemporaryResource(temporaryFiledeDescriptor);
+		Image temporaryImage = new NonCachingImage("temporary-image", temporaryResource);
 		temporaryImage.add(AttributeModifier.replace(HtmlElementEnum.WIDTH.value(), String.valueOf(imageWidth)));
 		temporaryImage.add(AttributeModifier.replace(HtmlElementEnum.HEIGHT.value(), String.valueOf(imageHeight)));
 		temporaryImage.setVisible(!temporaryResource.isEmpty());

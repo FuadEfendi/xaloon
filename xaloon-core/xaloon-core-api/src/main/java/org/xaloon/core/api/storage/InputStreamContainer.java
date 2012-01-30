@@ -43,4 +43,11 @@ public interface InputStreamContainer extends Serializable {
 	InputStreamContainerOptions getOptions();
 
 	void setOptions(InputStreamContainerOptions options);
+
+	/**
+	 * Returns input stream as byte array
+	 * 
+	 * @return input stream converted into byte array
+	 */
+	byte[] asByteArray();
 }

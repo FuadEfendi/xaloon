@@ -1,7 +1,6 @@
 package org.xaloon.wicket.plugin.google.storage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -209,11 +208,6 @@ public class PicasaFileStorageService implements FileStorageService {
 	}
 
 	@Override
-	public InputStream getInputStreamByIdentifier(String identifier) {
-		return null;
-	}
-
-	@Override
 	public boolean delete(String uniqueIdentifier) {
 		PicasawebService picasawebService = new PicasawebService("xaloon-application");
 		picasawebService.setHeader("If-Match", "*");
@@ -230,6 +224,12 @@ public class PicasaFileStorageService implements FileStorageService {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public byte[] getByteArrayByIdentifier(String identifier) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
