@@ -31,7 +31,7 @@ public class AuthorityChoiceRenderer implements IChoiceRenderer<Authority> {
 
 	@Override
 	public Object getDisplayValue(Authority object) {
-		return object.getAuthority();
+		return object.getName();
 	}
 
 	@Override

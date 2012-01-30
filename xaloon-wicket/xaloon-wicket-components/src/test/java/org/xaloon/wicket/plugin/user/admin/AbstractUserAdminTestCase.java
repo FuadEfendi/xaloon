@@ -73,7 +73,7 @@ public abstract class AbstractUserAdminTestCase {
 	protected Authority newAuthority(Long id, String name) {
 		Authority item = new JpaAuthority();
 		item.setId(id);
-		item.setAuthority(name);
+		item.setName(name);
 		item.setPath(UrlUtil.encode(name));
 		return item;
 	}

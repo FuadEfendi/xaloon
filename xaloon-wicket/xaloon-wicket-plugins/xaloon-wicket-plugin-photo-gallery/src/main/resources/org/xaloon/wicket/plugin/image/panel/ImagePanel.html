@@ -18,10 +18,14 @@
 <html xmlns:wicket>
 <body>
 <wicket:panel>
-	<img alt="ttt" src="news-image-small-1.jpg" wicket:id="temporary-image"/>
-	<wicket:enclosure child="delete-image-link">
-		<a href="#" wicket:id="delete-image-link">Delete</a>&nbsp;
-	</wicket:enclosure>
+	<div class="float-left model-info-photo">
+		<wicket:enclosure child="delete-image-link">
+		<div class="edit-panel">
+			<a href="#" class="delete-link" onclick="#" wicket:id="delete-image-link"><span></span></a>
+		</div>
+		</wicket:enclosure>
+		<img alt="ttt" src="1.jpg" width="158" height="82" wicket:id="temporary-image">
+	</div>
 </wicket:panel>
 </body>
 </html>

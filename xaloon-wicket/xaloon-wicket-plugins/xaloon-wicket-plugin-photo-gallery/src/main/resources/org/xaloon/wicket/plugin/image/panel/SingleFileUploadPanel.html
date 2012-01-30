@@ -19,24 +19,22 @@
 <body>
 <wicket:panel>
 	<form wicket:id="file-upload-form">
-		<table>
-			<tr>
-	  			<td><label for="external-file">External link to file</label></td>
-		  		<td class="align_right"><input id="external-file" wicket:id="path"/></td>
-		  	</tr>
-	  		<tr>
-	  			<td><label for="file-upload-field">Upload file</label></td>
-	  			<td class="align_right"><input wicket:id="file-upload-field" type="file"/></td>
-	  		</tr>
-	  		<tr>
-	  			<td>&nbsp;</td>
-	  			<td>
-					<div class="align_right">
-						<input class="formbutton" type="submit" value="Upload" wicket:id="submit"/>				
-					</div>
-				</td>
-	  		</tr>
-	  	</table>
+		<div>
+				<label>External file
+					<span class="small">Add external image to gallery</span>
+				</label>
+				<input type="text" name="image_remote" id="image_remote"  class="width_long input" wicket:id="path"/>
+			</div>
+			<div>
+				<label>Or upload file
+					<span class="small">Add local image to gallery</span>
+				</label>
+				<input type="file" name="image_local" id="image_local"  class="width_long" wicket:id="file-upload-field"/>
+			</div>
+			<div>
+				<button type="submit" class="button2 active-button" wicket:id="submit">Upload file</button>
+				<div class="spacer"></div>
+			</div>
 	</form>
 </wicket:panel>
 </body>

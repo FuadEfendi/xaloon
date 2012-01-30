@@ -25,14 +25,16 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.xaloon.core.api.persistence.Persistable;
+import org.apache.commons.lang.StringUtils;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.SecurityEntity;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
 import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.core.jpa.security.model.JpaRole;
@@ -87,7 +89,10 @@ public class JpaRoleGroupService implements RoleGroupService {
 	}
 
 	@Override
-	public <T extends Persistable> void save(T entity) {
+	public <T extends SecurityEntity> void save(T entity) {
+		if (StringUtils.isEmpty(entity.getPath())) {
+			entity.setPath(UrlUtil.encode(entity.getName()));
+		}
 		persistenceServices.create(entity);
 	}
 
@@ -148,7 +153,7 @@ public class JpaRoleGroupService implements RoleGroupService {
 
 	public Authority findAuthority(String authorityName) {
 		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
-		queryBuilder.addParameter("a.authority", "_AUTHORITY_NAME", authorityName);
+		queryBuilder.addParameter("a.name", "_AUTHORITY_NAME", authorityName);
 		return persistenceServices.executeQuerySingle(queryBuilder);
 	}
 

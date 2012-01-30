@@ -18,14 +18,16 @@
 <html xmlns:wicket>
 <body>
 <wicket:panel>
-	<div>
-		<input wicket:id="input-token" type="text" class="input"/>
-		<div class="float-right"><a wicket:id="link-add-selected" href="#">add selected</a></div>
-	</div>
-	<div class="wicket-mfu-container">
-		<div  wicket:id="item-list">
-			<div class="float-left send-additional-info-attached-file"><span wicket:id="name"></span></div> <div class="float-left send-additional-info-attached-file-delete"><a wicket:id="delete" href="#" title="Delete">delete</a></div>
-		</div>			
+	<input type="text" name="tags" id="tags" class="width_shorter input" wicket:id="input-token"/><span><a href="#" wicket:id="link-add-selected" >add selected</a></span>
+	<div class="row width_wide">			
+		<span  wicket:id="item-list">
+			<span>
+				<span wicket:id="name">asdf</span>
+			</span> 
+			<span>
+				<a href="#" title="Delete" wicket:id="delete">delete</a>
+			</span>
+		</span>
 	</div>
 </wicket:panel>
 </body>

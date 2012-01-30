@@ -84,7 +84,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(authority.getAuthority())));
+				item.add(new Label("name", new Model<String>(authority.getName())));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 

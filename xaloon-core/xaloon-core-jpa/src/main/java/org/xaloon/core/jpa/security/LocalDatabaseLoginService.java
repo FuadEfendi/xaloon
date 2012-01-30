@@ -216,8 +216,8 @@ public class LocalDatabaseLoginService implements LoginService {
 		Authority authority = roleGroupService.findAuthority(role);
 		if (authority == null) {
 			authority = roleGroupService.newAuthority();
-			authority.setAuthority(role);
-			persistenceServices.create(authority);
+			authority.setName(role);
+			roleGroupService.save(authority);
 		}
 		return authority;
 	}
@@ -264,7 +264,7 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	private void addByAuthorityMember(List<JpaAuthority> authorities, Set<String> items) {
 		for (JpaAuthority authority : authorities) {
-			items.add(authority.getAuthority());
+			items.add(authority.getName());
 		}
 	}
 

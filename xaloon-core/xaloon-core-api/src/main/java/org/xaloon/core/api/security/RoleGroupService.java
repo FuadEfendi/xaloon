@@ -19,8 +19,6 @@ package org.xaloon.core.api.security;
 import java.io.Serializable;
 import java.util.List;
 
-import org.xaloon.core.api.persistence.Persistable;
-
 /**
  * @author vytautas r.
  */
@@ -36,7 +34,7 @@ public interface RoleGroupService extends Serializable {
 
 	SecurityGroup newGroup();
 
-	<T extends Persistable> void save(T entity);
+	<T extends SecurityEntity> void save(T entity);
 
 	SecurityRole newRole();
 

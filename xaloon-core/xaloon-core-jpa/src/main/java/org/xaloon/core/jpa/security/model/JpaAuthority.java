@@ -42,7 +42,7 @@ public class JpaAuthority extends BookmarkableEntity implements Authority {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "AUTHORITY", nullable = false)
-	private String authority;
+	private String name;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
@@ -67,18 +67,24 @@ public class JpaAuthority extends BookmarkableEntity implements Authority {
 		this.users = users;
 	}
 
+
 	/**
-	 * @return authority
+	 * Gets name.
+	 * 
+	 * @return name
 	 */
-	public String getAuthority() {
-		return authority;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param authority
+	 * Sets name.
+	 * 
+	 * @param name
+	 *            name
 	 */
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -89,19 +95,19 @@ public class JpaAuthority extends BookmarkableEntity implements Authority {
 		JpaAuthority jpaAuthority = (JpaAuthority)obj;
 
 		EqualsBuilder equalsBuilder = new EqualsBuilder();
-		equalsBuilder.append(getAuthority(), jpaAuthority.getAuthority());
+		equalsBuilder.append(getName(), jpaAuthority.getName());
 		return equalsBuilder.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-		hashCodeBuilder.append(getAuthority());
+		hashCodeBuilder.append(getName());
 		return hashCodeBuilder.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[%s] authority=%s", this.getClass().getSimpleName(), getAuthority());
+		return String.format("[%s] authority=%s", this.getClass().getSimpleName(), getName());
 	}
 }
