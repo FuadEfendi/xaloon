@@ -37,6 +37,7 @@ import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
+import org.xaloon.wicket.plugin.captcha.RecaptchaPanel;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
 import org.xaloon.wicket.plugin.system.SystemPluginBean;
 import org.xaloon.wicket.plugin.user.RegistrationModel;
@@ -112,10 +113,18 @@ public class RegistrationPanel<T extends RegistrationModel, K extends User> exte
 		createEmailField(registrationForm);
 		createRepeatPasswordField(registrationForm, passwordField);
 		createAgreementPanel(registrationForm);
+		createCaptchaPanel(registrationForm);
+
 		registrationForm.add(createAgreementMessageLabel());
 		registrationForm.add(new EmailPluginEnabledValidator());
 
 		onFormInitialize(registrationForm);
+	}
+
+	private void createCaptchaPanel(Form<T> registrationForm) {
+		// Add captcha panel
+		RecaptchaPanel recaptchaPanel = new RecaptchaPanel("recaptcha-panel", registrationForm);
+		registrationForm.add(recaptchaPanel);
 	}
 
 	@SuppressWarnings("unchecked")
