@@ -101,6 +101,13 @@ public class JpaCommentDao implements CommentDao {
 	}
 
 	@Override
+	public List<Comment> getInappropriateCommentsForApproval() {
+		QueryBuilder queryBuilder = new QueryBuilder("select c from " + JpaComment.class.getSimpleName() + " c");
+		queryBuilder.addParameter("c.inappropriate", "_inappropriate", true);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
 	public void delete(Comment comment) {
 		persistenceServices.remove(JpaComment.class, comment.getId());
 	}
@@ -121,5 +128,18 @@ public class JpaCommentDao implements CommentDao {
 	@Override
 	public Comment newComment() {
 		return new JpaComment();
+	}
+
+	@Override
+	public void markAsInappropriate(Comment comment, boolean flag) {
+		comment.setInappropriate(flag);
+		persistenceServices.edit(comment);
+	}
+
+	@Override
+	public void deleteInappropriateCommentsForApproval() {
+		QueryBuilder queryBuilder = new QueryBuilder("delete from " + JpaComment.class.getSimpleName() + " c");
+		queryBuilder.addParameter("c.inappropriate", "_inappropriate", true);
+		persistenceServices.executeUpdate(queryBuilder);
 	}
 }

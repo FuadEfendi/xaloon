@@ -18,21 +18,20 @@
 <html xmlns:wicket>
 <body>
 <wicket:panel>
-	<wicket:enclosure child="container">
-	<h2>Comments</h2>
-	<div wicket:id="container">
-		<div class="comments-block" wicket:id="comment-list">
-			<wicket:enclosure child="image-link"><img src="#" wicket:id="image-link"/></wicket:enclosure>
-			<div class="comment-author blogger-comment-icon"><a href="#" wicket:id="external-link"><span wicket:id="displayName"></span></a> wrote ...</div>
+	<h2>Inappropriate comments</h2>
+	<wicket:enclosure child="comment-list-view">
+		<a href="#" wicket:id="delete-all">delete all inappropriate comments</a>
+		<br/><br/>
+		<div class="comments-block" wicket:id="comment-list-view">
+			<div class="comment-author blogger-comment-icon"><span wicket:id="display-name"></span> wrote ...</div>
 			<div class="comment-body" wicket:id="message"/>
 			<div class="comment-footer">
-				<a href="#" wicket:id="inappropriateFlag">Flag as inappropriate</a> <span class="comment-timestamp" wicket:id="comment-timestamp">2010-12-25 01:43</span>
+				<a href="#" wicket:id="link-to-object">link to commentable object</a> |
+				<a href="#" wicket:id="revert">revert to normal comment</a> |
+				<a href="#" wicket:id="delete">delete</a> |
+				<span class="comment-timestamp" wicket:id="create-date">2010-12-25 01:43</span>
 			</div>
 		</div>
-		<div>
-			<span wicket:id="navigator"></span>
-		</div>
-	</div>
 	</wicket:enclosure>
 </wicket:panel>
 </body>

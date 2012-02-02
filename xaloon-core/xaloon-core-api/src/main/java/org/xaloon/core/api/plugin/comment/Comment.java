@@ -59,4 +59,19 @@ public interface Comment extends Message, Bookmarkable {
 	 * @param enabled
 	 */
 	void setEnabled(boolean enabled);
+
+	/**
+	 * Gets inappropriate.
+	 * 
+	 * @return inappropriate
+	 */
+	boolean isInappropriate();
+
+	/**
+	 * Sets inappropriate.
+	 * 
+	 * @param inappropriate
+	 *            inappropriate
+	 */
+	void setInappropriate(boolean inappropriate);
 }

@@ -41,6 +41,7 @@ import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.CommentPluginBean;
 import org.xaloon.core.api.plugin.comment.Commentable;
+import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.util.TextUtil;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
@@ -61,6 +62,9 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 	@Inject
 	private DateService dateService;
+
+	@Inject
+	private SecurityFacade securityFacade;
 
 	/**
 	 * Construct.
@@ -121,6 +125,21 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 						};
 					}
 				}.setVisible(getSecurityFacade().isAdministrator()));
+
+				// Add inappropriate flag
+				item.add(new AjaxLink<Void>("inappropriateFlag") {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						commentDao.markAsInappropriate(comment, true);
+						target.add(CommentListPanel.this);
+					}
+				}.setVisible(securityFacade.isLoggedIn() && !comment.isInappropriate()));
 			}
 		};
 		dataContainer.addAbstractPageableView(commentListDataView);

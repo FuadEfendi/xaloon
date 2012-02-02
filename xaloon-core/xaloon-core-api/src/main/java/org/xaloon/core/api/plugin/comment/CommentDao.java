@@ -97,4 +97,24 @@ public interface CommentDao extends Serializable {
 	 * @return create new instance of Comment persistable object
 	 */
 	Comment newComment();
+
+	/**
+	 * @param comment
+	 *            comment which contains inappropriate content
+	 * @param flag
+	 *            true/false - false means rollback inappropriate comment to proper state
+	 */
+	void markAsInappropriate(Comment comment, boolean flag);
+
+	/**
+	 * Returns the list of inappropriate comments
+	 * 
+	 * @return the list of inappropriate comments
+	 */
+	List<Comment> getInappropriateCommentsForApproval();
+
+	/**
+	 * Delete all comments, which are inappropriate. Should be a spam.
+	 */
+	void deleteInappropriateCommentsForApproval();
 }

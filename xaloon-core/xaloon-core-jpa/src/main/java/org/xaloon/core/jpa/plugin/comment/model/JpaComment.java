@@ -43,6 +43,28 @@ public class JpaComment extends JpaMessage implements Comment {
 	@Column(name = "PATH")
 	private String path;
 
+	@Column(name = "INAPPROPRIATE")
+	private boolean inappropriate;
+
+	/**
+	 * Gets inappropriate.
+	 * 
+	 * @return inappropriate
+	 */
+	public boolean isInappropriate() {
+		return inappropriate;
+	}
+
+	/**
+	 * Sets inappropriate.
+	 * 
+	 * @param inappropriate
+	 *            inappropriate
+	 */
+	public void setInappropriate(boolean inappropriate) {
+		this.inappropriate = inappropriate;
+	}
+
 	/**
 	 * @return path where comment was posted
 	 */
