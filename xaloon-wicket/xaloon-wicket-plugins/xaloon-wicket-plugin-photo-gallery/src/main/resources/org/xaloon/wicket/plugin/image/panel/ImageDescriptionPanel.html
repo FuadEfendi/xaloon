@@ -18,16 +18,19 @@
 <html xmlns:wicket>
 <body>
 <wicket:panel>
-	<div class="float-left model-info-photo">
-		<wicket:enclosure child="delete-image-link">
-		<div class="edit-panel">
-			<a href="#" class="delete-link" onclick="#" wicket:id="delete-image-link"><span></span></a>
-			<a href="#" class="edit-link" onclick="#" wicket:id="edit-information"><span></span></a>
-			<div wicket:id="modal-image-information"/>
+	<h2>Image information</h2>
+	<form wicket:id="image-form">
+		<div wicket:id="feedback"></div>
+		<div>
+			<input type="text" wicket:id="title"/>
 		</div>
-		</wicket:enclosure>
-		<img alt="ttt" src="1.jpg" width="158" height="82" wicket:id="temporary-image">
-	</div>
+		<div>
+			<TEXTAREA cols="20" rows="5" class="entry_content" wicket:id="description"></TEXTAREA>
+		</div>
+		<div>
+			<input type="button" value="Save" wicket:id="submit"/>
+		</div>
+	</form>
 </wicket:panel>
 </body>
 </html>

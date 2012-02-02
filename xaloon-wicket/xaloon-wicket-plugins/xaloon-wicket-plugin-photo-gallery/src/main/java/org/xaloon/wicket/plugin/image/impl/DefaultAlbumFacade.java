@@ -261,4 +261,9 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		newImage.setImageInputStreamContainer(thumbnailInputStreamContainer);
 		newImage.setThumbnail(createPhysicalFile(newImage, fileDescriptor));
 	}
+
+	@Override
+	public void save(Image image) {
+		persistenceServices.edit(image);
+	}
 }

@@ -24,15 +24,19 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.storage.ByteArrayAsInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
+import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 
 /**
  * @author vytautas r.
@@ -50,6 +54,9 @@ public class ImagePanel extends Panel {
 
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
+
+	@Inject
+	private AlbumFacade albumFacade;
 	
 	/**
 	 * Construct.
@@ -66,10 +73,7 @@ public class ImagePanel extends Panel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image)getDefaultModelObject();
-
-
-		
+		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image) getDefaultModelObject();
 
 		// Add show temporary image
 		FileDescriptor temporaryFiledeDescriptor = image.getThumbnail();
@@ -80,7 +84,8 @@ public class ImagePanel extends Panel {
 			if (temporaryFiledeDescriptor.isExternal()) {
 				temporaryFiledeDescriptor.setImageInputStreamContainer(new UrlInputStreamContainer(temporaryFiledeDescriptor.getPath()));
 			} else {
-				temporaryFiledeDescriptor.setImageInputStreamContainer(new ByteArrayAsInputStreamContainer(fileRepositoryFacade.getFileByPath(temporaryFiledeDescriptor.getPath())));
+				temporaryFiledeDescriptor.setImageInputStreamContainer(new ByteArrayAsInputStreamContainer(fileRepositoryFacade
+						.getFileByPath(temporaryFiledeDescriptor.getPath())));
 			}
 		}
 		TemporaryResource temporaryResource = new TemporaryResource(temporaryFiledeDescriptor);
@@ -115,12 +120,45 @@ public class ImagePanel extends Panel {
 				}
 			}
 		});
+
+		// Add the modal window to edit image information
+		final ModalWindow imageInformationModalWindow = new CustomModalWindow("modal-image-information", "Image information") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected Component getOnCloseComponent() {
+				return ImagePanel.this;
+			}
+		};
+		imageInformationModalWindow.setContent(new ImageDescriptionPanel(imageInformationModalWindow.getContentId(), new Model<org.xaloon.core.api.image.model.Image>(image)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onImageUpdate(AjaxRequestTarget target, org.xaloon.core.api.image.model.Image entity) {
+				//Usually parent of this panel should be responsible to save new entity, so we just update existing one here
+				if (entity.getId() != null) {
+					albumFacade.save(entity);				
+				}
+				imageInformationModalWindow.close(target);
+			}
+			
+		});
+		add(imageInformationModalWindow);
+
+		// Add edit image metadata modal window
+		add(new AjaxLink<Void>("edit-information") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				imageInformationModalWindow.show(target);
+			}
+		});
 	}
 
 	protected Component getOnCloseRefreshComponent() {
 		return ImagePanel.this;
 	}
-
 
 	/**
 	 * Delete file descriptor and file
