@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.component.security.page;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +39,14 @@ public abstract class AbstractSignInPage extends LayoutWebPage {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static final List<String> ingoreRefererPages = new ArrayList<String>();
+
+	static {
+		ingoreRefererPages.add("login");
+		ingoreRefererPages.add("activate");
+		ingoreRefererPages.add("activation");
+	}
+
 	@Override
 	protected Panel getContentPanel(String id, PageParameters pageParameters) {
 		// If there is no referer set then try to set one
@@ -43,11 +54,22 @@ public abstract class AbstractSignInPage extends LayoutWebPage {
 		if (StringUtils.isEmpty(refereUrl)) {
 			HttpServletRequest req = (HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest();
 			refereUrl = req.getHeader("referer");
-			if (!StringUtils.isEmpty(refereUrl) && !refereUrl.contains("login")) {
+			if (!StringUtils.isEmpty(refereUrl) && !isInIgnoreList(refereUrl)) {
 				WebSession.get().setMetaData(SignInPanel.METADATAKEY_REFERER, refereUrl);
 			}
 		}
 		return onGetContentPanel(id, pageParameters);
+	}
+
+	private boolean isInIgnoreList(String refereUrl) {
+		boolean result = false;
+		for (String itemToIgnore : ingoreRefererPages) {
+			if (refereUrl.contains(itemToIgnore)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 	protected abstract Panel onGetContentPanel(String id, PageParameters pageParameters);

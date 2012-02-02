@@ -128,8 +128,8 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public boolean activate(String activationKey) {
-		return loginService.activate(activationKey);
+	public boolean activate(String activationKey, String userPassword) {
+		return loginService.activate(activationKey, userPassword);
 	}
 
 	@Override

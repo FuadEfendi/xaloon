@@ -106,14 +106,14 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public boolean activate(String activationKey) {
+	public boolean activate(String activationKey, String userPassword) {
 		boolean result = false;
 
 		QueryBuilder queryBuilder = new QueryBuilder("select ud from " + JpaUserDetails.class.getSimpleName() + " ud");
 		queryBuilder.addParameter("ud.activationKey", "_activationKey", activationKey);
 		queryBuilder.addParameter("ud.enabled", "_enabled", Boolean.FALSE);
 		JpaUserDetails userDetails = persistenceServices.executeQuerySingle(queryBuilder);
-		if (userDetails != null) {
+		if (userDetails != null && userDetails.getPassword().equals(encode(userDetails.getUsername(), userPassword))) {
 			userDetails.setEnabled(true);
 			persistenceServices.edit(userDetails);
 			result = true;

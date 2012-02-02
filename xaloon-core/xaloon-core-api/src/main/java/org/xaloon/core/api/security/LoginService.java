@@ -44,9 +44,10 @@ public interface LoginService extends Serializable {
 	 * activate user into system
 	 * 
 	 * @param activationKey
+	 * @param userPassword
 	 * @return true if activation was fine
 	 */
-	boolean activate(String activationKey);
+	boolean activate(String activationKey, String userPassword);
 
 	/**
 	 * check if username exists in system
