@@ -34,6 +34,11 @@ public interface SecurityRoles {
 	String BLOG_CREATOR = "BLOG_CREATOR";
 
 	/**
+	 * User is able to create/update/delete classifiers/classifier items
+	 */
+	String CLASSIFIER_MANAGER = "CLASSIFIER_MANAGER";
+
+	/**
 	 * System administrator role
 	 */
 	String SYSTEM_ADMINISTRATOR = "SYSTEM_ADMINISTRATOR";

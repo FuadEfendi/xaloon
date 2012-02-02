@@ -22,7 +22,7 @@
 		<div wicket:id="modal2"></div>
 		<div>
 			<select class="select" wicket:id="classifier-item"><option></option><option>Lithuania</option> </select>
-			<div class="float-right"><a href="#" wicket:id="add-new-item">add new</a></div>
+			<wicket:enclosure child="add-new-item"><div class="float-right"><a href="#" wicket:id="add-new-item">add new</a></div></wicket:enclosure>
 		</div>
 		<div class="wicket-mfu-container">
 			<div  wicket:id="item-list">

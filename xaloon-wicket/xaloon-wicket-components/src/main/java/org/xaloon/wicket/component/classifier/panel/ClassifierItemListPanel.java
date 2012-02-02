@@ -38,6 +38,8 @@ import org.xaloon.core.api.classifier.Classifier;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
+import org.xaloon.core.api.security.SecurityFacade;
+import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.classifier.ClassifierDropDownChoice;
 
 /**
@@ -55,6 +57,9 @@ public class ClassifierItemListPanel extends Panel {
 
 	@Inject
 	private ClassifierItemDao classifierItemDao;
+
+	@Inject
+	private SecurityFacade securityFacade;
 
 	/**
 	 * Construct.
@@ -98,6 +103,7 @@ public class ClassifierItemListPanel extends Panel {
 		params.set(ClassifiersPanel.PARAM_CLASSIFIER_TYPE, classifierItemOptions.getClassifierType());
 		params.set(ClassifiersItemPanel.PARENT_ITEM, parentClassifierItem);
 		modal2.setContent(new NewClassifierItemPanel<ClassifierItem, Classifier>(modal2, params));
+		modal2.setVisible(securityFacade.hasAny(SecurityRoles.CLASSIFIER_MANAGER));
 		add(modal2);
 
 		add(new AjaxLink<Void>("add-new-item") {
@@ -107,7 +113,7 @@ public class ClassifierItemListPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 				modal2.show(target);
 			}
-		});
+		}.setVisible(securityFacade.hasAny(SecurityRoles.CLASSIFIER_MANAGER)));
 	}
 
 	private ClassifierDropDownChoice addClassifierItemDropDownChoice(final ClassifierItemOptions classifierItemOptions) {
@@ -123,7 +129,8 @@ public class ClassifierItemListPanel extends Panel {
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				List<ClassifierItem> desticationList = (List<ClassifierItem>)classifierItemOptions.getDestinationList();
-				if (!desticationList.contains(selectedClassifierItem)) {
+				if (!desticationList.contains(selectedClassifierItem) &&
+					(classifierItemOptions.getMaxItemCount() < 0 || (classifierItemOptions.getMaxItemCount() > 0 && desticationList.size() < classifierItemOptions.getMaxItemCount()))) {
 					desticationList.add(getSelectedClassifierItem());
 				}
 				selectedClassifierItem = null;

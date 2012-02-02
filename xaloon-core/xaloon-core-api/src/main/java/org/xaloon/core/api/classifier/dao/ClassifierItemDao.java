@@ -89,4 +89,12 @@ public interface ClassifierItemDao extends Serializable {
 	 * @return classifier item instance found in storage. null is returned if not found.
 	 */
 	<T extends ClassifierItem> T getClassifierItem(ClassifierItemSearchRequest classifierItemSearchRequest);
+
+	/**
+	 * Returns classifier items of 2nd level and any lower levels if any
+	 * 
+	 * @param classifierType
+	 * @return list of classifier items
+	 */
+	<T extends ClassifierItem> List<T> findLowerLevelItems(String classifierType);
 }

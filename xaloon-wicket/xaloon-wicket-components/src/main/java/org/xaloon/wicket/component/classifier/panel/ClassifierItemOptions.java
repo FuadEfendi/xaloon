@@ -31,6 +31,8 @@ public class ClassifierItemOptions implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private int maxItemCount = -1;
+
 	private boolean multilevelClassifier;
 
 	private String classifierType;
@@ -97,6 +99,27 @@ public class ClassifierItemOptions implements Serializable {
 	 */
 	public ClassifierItemOptions setDestinationList(List<? extends ClassifierItem> destinationList) {
 		this.destinationList = destinationList;
+		return this;
+	}
+
+	/**
+	 * Gets maxItemCount.
+	 * 
+	 * @return maxItemCount
+	 */
+	public int getMaxItemCount() {
+		return maxItemCount;
+	}
+
+	/**
+	 * Sets maxItemCount.
+	 * 
+	 * @param maxItemCount
+	 *            maxItemCount
+	 * @return current instance
+	 */
+	public ClassifierItemOptions setMaxItemCount(int maxItemCount) {
+		this.maxItemCount = maxItemCount;
 		return this;
 	}
 }
