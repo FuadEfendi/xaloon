@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
@@ -41,6 +42,7 @@ import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.CommentPluginBean;
 import org.xaloon.core.api.plugin.comment.Commentable;
+import org.xaloon.core.api.plugin.email.EmailFacade;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.util.TextUtil;
@@ -49,7 +51,9 @@ import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.comment.CommentDetachableModel;
 import org.xaloon.wicket.plugin.comment.CommentPlugin;
+import org.xaloon.wicket.plugin.comment.template.InappropriateFlagEmailTemplatePage;
 import org.xaloon.wicket.util.Link;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * @author vytautas r.
@@ -65,6 +69,9 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 	@Inject
 	private SecurityFacade securityFacade;
+
+	@Inject
+	private EmailFacade emailFacade;
 
 	/**
 	 * Construct.
@@ -134,9 +141,20 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 					 */
 					private static final long serialVersionUID = 1L;
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public void onClick(AjaxRequestTarget target) {
+						// First mark comment as inappropriate
 						commentDao.markAsInappropriate(comment, true);
+
+						// Then send email if possible
+						if (getPluginBean().isSendEmail()) {
+							String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), getPageRequestParameters());
+							InappropriateFlagEmailTemplatePage commentMessage = new InappropriateFlagEmailTemplatePage(absolutePath,
+								comment.getFromUser().getDisplayName(), comment.getMessage());
+							emailFacade.sendMailToSystem(commentMessage.getSource(), comment.getFromUser().getEmail(), comment.getFromUser()
+								.getDisplayName());
+						}
 						target.add(CommentListPanel.this);
 					}
 				}.setVisible(securityFacade.isLoggedIn() && !comment.isInappropriate()));
