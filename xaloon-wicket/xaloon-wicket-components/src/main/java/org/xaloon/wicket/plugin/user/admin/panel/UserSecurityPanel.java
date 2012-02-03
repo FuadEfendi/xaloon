@@ -24,6 +24,7 @@ import javax.inject.Named;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -44,6 +45,7 @@ import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.plugin.user.admin.renderer.AuthorityChoiceRenderer;
 import org.xaloon.wicket.plugin.user.admin.renderer.GroupChoiceRenderer;
 import org.xaloon.wicket.plugin.user.admin.renderer.RoleChoiceRenderer;
+import org.xaloon.wicket.plugin.user.panel.UserProfilePanel;
 
 /**
  * @author vytautas r.
@@ -62,6 +64,8 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	@Inject
 	private RoleGroupService roleGroupService;
 
+	private String username;
+
 	/**
 	 * Construct.
 	 * 
@@ -73,6 +77,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		if (getPageRequestParameters().isEmpty() || getPageRequestParameters().get(UsersPage.PARAM_USER_ID).isEmpty()) {
 			throw new RestartResponseException(UsersPage.class);
 		}
+		username = getPageRequestParameters().get(UsersPage.PARAM_USER_ID).toString();
 		setOutputMarkupId(true);
 	}
 
@@ -80,8 +85,6 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-
-		String username = getPageRequestParameters().get(UsersPage.PARAM_USER_ID).toString();
 
 		UserDetails userDetails = userFacade.loadUserDetails(username);
 
@@ -92,23 +95,31 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			throw new RestartResponseException(UsersPage.class);
 		}
 
+		// Add user details panel
+		addUserDetails(userDetails, userInfo);
+
 		// Add user authorities/permissions
-		addAuthorities(userDetails.getAuthorities(), userDetails);
+		addAuthorities();
 
 		// Add user roles
-		addRoles(userDetails);
+		addRoles();
 
 		// Add user groups
-		addGroups(userDetails);
+		addGroups();
 	}
 
 
-	private void addGroups(final UserDetails userDetails) {
-		final List<SecurityGroup> providedSelections = userDetails.getGroups();
-		List<SecurityGroup> availableItemsForSelection = roleGroupService.getGroupList(0, -1);
+	private void addUserDetails(UserDetails userDetails, User userInfo) {
+		add(new UserProfilePanel<User>("user-details", getPageRequestParameters()));
+	}
+
+	private void addGroups() {
+		final WebMarkupContainer groupContainer = new WebMarkupContainer("group-container");
+		groupContainer.setOutputMarkupId(true);
+		add(groupContainer);
 
 		// Add role list
-		add(new AuthorityManagementContainer<SecurityGroup>("group-admin") {
+		groupContainer.add(new AuthorityManagementContainer<SecurityGroup>("group-admin") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -127,32 +138,41 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeGroup(userDetails, group);
-						target.add(UserSecurityPanel.this);
+						roleGroupService.revokeGroup(getUserDetails(), group);
+						target.add(getOnCloseComponent());
 					}
 				});
 			}
 
 			@Override
 			protected void onAssign(List<SecurityGroup> selections) {
-				roleGroupService.assignGroups(userDetails, selections);
+				roleGroupService.assignGroups(getUserDetails(), selections);
 			}
 
 			@Override
 			protected Component getOnCloseComponent() {
-				return UserSecurityPanel.this;
+				return groupContainer;
 			}
-		}.setChoiceRenderer(new GroupChoiceRenderer())
-			.setAvailableItemsForSelection(availableItemsForSelection)
-			.setProvidedSelections(providedSelections));
+
+			@Override
+			protected List<SecurityGroup> getAvailableItemsForSelection() {
+				return roleGroupService.getGroupList(0, -1);
+			}
+
+			@Override
+			protected List<SecurityGroup> getProvidedSelections() {
+				return getUserDetails().getGroups();
+			}
+		}.setChoiceRenderer(new GroupChoiceRenderer()));
 	}
 
-	private void addRoles(final UserDetails userDetails) {
-		List<SecurityRole> availableItemsForSelection = roleGroupService.getRoleList(0, -1);
-		List<SecurityRole> providedSelections = userDetails.getRoles();
+	private void addRoles() {
+		final WebMarkupContainer roleContainer = new WebMarkupContainer("role-container");
+		roleContainer.setOutputMarkupId(true);
+		add(roleContainer);
 
 		// Add role list
-		add(new AuthorityManagementContainer<SecurityRole>("role-admin") {
+		roleContainer.add(new AuthorityManagementContainer<SecurityRole>("role-admin") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -171,61 +191,89 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeRole(userDetails, role);
-						target.add(UserSecurityPanel.this);
+						roleGroupService.revokeRole(getUserDetails(), role);
+						target.add(getOnCloseComponent());
 					}
 				});
 			}
 
 			@Override
 			protected void onAssign(List<SecurityRole> selections) {
-				roleGroupService.assignRoles(userDetails, selections);
+				roleGroupService.assignRoles(getUserDetails(), selections);
 			}
 
 			@Override
 			protected Component getOnCloseComponent() {
-				return UserSecurityPanel.this;
+				return roleContainer;
 			}
-		}.setChoiceRenderer(new RoleChoiceRenderer())
-			.setAvailableItemsForSelection(availableItemsForSelection)
-			.setProvidedSelections(providedSelections));
+
+			@Override
+			protected List<SecurityRole> getAvailableItemsForSelection() {
+				return roleGroupService.getRoleList(0, -1);
+			}
+
+			@Override
+			protected List<SecurityRole> getProvidedSelections() {
+				return getUserDetails().getRoles();
+			}
+		}.setChoiceRenderer(new RoleChoiceRenderer()));
 
 	}
 
-	private void addAuthorities(List<Authority> userAuthorities, final UserDetails userDetails) {
-		final List<Authority> providedSelections = userDetails.getAuthorities();
-		List<Authority> availableItemsForSelection = roleGroupService.getAuthorityList(0, -1);
+	private void addAuthorities() {
+		final WebMarkupContainer authorityContainer = new WebMarkupContainer("authority-container");
+		authorityContainer.setOutputMarkupId(true);
+		add(authorityContainer);
 
 		// Add permission list
-		add(new AuthorityManagementContainer<Authority>("authority-admin") {
+		authorityContainer.add(new AuthorityManagementContainer<Authority>("authority-admin") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(authority.getName())));
+				item.add(new Label("name", new Model<String>(getString(authority.getName()))));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeAuthority(userDetails, authority);
-						target.add(UserSecurityPanel.this);
+						roleGroupService.revokeAuthority(getUserDetails(), authority);
+						target.add(getOnCloseComponent());
 					}
 				});
 			}
 
 			@Override
 			protected void onAssign(List<Authority> selections) {
-				roleGroupService.assignAuthorities(userDetails, selections);
+				roleGroupService.assignAuthorities(getUserDetails(), selections);
 			}
 
 			@Override
 			protected Component getOnCloseComponent() {
-				return UserSecurityPanel.this;
+				return authorityContainer;
 			}
-		}.setChoiceRenderer(new AuthorityChoiceRenderer())
-			.setAvailableItemsForSelection(availableItemsForSelection)
-			.setProvidedSelections(providedSelections));
+
+			@Override
+			protected List<Authority> getAvailableItemsForSelection() {
+				return roleGroupService.getAuthorityList(0, -1);
+			}
+
+			@Override
+			protected List<Authority> getProvidedSelections() {
+				return getUserDetails().getAuthorities();
+			}
+		}.setChoiceRenderer(new AuthorityChoiceRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object getDisplayValue(Authority object) {
+				return getString(object.getName());
+			}
+		}));
+	}
+
+	private UserDetails getUserDetails() {
+		return userFacade.loadUserDetails(username);
 	}
 }

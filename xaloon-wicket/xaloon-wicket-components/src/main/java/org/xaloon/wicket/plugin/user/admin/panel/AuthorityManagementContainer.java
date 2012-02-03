@@ -39,10 +39,6 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 
 	private IChoiceRenderer<T> choiceRenderer;
 
-	private List<T> availableItemsForSelection;
-
-	private List<T> providedSelections;
-
 	/**
 	 * Construct.
 	 * 
@@ -62,6 +58,8 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 	private void addInformation() {
 		// Initialise selections and available item lists
 		final List<T> selections = new ArrayList<T>();
+		List<T> providedSelections = getProvidedSelections();
+		List<T> availableItemsForSelection = getAvailableItemsForSelection();
 		availableItemsForSelection.removeAll(providedSelections);
 
 		add(new CheckboxMultipleChoiceManagement<T>("choice-management", selections, availableItemsForSelection, choiceRenderer) {
@@ -70,6 +68,7 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 			@Override
 			void onFormSubmit(AjaxRequestTarget target) {
 				AuthorityManagementContainer.this.onAssign(selections);
+				target.add(getOnCloseComponent());
 			}
 
 			@Override
@@ -88,6 +87,10 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 		});
 	}
 
+	protected abstract List<T> getAvailableItemsForSelection();
+
+	protected abstract List<T> getProvidedSelections();
+
 	protected abstract void onItemAddedToView(ListItem<T> item);
 
 	protected abstract void onAssign(List<T> selections);
@@ -103,30 +106,6 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 	 */
 	public AuthorityManagementContainer<T> setChoiceRenderer(IChoiceRenderer<T> choiceRenderer) {
 		this.choiceRenderer = choiceRenderer;
-		return this;
-	}
-
-	/**
-	 * Sets availableItemsForSelection.
-	 * 
-	 * @param availableItemsForSelection
-	 *            availableItemsForSelection
-	 * @return this instance
-	 */
-	public AuthorityManagementContainer<T> setAvailableItemsForSelection(List<T> availableItemsForSelection) {
-		this.availableItemsForSelection = availableItemsForSelection;
-		return this;
-	}
-
-	/**
-	 * Sets providedSelections.
-	 * 
-	 * @param providedSelections
-	 *            providedSelections
-	 * @return this instance
-	 */
-	public AuthorityManagementContainer<T> setProvidedSelections(List<T> providedSelections) {
-		this.providedSelections = providedSelections;
 		return this;
 	}
 }

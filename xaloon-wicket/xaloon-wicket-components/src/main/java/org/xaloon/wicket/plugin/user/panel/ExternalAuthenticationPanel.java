@@ -77,7 +77,6 @@ public class ExternalAuthenticationPanel extends Panel {
 	 */
 	public ExternalAuthenticationPanel(String id, IModel<? extends User> model) {
 		super(id, model);
-		setVisible(isExternalAuthenticationEnabled() && model.getObject().getId() != null);
 	}
 
 	@Override
@@ -133,7 +132,10 @@ public class ExternalAuthenticationPanel extends Panel {
 		});
 	}
 
-	private boolean isExternalAuthenticationEnabled() {
+	/**
+	 * @return
+	 */
+	public boolean isExternalAuthenticationEnabled() {
 		try {
 			return authenticationFacade.isPluginEnabled();
 		} catch (NullPointerException e) {

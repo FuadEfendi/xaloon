@@ -217,4 +217,14 @@ public class JpaRoleGroupService implements RoleGroupService {
 		group.getRoles().addAll(selections);
 		return persistenceServices.edit(group);
 	}
+
+	@Override
+	public void delete(SecurityGroup group) {
+		persistenceServices.remove(group);
+	}
+
+	@Override
+	public void delete(SecurityRole role) {
+		persistenceServices.remove(role);
+	}
 }

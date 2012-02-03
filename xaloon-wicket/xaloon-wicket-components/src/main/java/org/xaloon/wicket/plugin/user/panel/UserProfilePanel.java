@@ -44,6 +44,7 @@ import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.api.util.KeyFactory;
 import org.xaloon.wicket.component.html.TimezoneDropDownChoice;
+import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.plugin.user.page.UserRegistrationPage;
 import org.xaloon.wicket.plugin.user.validator.AgreementValidator;
 import org.xaloon.wicket.plugin.user.validator.EmailUsageValidator;
@@ -89,16 +90,22 @@ public class UserProfilePanel<T extends User> extends Panel {
 	 * @param params
 	 */
 	public UserProfilePanel(String id, PageParameters params) {
-		super(id);
+		super(id, new Model<PageParameters>(params));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
+		T user = null;
 
-		T user = (T)securityFacade.getCurrentUser();
-
+		PageParameters params = (PageParameters)getDefaultModelObject();
+		String username = params.get(UsersPage.PARAM_USER_ID).toString();
+		if (!StringUtils.isEmpty(username) && securityFacade.isAdministrator()) {
+			user = (T)userFacade.getUserByUsername(username);
+		} else {
+			user = (T)securityFacade.getCurrentUser();
+		}
 		Form<T> profileForm = new StatelessForm<T>("user-form", new CompoundPropertyModel<T>(user)) {
 			private static final long serialVersionUID = 1L;
 
@@ -125,10 +132,16 @@ public class UserProfilePanel<T extends User> extends Panel {
 		onFormInitialize(profileForm);
 	}
 
-
 	private Component createExternalAuthenticationPanel(IModel<T> iModel) {
 		// Add external authentication methods
-		return new ExternalAuthenticationPanel("external-auth-link", iModel);
+		ExternalAuthenticationPanel externalAuthenticationPanel = new ExternalAuthenticationPanel("external-auth-link", iModel);
+		externalAuthenticationPanel.setVisible(externalAuthenticationPanel.isExternalAuthenticationEnabled() && iModel.getObject().getId() != null &&
+			!isAdministrationPanel());
+		return externalAuthenticationPanel;
+	}
+
+	private boolean isAdministrationPanel() {
+		return securityFacade.isAdministrator() && !((PageParameters)getDefaultModelObject()).isEmpty();
 	}
 
 	private Component createAgreementMessagePanel() {

@@ -36,6 +36,7 @@ import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.plugin.user.admin.page.RoleDetailPage;
 import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
@@ -74,6 +75,7 @@ public class RolesPanel extends AbstractAdministrationPanel {
 		final DecoratedPagingNavigatorContainer<SecurityRole> dataContainer = new DecoratedPagingNavigatorContainer<SecurityRole>("container",
 			getCurrentRedirectLink());
 		addOrReplace(dataContainer);
+		dataContainer.setOutputMarkupId(true);
 
 		// Add blog list data view
 		final DataView<SecurityRole> securityGroupDataView = new DataView<SecurityRole>("security-roles", new JpaSecurityRoleDataProvider()) {
@@ -81,13 +83,25 @@ public class RolesPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void populateItem(Item<SecurityRole> item) {
-				SecurityRole role = item.getModelObject();
+				final SecurityRole role = item.getModelObject();
 
 				PageParameters pageParams = new PageParameters();
 				pageParams.add(Bookmarkable.PARAM_PATH, role.getPath());
 				BookmarkablePageLink<Void> roleLink = new BookmarkablePageLink<Void>("roleDetails", RoleDetailPage.class, pageParams);
 				item.add(roleLink);
 				roleLink.add(new Label("name", new Model<String>(role.getName())));
+
+				// Add delete role link
+				item.add(new ConfirmationAjaxLink<Void>("delete") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						roleGroupService.delete(role);
+						target.add(dataContainer);
+					}
+
+				});
 			}
 		};
 		dataContainer.addAbstractPageableView(securityGroupDataView);

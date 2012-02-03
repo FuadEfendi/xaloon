@@ -71,4 +71,8 @@ public interface RoleGroupService extends Serializable {
 	SecurityGroup revokeRoleFromGroup(SecurityGroup group, SecurityRole role);
 
 	SecurityGroup assignRolesToGroup(SecurityGroup group, List<SecurityRole> selections);
+
+	void delete(SecurityGroup group);
+
+	void delete(SecurityRole role);
 }

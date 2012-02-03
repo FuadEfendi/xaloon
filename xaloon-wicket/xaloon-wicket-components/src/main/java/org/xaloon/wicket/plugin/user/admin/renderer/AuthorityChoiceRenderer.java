@@ -22,17 +22,12 @@ import org.xaloon.core.api.security.Authority;
 /**
  * @author vytautas r.
  */
-public class AuthorityChoiceRenderer implements IChoiceRenderer<Authority> {
+public abstract class AuthorityChoiceRenderer implements IChoiceRenderer<Authority> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Override
-	public Object getDisplayValue(Authority object) {
-		return object.getName();
-	}
 
 	@Override
 	public String getIdValue(Authority object, int index) {

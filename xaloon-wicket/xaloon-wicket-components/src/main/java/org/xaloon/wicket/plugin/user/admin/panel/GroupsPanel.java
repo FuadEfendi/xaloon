@@ -36,6 +36,7 @@ import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.plugin.user.admin.page.GroupDetailPage;
 import org.xaloon.wicket.plugin.user.admin.page.GroupsPage;
@@ -82,13 +83,23 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void populateItem(Item<SecurityGroup> item) {
-				SecurityGroup group = item.getModelObject();
+				final SecurityGroup group = item.getModelObject();
 
 				PageParameters pageParams = new PageParameters();
 				pageParams.add(Bookmarkable.PARAM_PATH, group.getPath());
 				BookmarkablePageLink<Void> groupLink = new BookmarkablePageLink<Void>("groupDetails", GroupDetailPage.class, pageParams);
 				item.add(groupLink);
 				groupLink.add(new Label("name", new Model<String>(group.getName())));
+
+				item.add(new ConfirmationAjaxLink<Void>("delete") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						roleGroupService.delete(group);
+						target.add(dataContainer);
+					}
+				});
 			}
 
 		};
@@ -125,7 +136,6 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 			}
 		});
 	}
-
 
 	protected Link getCurrentRedirectLink() {
 		return new Link(GroupsPage.class, getPageRequestParameters());

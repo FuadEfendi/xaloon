@@ -20,17 +20,22 @@
 <body>
 <wicket:panel  xmlns:wicket>
 	<h2>Group security administration</h2>
-	<div wicket:id="modal-new-group"/>
+	<br/>
+	<div wicket:id="modal-new-group"></div>
 	<div><a href="" wicket:id="add-new-group">Add new group</a></div>
 	<br/>
-	<div wicket:id="container">
-		<wicket:container wicket:id="security-groups">
-			<div><a href="#" wicket:id="groupDetails"><span wicket:id="name"></span></a></div>
-		</wicket:container>
-		<div>
-			<span wicket:id="navigator"></span>
-		</div>
-	</div>
+	
+	<table wicket:id="container">
+		<tr wicket:id="security-groups">
+			<td style="width:250px;"><a href="#" wicket:id="groupDetails"><span wicket:id="name"></span></a></td>
+			<td style="width:150px;"><a href="#" wicket:id="delete">Delete</a></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<span wicket:id="navigator"></span>
+			</td>
+		</tr>
+	</table>
 </wicket:panel>
 </body>
 </html>

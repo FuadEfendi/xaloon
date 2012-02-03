@@ -20,17 +20,22 @@
 <body>
 <wicket:panel  xmlns:wicket>
 	<h2>Roles security administration</h2>
-	<div wicket:id="modal-new-role"/>
+	<br/>
+	<div wicket:id="modal-new-role"></div>
 	<div><a href="" wicket:id="add-new-role">Add new role</a></div>
 	<br/>
-	<div wicket:id="container">
-		<wicket:container wicket:id="security-roles">
-			<div><a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a></div>
-		</wicket:container>
-		<div>
-			<span wicket:id="navigator"></span>
-		</div>
-	</div>
+				
+	<table wicket:id="container">
+		<tr wicket:id="security-roles">
+			<td style="width:250px;"><a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a></td>
+			<td style="width:150px;"><a href="#" wicket:id="delete">Delete</a></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<span wicket:id="navigator"></span>
+			</td>
+		</tr>
+	</table>
 </wicket:panel>
 </body>
 </html>

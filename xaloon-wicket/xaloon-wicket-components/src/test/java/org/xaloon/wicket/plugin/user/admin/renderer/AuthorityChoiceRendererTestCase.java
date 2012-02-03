@@ -33,7 +33,14 @@ public class AuthorityChoiceRendererTestCase {
 		Authority authority = new JpaAuthority();
 		authority.setName("test");
 		authority.setId(1L);
-		AuthorityChoiceRenderer authorityChoiceRenderer = new AuthorityChoiceRenderer();
+		AuthorityChoiceRenderer authorityChoiceRenderer = new AuthorityChoiceRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object getDisplayValue(Authority object) {
+				return object.getName();
+			}
+		};
 		Assert.assertEquals("test", authorityChoiceRenderer.getDisplayValue(authority));
 		Assert.assertEquals("1", authorityChoiceRenderer.getIdValue(authority, 0));
 

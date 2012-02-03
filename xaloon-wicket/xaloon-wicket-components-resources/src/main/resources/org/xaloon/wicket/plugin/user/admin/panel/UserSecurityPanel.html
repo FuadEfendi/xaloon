@@ -20,39 +20,60 @@
 <body>
 <wicket:panel  xmlns:wicket>
 	<h2>User security administration</h2>
-	<h3>Permissions</h3>
-	<div wicket:id="authority-admin">	
-		<div wicket:id="choice-management">
-			<div wicket:id="modal-assign-entities"></div>
-			<a href="#" wicket:id="link-assign-entities">Assign</a>
-		</div>
-		<div wicket:id="current-view">
-			<span wicket:id="name"></span>&nbsp;<a href="#" wicket:id="revoke">Revoke permission</a>
-		</div>	
-	</div>
 	<br/>
-	<h3>Roles</h3>
-	<div wicket:id="role-admin">	
-		<div wicket:id="choice-management">
-			<div wicket:id="modal-assign-entities"></div>
-			<a href="#" wicket:id="link-assign-entities">Assign</a>
-		</div>
-		<div wicket:id="current-view">
-			<a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a>&nbsp;<a href="#" wicket:id="revoke">Revoke role</a>
-		</div>	
-	</div>
+	<div wicket:id="user-details"></div>
 	<br/>
-	<h3>Groups</h3>
-	<div wicket:id="group-admin">	
-		<div wicket:id="choice-management">
-			<div wicket:id="modal-assign-entities"></div>
-			<a href="#" wicket:id="link-assign-entities">Assign</a>
-		</div>
-		<div wicket:id="current-view">
-			<a href="#" wicket:id="groupDetails"><span wicket:id="name"></span></a>&nbsp;<a href="#" wicket:id="revoke">Leave group</a>
-		</div>	
+	<div wicket:id="authority-container">
+	<table wicket:id="authority-admin">
+		<tr>
+			<td colspan="2"><h3>Permissions</h3></td>
+		</tr>
+		<tr wicket:id="choice-management">
+			<td colspan="2">
+				<div wicket:id="modal-assign-entities"></div>
+				<a href="#" wicket:id="link-assign-entities">Assign</a>
+			</td>
+		</tr>
+		<tr wicket:id="current-view">
+			<td style="width:250px;"><span wicket:id="name"></span></td>
+			<td style="width:150px;"><a href="#" wicket:id="revoke">Revoke permission</a></td>
+		</tr>
+	</table>
 	</div>
-	<br/>
+	<div wicket:id="role-container">
+	<table wicket:id="role-admin">
+		<tr>
+			<td colspan="2"><h3>Roles</h3></td>
+		</tr>
+		<tr wicket:id="choice-management">
+			<td colspan="2">
+				<div wicket:id="modal-assign-entities"></div>
+				<a href="#" wicket:id="link-assign-entities">Assign</a>
+			</td>
+		</tr>
+		<tr wicket:id="current-view">
+			<td style="width:250px;"><a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a></td>
+			<td style="width:150px;"><a href="#" wicket:id="revoke">Revoke role</a></td>
+		</tr>
+	</table>
+	</div>
+	<div wicket:id="group-container">
+	<table wicket:id="group-admin">
+		<tr>
+			<td colspan="2"><h3>Groups</h3></td>
+		</tr>
+		<tr wicket:id="choice-management">
+			<td colspan="2">
+				<div wicket:id="modal-assign-entities"></div>
+				<a href="#" wicket:id="link-assign-entities">Assign</a>
+			</td>
+		</tr>
+		<tr wicket:id="current-view">
+			<td style="width:250px;"><a href="#" wicket:id="groupDetails"><span wicket:id="name"></span></a></td>
+			<td style="width:150px;"><a href="#" wicket:id="revoke">Leave group</a></td>
+		</tr>
+	</table>
+	</div>
 </wicket:panel>
 </body>
 </html>

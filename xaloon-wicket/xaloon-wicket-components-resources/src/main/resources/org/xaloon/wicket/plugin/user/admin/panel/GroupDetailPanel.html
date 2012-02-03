@@ -19,18 +19,23 @@
 </head>
 <body>
 <wicket:panel  xmlns:wicket>
-	<h2>Group detail security administration</h2>
-	<div wicket:id="name"></div>
+	<h2>Group details for [<wicket:container wicket:id="name"></wicket:container>]</h2>
 	<br/>
-	<div wicket:id="role-admin">	
-		<div wicket:id="choice-management">
-			<div wicket:id="modal-assign-entities"></div>
-			<a href="#" wicket:id="link-assign-entities">Assign</a>
-		</div>
-		<div wicket:id="current-view">
-			<a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a>&nbsp;<a href="#" wicket:id="revoke">Revoke</a>
-		</div>	
-	</div>
+	<table wicket:id="role-admin">
+		<tr>
+			<td colspan="2"><h3>Roles</h3></td>
+		</tr>
+		<tr wicket:id="choice-management">
+			<td colspan="2">
+				<div wicket:id="modal-assign-entities"></div>
+				<a href="#" wicket:id="link-assign-entities">Assign</a>
+			</td>
+		</tr>
+		<tr wicket:id="current-view">
+			<td style="width:250px;"><a href="#" wicket:id="roleDetails"><span wicket:id="name"></span></a></td>
+			<td style="width:150px;"><a href="#" wicket:id="revoke">Revoke</a></td>
+		</tr>
+	</table>
 </wicket:panel>
 </body>
 </html>

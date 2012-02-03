@@ -74,8 +74,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 		// Add name
 		add(new Label("name", new Model<String>(role.getName())));
 
-		List<Authority> availableItemsForSelection = roleGroupService.getAuthorityList(0, -1);
-		List<Authority> providedSelections = role.getAuthorities();
+		final List<Authority> availableItemsForSelection = roleGroupService.getAuthorityList(0, -1);
 
 		// Add permission list
 		add(new AuthorityManagementContainer<Authority>("authority-admin") {
@@ -84,7 +83,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(authority.getName())));
+				item.add(new Label("name", new Model<String>(getString(authority.getName()))));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 
@@ -105,8 +104,23 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			protected Component getOnCloseComponent() {
 				return RoleDetailPanel.this;
 			}
-		}.setChoiceRenderer(new AuthorityChoiceRenderer())
-			.setAvailableItemsForSelection(availableItemsForSelection)
-			.setProvidedSelections(providedSelections));
+
+			@Override
+			protected List<Authority> getAvailableItemsForSelection() {
+				return availableItemsForSelection;
+			}
+
+			@Override
+			protected List<Authority> getProvidedSelections() {
+				return role.getAuthorities();
+			}
+		}.setChoiceRenderer(new AuthorityChoiceRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object getDisplayValue(Authority object) {
+				return getString(object.getName());
+			}
+		}));
 	}
 }

@@ -76,8 +76,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 		// Add name
 		add(new Label("name", new Model<String>(group.getName())));
 
-		List<SecurityRole> availableItemsForSelection = roleGroupService.getRoleList(0, -1);
-		List<SecurityRole> providedSelections = group.getRoles();
+		final List<SecurityRole> availableItemsForSelection = roleGroupService.getRoleList(0, -1);
 
 		// Add role list
 		add(new AuthorityManagementContainer<SecurityRole>("role-admin") {
@@ -114,8 +113,16 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 			protected Component getOnCloseComponent() {
 				return GroupDetailPanel.this;
 			}
-		}.setChoiceRenderer(new RoleChoiceRenderer())
-			.setAvailableItemsForSelection(availableItemsForSelection)
-			.setProvidedSelections(providedSelections));
+
+			@Override
+			protected List<SecurityRole> getAvailableItemsForSelection() {
+				return availableItemsForSelection;
+			}
+
+			@Override
+			protected List<SecurityRole> getProvidedSelections() {
+				return group.getRoles();
+			}
+		}.setChoiceRenderer(new RoleChoiceRenderer()));
 	}
 }
