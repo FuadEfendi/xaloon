@@ -330,7 +330,7 @@ public class QueryBuilder {
 	 * @return true if no parameters are set to query
 	 */
 	public boolean isEmpty() {
-		return parameters.isEmpty();
+		return filter.length() < 1 && parameters.isEmpty();
 	}
 
 	/**

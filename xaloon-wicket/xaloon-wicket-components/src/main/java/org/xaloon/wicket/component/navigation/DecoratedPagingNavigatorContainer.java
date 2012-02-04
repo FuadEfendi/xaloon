@@ -17,8 +17,8 @@
 package org.xaloon.wicket.component.navigation;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.AbstractPageableView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -53,7 +53,7 @@ public class DecoratedPagingNavigatorContainer<T> extends WebMarkupContainer {
 		// Ajax paginator should be added before render
 		if (currentLink == null) {
 			AbstractPageableView<T> dataView = (AbstractPageableView<T>)getDefaultModelObject();
-			PagingNavigator pagingNavigator = new PagingNavigator("navigator", dataView);
+			AjaxPagingNavigator pagingNavigator = new AjaxPagingNavigator("navigator", dataView);
 			addOrReplace(pagingNavigator);
 		}
 	}

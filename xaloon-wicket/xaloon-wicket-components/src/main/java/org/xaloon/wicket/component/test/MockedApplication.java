@@ -29,6 +29,7 @@ import org.xaloon.core.api.plugin.PluginLoader;
 import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.SecurityFacade;
+import org.xaloon.core.api.security.external.AuthenticationFacade;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
@@ -51,6 +52,9 @@ public class MockedApplication extends AuthenticatedWebApplication {
 
 	private UserFacade userFacade = mock(UserFacade.class);
 
+	/**
+	 * Construct.
+	 */
 	public MockedApplication() {
 		DynamicMenuMountScannerListener dynamicMenuMountScannerListener = mock(DynamicMenuMountScannerListener.class);
 		mockedServices.put(DynamicMenuMountScannerListener.class.getName(), dynamicMenuMountScannerListener);
@@ -75,6 +79,9 @@ public class MockedApplication extends AuthenticatedWebApplication {
 
 		FileRepositoryFacade fileRepositoryFacade = mock(FileRepositoryFacade.class);
 		mockedServices.put(FileRepositoryFacade.class.getName(), fileRepositoryFacade);
+
+		AuthenticationFacade authenticationFacade = mock(AuthenticationFacade.class);
+		mockedServices.put(AuthenticationFacade.class.getName(), authenticationFacade);
 
 		StringResourceLoader stringResourceLoader = mock(StringResourceLoader.class);
 		mockedServices.put(StringResourceLoader.class.getName(), stringResourceLoader);
