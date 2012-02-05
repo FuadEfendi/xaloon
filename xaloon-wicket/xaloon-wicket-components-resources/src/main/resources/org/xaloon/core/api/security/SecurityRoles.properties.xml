@@ -2,9 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="AUTHENTICATED_USER">User is able to login</entry>
-	<entry key="BLOG_CREATOR">Create/Update/Delete blog entry</entry>
 	<entry key="CLASSIFIER_MANAGER">Create/Update/Delete classifier and it's items</entry>
-	<entry key="SYSTEM_ADMINISTRATOR">System administrator</entry>
+	<entry key="SYSTEM_ADMINISTRATOR">System administrator</entry>	
 	<entry key="IMAGE_DELETE">Delete image</entry>
 	<entry key="IMAGE_EDIT">Edit image</entry>
+	<entry key="BLOG_CREATOR">Create/Update/Delete blog entry</entry>
 </properties>

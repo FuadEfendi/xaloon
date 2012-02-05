@@ -52,9 +52,6 @@ public interface RoleGroupService extends Serializable {
 
 	UserDetails revokeAuthority(UserDetails userDetails, Authority authority);
 
-	Authority findAuthority(String authorityName);
-
-	Authority newAuthority();
 
 	UserDetails revokeGroup(UserDetails userDetails, SecurityGroup group);
 

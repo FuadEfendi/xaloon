@@ -29,11 +29,6 @@ public interface SecurityRoles {
 	String AUTHENTICATED_USER = "AUTHENTICATED_USER";
 
 	/**
-	 * User is able to create blog entries when having this role
-	 */
-	String BLOG_CREATOR = "BLOG_CREATOR";
-
-	/**
 	 * User is able to create/update/delete classifiers/classifier items
 	 */
 	String CLASSIFIER_MANAGER = "CLASSIFIER_MANAGER";
@@ -42,14 +37,4 @@ public interface SecurityRoles {
 	 * System administrator role
 	 */
 	String SYSTEM_ADMINISTRATOR = "SYSTEM_ADMINISTRATOR";
-
-	/**
-	 * Authority to edit the selected image
-	 */
-	String IMAGE_EDIT = "IMAGE_EDIT";
-
-	/**
-	 * Authority to delete the selected image
-	 */
-	String IMAGE_DELETE = "IMAGE_DELETE";
 }

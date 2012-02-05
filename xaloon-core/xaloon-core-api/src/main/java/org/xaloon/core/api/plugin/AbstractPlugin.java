@@ -16,6 +16,9 @@
  */
 package org.xaloon.core.api.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -182,6 +185,11 @@ public abstract class AbstractPlugin<T extends AbstractPluginBean> implements Pl
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public List<String> getSupportedAuthorities() {
+		return new ArrayList<String>();
 	}
 
 	@Override

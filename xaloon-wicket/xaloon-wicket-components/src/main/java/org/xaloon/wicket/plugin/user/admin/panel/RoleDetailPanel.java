@@ -28,9 +28,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
+import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
 import org.xaloon.wicket.plugin.user.admin.renderer.AuthorityChoiceRenderer;
@@ -47,6 +49,9 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 	@Inject
 	private RoleGroupService roleGroupService;
+
+	@Inject
+	private StringResourceLoader stringResourceLoader;
 
 	/**
 	 * Construct.
@@ -83,7 +88,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(getString(authority.getName()))));
+				item.add(new Label("name", new Model<String>(stringResourceLoader.getString(SecurityRoles.class, authority.getName()))));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 
@@ -119,7 +124,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 			@Override
 			public Object getDisplayValue(Authority object) {
-				return getString(object.getName());
+				return stringResourceLoader.getString(SecurityRoles.class, object.getName());
 			}
 		}));
 	}

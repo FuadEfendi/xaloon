@@ -32,13 +32,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.security.SecurityFacade;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.storage.ByteArrayAsInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
+import org.xaloon.wicket.plugin.image.plugin.GallerySecurityRoles;
 
 /**
  * @author vytautas r.
@@ -124,7 +124,7 @@ public class ImagePanel extends Panel {
 					target.add(componentToRefresh);
 				}
 			}
-		}.setVisible(securityFacade.hasAny(SecurityRoles.IMAGE_DELETE)));
+		}.setVisible(securityFacade.hasAny(GallerySecurityRoles.IMAGE_DELETE)));
 
 		// Add the modal window to edit image information
 		final ModalWindow imageInformationModalWindow = new CustomModalWindow("modal-image-information", "Image information") {
@@ -158,7 +158,7 @@ public class ImagePanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 				imageInformationModalWindow.show(target);
 			}
-		}.setVisible(securityFacade.hasAny(SecurityRoles.IMAGE_EDIT)));
+		}.setVisible(securityFacade.hasAny(GallerySecurityRoles.IMAGE_EDIT)));
 	}
 
 	protected Component getOnCloseRefreshComponent() {

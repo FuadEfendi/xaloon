@@ -36,9 +36,9 @@ import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.persistence.QueryBuilder.Condition;
 import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.AuthorityService;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
-import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
@@ -61,7 +61,7 @@ public class LocalDatabaseLoginService implements LoginService {
 	private PersistenceServices persistenceServices;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	AuthorityService authorityService;
 
 	@Override
 	public boolean performLogin(String username, String password) {
@@ -161,7 +161,7 @@ public class LocalDatabaseLoginService implements LoginService {
 	public void assignRole(String username, String role) {// TODO role or permission?
 		UserDetails userDetails = loadUserDetails(username);
 		if (userDetails != null) {
-			Authority authority = findOrCreateAuthority(role);
+			Authority authority = authorityService.findOrCreateAuthority(role);
 			if (authority != null && !userDetails.getAuthorities().contains(authority)) {// TODO fix this
 				userDetails.getAuthorities().add(authority);
 				persistenceServices.edit(userDetails);
@@ -210,16 +210,6 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	private String encode(String username, String password) {
 		return PasswordEncoder.get().encode(username, password);
-	}
-
-	private Authority findOrCreateAuthority(String role) {
-		Authority authority = roleGroupService.findAuthority(role);
-		if (authority == null) {
-			authority = roleGroupService.newAuthority();
-			authority.setName(role);
-			roleGroupService.save(authority);
-		}
-		return authority;
 	}
 
 	private boolean createAlias(KeyValue<String, String> alias, JpaUserDetails jpaUserDetails) {

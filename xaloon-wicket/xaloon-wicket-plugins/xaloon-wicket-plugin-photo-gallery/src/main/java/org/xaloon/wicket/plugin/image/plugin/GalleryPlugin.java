@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.plugin.image.plugin;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
@@ -37,5 +40,10 @@ public class GalleryPlugin extends AbstractPlugin<GalleryPluginBean> {
 	 */
 	public GalleryPlugin() {
 		setCategory(DefaultPluginCategories.PRODUCTS);
+	}
+	
+	@Override
+	public List<String> getSupportedAuthorities() {
+		return Arrays.asList(new String[]{GallerySecurityRoles.IMAGE_EDIT, GallerySecurityRoles.IMAGE_DELETE});
 	}
 }

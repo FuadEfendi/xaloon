@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.plugin.blog;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
@@ -56,5 +59,10 @@ public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
 	@Override
 	public Class<?> getAdministratorFormClass() {
 		return BlogPluginAdministrationPanel.class;
+	}
+	
+	@Override
+	public List<String> getSupportedAuthorities() {
+		return Arrays.asList(new String[]{BlogSecurityRoles.BLOG_CREATOR});
 	}
 }

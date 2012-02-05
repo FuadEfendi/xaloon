@@ -151,17 +151,6 @@ public class JpaRoleGroupService implements RoleGroupService {
 		return persistenceServices.edit(userDetails);
 	}
 
-	public Authority findAuthority(String authorityName) {
-		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
-		queryBuilder.addParameter("a.name", "_AUTHORITY_NAME", authorityName);
-		return persistenceServices.executeQuerySingle(queryBuilder);
-	}
-
-	@Override
-	public Authority newAuthority() {
-		return new JpaAuthority();
-	}
-
 	@Override
 	public UserDetails revokeGroup(UserDetails userDetails, SecurityGroup group) {
 		userDetails = persistenceServices.find(userDetails.getClass(), userDetails.getId());
