@@ -5,4 +5,6 @@
 	<entry key="BLOG_CREATOR">Create/Update/Delete blog entry</entry>
 	<entry key="CLASSIFIER_MANAGER">Create/Update/Delete classifier and it's items</entry>
 	<entry key="SYSTEM_ADMINISTRATOR">System administrator</entry>
+	<entry key="IMAGE_DELETE">Delete image</entry>
+	<entry key="IMAGE_EDIT">Edit image</entry>
 </properties>
