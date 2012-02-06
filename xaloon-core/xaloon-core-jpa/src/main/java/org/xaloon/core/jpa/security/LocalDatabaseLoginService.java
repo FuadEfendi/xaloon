@@ -36,9 +36,9 @@ import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.persistence.QueryBuilder.Condition;
 import org.xaloon.core.api.security.Authority;
-import org.xaloon.core.api.security.AuthorityService;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
+import org.xaloon.core.api.security.RoleGroupService;
 import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
@@ -62,7 +62,7 @@ public class LocalDatabaseLoginService implements LoginService {
 	private PersistenceServices persistenceServices;
 
 	@Inject
-	AuthorityService authorityService;
+	private RoleGroupService roleGroupService;
 
 	@Override
 	public boolean performLogin(String username, String password) {
@@ -102,7 +102,9 @@ public class LocalDatabaseLoginService implements LoginService {
 			createAlias(alias, jpaUserDetails);
 		}
 		persistenceServices.create(jpaUserDetails);
-		assignRole(username, SecurityAuthorities.AUTHENTICATED_USER);
+		List<String> selections = new ArrayList<String>();
+		selections.add(SecurityAuthorities.ROLE_REGISTERED_USER);
+		roleGroupService.assignRolesByName(jpaUserDetails, selections);
 		return activationKey;
 	}
 
@@ -157,19 +159,6 @@ public class LocalDatabaseLoginService implements LoginService {
 		}
 		return false;
 	}
-
-	@Override
-	public void assignRole(String username, String role) {// TODO role or permission?
-		UserDetails userDetails = loadUserDetails(username);
-		if (userDetails != null) {
-			Authority authority = authorityService.findOrCreateAuthority(role);
-			if (authority != null && !userDetails.getAuthorities().contains(authority)) {// TODO fix this
-				userDetails.getAuthorities().add(authority);
-				persistenceServices.edit(userDetails);
-			}
-		}
-	}
-
 
 	@Override
 	public void addAlias(String username, KeyValue<String, String> alias) {

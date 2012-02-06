@@ -68,11 +68,9 @@ public class SystemPlugin extends AbstractPlugin<SystemPluginBean> {
 		authenticatedUser.getAuthorities().add(AUTHENTICATED_USER);
 
 		SecurityRole systemAdministrator = new DefaultSecurityRole(SecurityAuthorities.ROLE_SYSTEM_ADMINISTRATOR);
-		systemAdministrator.getAuthorities().add(AUTHENTICATED_USER);
 		systemAdministrator.getAuthorities().add(SYSTEM_ADMINISTRATOR);
 
 		SecurityRole classifierAdministrator = new DefaultSecurityRole(SecurityAuthorities.ROLE_CLASSIFIER_ADMINISTRATOR);
-		classifierAdministrator.getAuthorities().add(AUTHENTICATED_USER);
 		classifierAdministrator.getAuthorities().addAll(Arrays.asList(CLASSIFIER_ADMINISTRATOR));
 
 		return Arrays.asList(systemAdministrator, classifierAdministrator, authenticatedUser);

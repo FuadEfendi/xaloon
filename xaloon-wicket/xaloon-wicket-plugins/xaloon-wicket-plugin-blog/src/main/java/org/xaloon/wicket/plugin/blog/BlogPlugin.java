@@ -28,7 +28,6 @@ import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
 import org.xaloon.core.impl.security.DefaultSecurityEntity;
 import org.xaloon.core.impl.security.DefaultSecurityRole;
 import org.xaloon.wicket.plugin.blog.panel.admin.BlogPluginAdministrationPanel;
-import org.xaloon.wicket.plugin.system.SystemPlugin;
 
 
 /**
@@ -65,7 +64,6 @@ public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
 	@Override
 	public List<SecurityRole> getSupportedRoles() {
 		SecurityRole role = new DefaultSecurityRole(BlogSecurityAuthorities.ROLE_BLOGGER);
-		role.getAuthorities().add(SystemPlugin.AUTHENTICATED_USER);
 		role.getAuthorities().addAll(getSupportedAuthorities());
 		return Arrays.asList(role);
 	}

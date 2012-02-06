@@ -96,14 +96,6 @@ public interface LoginService extends Serializable {
 	String registerNewLogin(String username, String password, boolean active, KeyValue<String, String> alias);
 
 	/**
-	 * Assign role to selected username
-	 * 
-	 * @param username
-	 * @param role
-	 */
-	void assignRole(String username, String role);
-
-	/**
 	 * Add alias to selected username
 	 * 
 	 * @param username

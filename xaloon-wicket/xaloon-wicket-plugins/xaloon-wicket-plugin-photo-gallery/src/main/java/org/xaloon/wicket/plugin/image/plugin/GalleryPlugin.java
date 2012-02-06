@@ -27,7 +27,6 @@ import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
 import org.xaloon.core.impl.security.DefaultSecurityEntity;
 import org.xaloon.core.impl.security.DefaultSecurityRole;
-import org.xaloon.wicket.plugin.system.SystemPlugin;
 
 /**
  * @author vytautas r.
@@ -49,7 +48,6 @@ public class GalleryPlugin extends AbstractPlugin<GalleryPluginBean> {
 	@Override
 	public List<SecurityRole> getSupportedRoles() {
 		SecurityRole role = new DefaultSecurityRole(GallerySecurityAuthorities.ROLE_GALLERY_USER);
-		role.getAuthorities().add(SystemPlugin.AUTHENTICATED_USER);
 		role.getAuthorities().addAll(getSupportedAuthorities());
 		return Arrays.asList(role);
 	}

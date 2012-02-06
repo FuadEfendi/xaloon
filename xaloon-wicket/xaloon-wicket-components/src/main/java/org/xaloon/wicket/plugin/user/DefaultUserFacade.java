@@ -160,11 +160,6 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public void assignRole(String username, String role) {
-		loginService.assignRole(username, role);
-	}
-
-	@Override
 	public void addAlias(String username, KeyValue<String, String> alias) {
 		loginService.addAlias(username, alias);
 	}
