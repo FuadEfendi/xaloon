@@ -273,7 +273,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			public Object getDisplayValue(Authority object) {
-				return getString(object.getName());
+				return stringResourceLoader.getString(SecurityRoles.class, object.getName());
 			}
 		}));
 	}
