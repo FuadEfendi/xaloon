@@ -28,6 +28,7 @@ import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.panel.AlbumAdministrationPanel;
+import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
 
 import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
 import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
@@ -186,6 +187,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			thumbnailManagementPanel.setMaxImagesAllowed(1);
 			thumbnailManagementPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
 			thumbnailManagementPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
+			thumbnailManagementPanel.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT));
 			add(thumbnailManagementPanel);
 		}
 
@@ -198,6 +200,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", destination);
 			albumAdministrationPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
 			albumAdministrationPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
+			albumAdministrationPanel.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT));
 			add(albumAdministrationPanel);
 			return albumAdministrationPanel;
 		}

@@ -8,7 +8,7 @@ import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
 import org.xaloon.wicket.component.mount.annotation.MountPageGroup;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
-import org.xaloon.wicket.plugin.blog.BlogSecurityRoles;
+import org.xaloon.wicket.plugin.blog.BlogSecurityAuthorities;
 import org.xaloon.wicket.plugin.blog.panel.CreateBlogEntryPanel;
 
 /**
@@ -16,7 +16,7 @@ import org.xaloon.wicket.plugin.blog.panel.CreateBlogEntryPanel;
  */
 @MountPageGroup(value = "/personal", plugin = BlogPlugin.class, order = 120)
 @MountPage(value = "/new-blog-entry", order = 100)
-@RolesAllowed({ BlogSecurityRoles.BLOG_CREATOR })
+@RolesAllowed({ BlogSecurityAuthorities.BLOG_CREATOR })
 public class CreateBlogEntryPage extends LayoutWebPage {
 
 	/**

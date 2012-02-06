@@ -39,7 +39,8 @@ import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.AuthorityService;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
+import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
 import org.xaloon.core.jpa.security.model.JpaGroup;
@@ -101,7 +102,7 @@ public class LocalDatabaseLoginService implements LoginService {
 			createAlias(alias, jpaUserDetails);
 		}
 		persistenceServices.create(jpaUserDetails);
-		assignRole(username, SecurityRoles.AUTHENTICATED_USER);
+		assignRole(username, SecurityAuthorities.AUTHENTICATED_USER);
 		return activationKey;
 	}
 
@@ -250,6 +251,70 @@ public class LocalDatabaseLoginService implements LoginService {
 		addByRoleMember(userDetails.getRoles(), items);
 		addByGroupMember(userDetails.getGroups(), items);
 		return new ArrayList<String>(items);
+	}
+
+	@Override
+	public List<Authority> getAuthorities(String username) {
+		List<Authority> result = new ArrayList<Authority>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
+		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<Authority> items = new HashSet<Authority>();
+		addByAuthorityMemberInternal(userDetails.getAuthorities(), items);
+		addByRoleMemberInternal(userDetails.getRoles(), items);
+		addByGroupMemberInternal(userDetails.getGroups(), items);
+		return new ArrayList<Authority>(items);
+	}
+
+	@Override
+	public List<SecurityRole> getRoles(String username) {
+		List<SecurityRole> result = new ArrayList<SecurityRole>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
+		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<SecurityRole> items = new HashSet<SecurityRole>();
+		addRolesByRoleMember(userDetails.getRoles(), items);
+		addRolesByGroupMemberInternal(userDetails.getGroups(), items);
+		return new ArrayList<SecurityRole>(items);
+	}
+
+
+	private void addRolesByGroupMemberInternal(List<JpaGroup> groups, Set<SecurityRole> items) {
+		for (JpaGroup group : groups) {
+			addRolesByRoleMember(group.getRoles(), items);
+		}
+	}
+
+	private void addRolesByRoleMember(List<JpaRole> roles, Set<SecurityRole> items) {
+		if (!roles.isEmpty()) {
+			items.addAll(roles);
+		}
+	}
+
+	private void addByGroupMemberInternal(List<JpaGroup> groups, Set<Authority> items) {
+		for (JpaGroup group : groups) {
+			addByRoleMemberInternal(group.getRoles(), items);
+		}
+	}
+
+	private void addByRoleMemberInternal(List<JpaRole> roles, Set<Authority> items) {
+		for (JpaRole role : roles) {
+			addByAuthorityMemberInternal(role.getAuthorities(), items);
+		}
+	}
+
+	private void addByAuthorityMemberInternal(List<JpaAuthority> authorities, Set<Authority> items) {
+		for (JpaAuthority authority : authorities) {
+			items.add(authority);
+		}
 	}
 
 	private void addByAuthorityMember(List<JpaAuthority> authorities, Set<String> items) {

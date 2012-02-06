@@ -111,9 +111,9 @@ public class RolesPanel extends AbstractAdministrationPanel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return RolesPanel.this;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(RolesPanel.this);
+			};
 		};
 		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityRole>(addNewGroupModalWindow.getContentId(), new Model<SecurityRole>(
 			roleGroupService.newRole())) {

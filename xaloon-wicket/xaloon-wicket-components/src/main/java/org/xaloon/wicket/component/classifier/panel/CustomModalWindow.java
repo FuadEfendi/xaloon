@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.component.classifier.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -23,7 +26,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 /**
  * @author vytautas r.
  */
-public abstract class CustomModalWindow extends ModalWindow {
+public class CustomModalWindow extends ModalWindow {
 
 	/**
 	 * 
@@ -66,18 +69,31 @@ public abstract class CustomModalWindow extends ModalWindow {
 			private static final long serialVersionUID = 1L;
 
 			public void onClose(AjaxRequestTarget target) {
-				Component component = getOnCloseComponent();
-				if (component != null) {
-					target.add(component);
+				List<Component> components = getOnCloseComponents();
+				if (components != null && !components.isEmpty()) {
+					for (Component component : components) {
+						if (component != null) {
+							target.add(component);
+						}
+					}
 				}
 			}
 		});
 	}
 
+	private List<Component> getOnCloseComponents() {
+		List<Component> components = new ArrayList<Component>();
+		addComponentsToRefresh(components);
+		return components;
+	}
+
 	/**
-	 * Target component on modal window close
+	 * Add target component(s) which will be added to {@link AjaxRequestTarget} after window is closed
 	 * 
-	 * @return target component which will be added to {@link AjaxRequestTarget}
+	 * @param components
+	 *            initial list of components where target components should be added
+	 * 
 	 */
-	protected abstract Component getOnCloseComponent();
+	protected void addComponentsToRefresh(List<Component> components) {
+	}
 }

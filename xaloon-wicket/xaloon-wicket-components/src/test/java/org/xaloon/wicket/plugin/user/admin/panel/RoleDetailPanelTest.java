@@ -32,9 +32,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -62,7 +62,7 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		// Set security to True by default
 		selectedRole = newRole(1L, "role");
 		selectedRole.getAuthorities().add(newAuthority(1L, "assignedRole"));
-		Mockito.when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+		Mockito.when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 		Mockito.when(roleGroupService.getRoleByPath(path)).thenReturn(selectedRole);
 
 

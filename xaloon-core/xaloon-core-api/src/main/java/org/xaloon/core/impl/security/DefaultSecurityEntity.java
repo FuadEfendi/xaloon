@@ -14,27 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.security;
+package org.xaloon.core.impl.security;
+
+import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.util.UrlUtil;
+import org.xaloon.core.impl.persistence.DefaultPersistentObject;
 
 /**
- * Default system roles
+ * Default authority in memory
  * 
  * @author vytautas r.
- * 
  */
-public interface SecurityRoles {
+public class DefaultSecurityEntity extends DefaultPersistentObject implements Authority {
 	/**
-	 * Default security role for login purposes
+	 * 
 	 */
-	String AUTHENTICATED_USER = "AUTHENTICATED_USER";
+	private static final long serialVersionUID = 1L;
+
+	private String name;
 
 	/**
-	 * User is able to create/update/delete classifiers/classifier items
+	 * Construct.
+	 * 
+	 * @param name
 	 */
-	String CLASSIFIER_MANAGER = "CLASSIFIER_MANAGER";
+	public DefaultSecurityEntity(String name) {
+		this.name = name;
+		setPath(UrlUtil.encode(name));
+	}
 
 	/**
-	 * System administrator role
+	 * Gets name.
+	 * 
+	 * @return name
 	 */
-	String SYSTEM_ADMINISTRATOR = "SYSTEM_ADMINISTRATOR";
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets name.
+	 * 
+	 * @param name
+	 *            name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 }

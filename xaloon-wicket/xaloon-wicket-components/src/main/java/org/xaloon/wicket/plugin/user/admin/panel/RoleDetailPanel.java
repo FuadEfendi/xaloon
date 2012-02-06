@@ -31,8 +31,8 @@ import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityRole;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.plugin.user.admin.page.RolesPage;
 import org.xaloon.wicket.plugin.user.admin.renderer.AuthorityChoiceRenderer;
@@ -88,7 +88,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(stringResourceLoader.getString(SecurityRoles.class, authority.getName()))));
+				item.add(new Label("name", new Model<String>(stringResourceLoader.getString(SecurityAuthorities.class, authority.getName()))));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 
@@ -106,9 +106,9 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 			}
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return RoleDetailPanel.this;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(RoleDetailPanel.this);
+			};
 
 			@Override
 			protected List<Authority> getAvailableItemsForSelection() {
@@ -124,7 +124,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 			@Override
 			public Object getDisplayValue(Authority object) {
-				return stringResourceLoader.getString(SecurityRoles.class, object.getName());
+				return stringResourceLoader.getString(SecurityAuthorities.class, object.getName());
 			}
 		}));
 	}

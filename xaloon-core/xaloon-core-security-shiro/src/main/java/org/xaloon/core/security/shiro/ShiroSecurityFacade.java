@@ -13,8 +13,8 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityFacade;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.security.external.AuthenticationAttribute;
 import org.xaloon.core.api.security.external.AuthenticationToken;
@@ -155,7 +155,7 @@ public class ShiroSecurityFacade implements SecurityFacade {
 
 	@Override
 	public boolean isAdministrator() {
-		return hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR);
+		return hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR);
 	}
 
 	@Override

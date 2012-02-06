@@ -14,29 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.user.admin.page;
+package org.xaloon.core.impl.security;
 
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-import org.xaloon.core.api.security.SecurityAuthorities;
-import org.xaloon.wicket.component.test.MockedApplication;
-import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
+import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.SecurityRole;
 
 /**
  * @author vytautas r.
  */
-public class UsersPageTest extends AbstractUserAdminTestCase {
+public class DefaultSecurityRole extends DefaultSecurityEntity implements SecurityRole {
 
-	@Test
-	public void testPage() throws Exception {
-		MockedApplication app = createMockedApplication();
 
-		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Authority> authorities = new ArrayList<Authority>();
 
-		WicketTester tester = new WicketTester(app);
-		tester.startPage(UsersPage.class);
-		tester.assertRenderedPage(UsersPage.class);
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public DefaultSecurityRole(String name) {
+		super(name);
+	}
+
+	/**
+	 * Gets authorities.
+	 * 
+	 * @return authorities
+	 */
+	public List<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	/**
+	 * Sets authorities.
+	 * 
+	 * @param authorities
+	 *            authorities
+	 */
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
 	}
 }

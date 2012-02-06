@@ -110,9 +110,9 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return GroupsPanel.this;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(GroupsPanel.this);
+			};
 		};
 		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityGroup>(addNewGroupModalWindow.getContentId(), new Model<SecurityGroup>(
 			roleGroupService.newGroup())) {

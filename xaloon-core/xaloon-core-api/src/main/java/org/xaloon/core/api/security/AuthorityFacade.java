@@ -14,29 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.user.admin.page;
+package org.xaloon.core.api.security;
 
-import static org.mockito.Mockito.when;
+import java.io.Serializable;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-import org.xaloon.core.api.security.SecurityAuthorities;
-import org.xaloon.wicket.component.test.MockedApplication;
-import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
+import org.xaloon.core.api.plugin.Plugin;
 
 /**
+ * Group/role/permission administration facade
+ * 
  * @author vytautas r.
  */
-public class UsersPageTest extends AbstractUserAdminTestCase {
-
-	@Test
-	public void testPage() throws Exception {
-		MockedApplication app = createMockedApplication();
-
-		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
-
-		WicketTester tester = new WicketTester(app);
-		tester.startPage(UsersPage.class);
-		tester.assertRenderedPage(UsersPage.class);
-	}
+public interface AuthorityFacade extends Serializable {
+	/**
+	 * Register existing roles for provided plugin
+	 * 
+	 * @param plugin
+	 */
+	void registerRoles(Plugin plugin);
 }

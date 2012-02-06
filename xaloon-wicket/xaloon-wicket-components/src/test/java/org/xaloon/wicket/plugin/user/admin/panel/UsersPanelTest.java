@@ -29,7 +29,7 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
@@ -59,7 +59,7 @@ public class UsersPanelTest extends AbstractUserAdminTestCase {
 	public void testPanelAuthorized() throws Exception {
 		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		when(app.getUserFacade().count()).thenReturn(1);
 

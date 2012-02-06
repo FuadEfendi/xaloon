@@ -38,9 +38,9 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
@@ -69,7 +69,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		app = createMockedApplication();
 		tester = new WicketTester(app);
 
-		Mockito.when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+		Mockito.when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 	}
 
 	/**

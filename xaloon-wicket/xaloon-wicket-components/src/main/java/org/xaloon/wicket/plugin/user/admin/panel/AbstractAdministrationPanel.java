@@ -19,7 +19,7 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 import javax.annotation.security.RolesAllowed;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
 import org.xaloon.wicket.plugin.system.SystemPluginBean;
@@ -27,7 +27,7 @@ import org.xaloon.wicket.plugin.system.SystemPluginBean;
 /**
  * @author vytautas r.
  */
-@RolesAllowed({ SecurityRoles.SYSTEM_ADMINISTRATOR })
+@RolesAllowed({ SecurityAuthorities.SYSTEM_ADMINISTRATOR })
 public abstract class AbstractAdministrationPanel extends AbstractPluginPanel<SystemPluginBean, SystemPlugin> {
 
 	/**

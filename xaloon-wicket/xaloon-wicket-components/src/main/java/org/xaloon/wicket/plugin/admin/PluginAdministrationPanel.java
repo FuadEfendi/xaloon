@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -122,14 +121,7 @@ public class PluginAdministrationPanel extends AbstractPluginPanel<AbstractPlugi
 				item.add(new Label("plugin-name", new Model<String>(plugin.getName())));
 				item.add(new Label("plugin-version", new Model<String>(plugin.getVersion())));
 				item.add(new Label("plugin-description", new Model<String>(plugin.getDescription())).setVisible(!StringUtils.isEmpty(plugin.getDescription())));
-				final ModalWindow pluginConfigurationModalWindow = new CustomModalWindow("plugin-config", "title") {
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					protected Component getOnCloseComponent() {
-						return null;
-					}
-				};
+				final ModalWindow pluginConfigurationModalWindow = new CustomModalWindow("plugin-config", "title");
 				item.add(pluginConfigurationModalWindow);
 
 				pluginConfigurationModalWindow.setContent(new PluginConfigurationPanel(pluginConfigurationModalWindow, new Model<Plugin>(plugin)));

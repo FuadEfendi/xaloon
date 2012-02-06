@@ -21,7 +21,7 @@ import javax.annotation.security.RolesAllowed;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.https.RequireHttps;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
 import org.xaloon.wicket.plugin.user.panel.UserProfilePanel;
@@ -31,7 +31,7 @@ import org.xaloon.wicket.plugin.user.panel.UserProfilePanel;
  */
 @RequireHttps
 @MountPage(value = "/profile", order = 10)
-@RolesAllowed({ SecurityRoles.AUTHENTICATED_USER })
+@RolesAllowed({ SecurityAuthorities.AUTHENTICATED_USER })
 public class UserProfilePage extends PersonalGroupPage {
 	private static final long serialVersionUID = 1L;
 

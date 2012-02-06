@@ -72,4 +72,8 @@ public interface RoleGroupService extends Serializable {
 	void delete(SecurityGroup group);
 
 	void delete(SecurityRole role);
+
+	SecurityRole findOrCreateRole(String name);
+
+	void assignRolesByName(UserDetails userDetails, List<String> selections);
 }

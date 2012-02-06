@@ -20,7 +20,7 @@ import javax.annotation.security.RolesAllowed;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
 import org.xaloon.wicket.plugin.user.panel.ChangePasswordPanel;
 
@@ -28,7 +28,7 @@ import org.xaloon.wicket.plugin.user.panel.ChangePasswordPanel;
  * @author vytautas r.
  */
 @MountPage(value = "/change-password", order = 20)
-@RolesAllowed({ SecurityRoles.AUTHENTICATED_USER })
+@RolesAllowed({ SecurityAuthorities.AUTHENTICATED_USER })
 public class ChangePasswordPage extends PersonalGroupPage {
 	private static final long serialVersionUID = 1L;
 

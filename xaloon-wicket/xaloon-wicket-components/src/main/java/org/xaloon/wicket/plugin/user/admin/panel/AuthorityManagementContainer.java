@@ -68,13 +68,25 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 			@Override
 			void onFormSubmit(AjaxRequestTarget target) {
 				AuthorityManagementContainer.this.onAssign(selections);
-				target.add(getOnCloseComponent());
+				refreshComponents(target);
+			}
+
+			private void refreshComponents(AjaxRequestTarget target) {
+				List<Component> components = new ArrayList<Component>();
+				addComponentsToRefresh(components);
+				if (components != null && !components.isEmpty()) {
+					for (Component component : components) {
+						if (component != null) {
+							target.add(component);
+						}
+					}
+				}
 			}
 
 			@Override
-			Component getOnCloseComponent() {
-				return AuthorityManagementContainer.this.getOnCloseComponent();
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				AuthorityManagementContainer.this.addComponentsToRefresh(components);
+			};
 		}.setVisible(!availableItemsForSelection.isEmpty()));
 
 		add(new ListView<T>("current-view", providedSelections) {
@@ -95,7 +107,8 @@ public abstract class AuthorityManagementContainer<T> extends WebMarkupContainer
 
 	protected abstract void onAssign(List<T> selections);
 
-	protected abstract Component getOnCloseComponent();
+	protected void addComponentsToRefresh(List<Component> components) {
+	}
 
 	/**
 	 * Sets choiceRenderer.

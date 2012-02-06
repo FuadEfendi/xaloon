@@ -38,8 +38,8 @@ import org.xaloon.core.api.classifier.Classifier;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityFacade;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.wicket.component.classifier.ClassifierDropDownChoice;
 
 /**
@@ -94,16 +94,15 @@ public class ClassifierItemListPanel extends Panel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return ClassifierItemListPanel.this;
-			}
-
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(ClassifierItemListPanel.this);
+			};
 		};
 		PageParameters params = new PageParameters();
 		params.set(ClassifiersPanel.PARAM_CLASSIFIER_TYPE, classifierItemOptions.getClassifierType());
 		params.set(ClassifiersItemPanel.PARENT_ITEM, parentClassifierItem);
 		modal2.setContent(new NewClassifierItemPanel<ClassifierItem, Classifier>(modal2, params));
-		modal2.setVisible(securityFacade.hasAny(SecurityRoles.CLASSIFIER_MANAGER));
+		modal2.setVisible(securityFacade.hasAny(SecurityAuthorities.CLASSIFIER_EDIT));
 		add(modal2);
 
 		add(new AjaxLink<Void>("add-new-item") {
@@ -113,7 +112,7 @@ public class ClassifierItemListPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 				modal2.show(target);
 			}
-		}.setVisible(securityFacade.hasAny(SecurityRoles.CLASSIFIER_MANAGER)));
+		}.setVisible(securityFacade.hasAny(SecurityAuthorities.CLASSIFIER_EDIT)));
 	}
 
 	private ClassifierDropDownChoice addClassifierItemDropDownChoice(final ClassifierItemOptions classifierItemOptions) {

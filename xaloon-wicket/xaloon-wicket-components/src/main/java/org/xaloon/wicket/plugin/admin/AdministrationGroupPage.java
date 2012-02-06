@@ -18,7 +18,7 @@ package org.xaloon.wicket.plugin.admin;
 
 import javax.annotation.security.RolesAllowed;
 
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.mount.annotation.MountPageGroup;
 
@@ -26,7 +26,7 @@ import org.xaloon.wicket.component.mount.annotation.MountPageGroup;
  * @author vytautas r.
  */
 @MountPageGroup(value = "/admin", order = 1000)
-@RolesAllowed({ SecurityRoles.SYSTEM_ADMINISTRATOR })
+@RolesAllowed({ SecurityAuthorities.SYSTEM_ADMINISTRATOR })
 public abstract class AdministrationGroupPage extends LayoutWebPage {
 
 	/**

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.SecurityRole;
 
 
 /**
@@ -188,8 +190,13 @@ public abstract class AbstractPlugin<T extends AbstractPluginBean> implements Pl
 	}
 
 	@Override
-	public List<String> getSupportedAuthorities() {
-		return new ArrayList<String>();
+	public List<SecurityRole> getSupportedRoles() {
+		return new ArrayList<SecurityRole>();
+	}
+
+	@Override
+	public List<Authority> getSupportedAuthorities() {
+		return new ArrayList<Authority>();
 	}
 
 	@Override

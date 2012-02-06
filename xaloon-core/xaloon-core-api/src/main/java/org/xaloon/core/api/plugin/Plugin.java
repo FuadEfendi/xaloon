@@ -19,6 +19,9 @@ package org.xaloon.core.api.plugin;
 import java.io.Serializable;
 import java.util.List;
 
+import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.SecurityRole;
+
 /**
  * Core plugin interface. It defines required methods provided by plugin implementation. Plugin contains property <b>pluginBean</b> which represents
  * configuration parameters of current plugin. This property usually will be modified via administration panel. It also may be configured once on
@@ -143,9 +146,16 @@ public interface Plugin extends Serializable, Comparable<Plugin> {
 	String getType();
 
 	/**
+	 * Returns the list of roles supported by this plugin
+	 * 
+	 * @return list of {@link SecurityRole} as a representation of roles
+	 */
+	List<SecurityRole> getSupportedRoles();
+
+	/**
 	 * Returns the list of permissions/authorities supported by this plugin
 	 * 
-	 * @return list of string as a representation of permissions
+	 * @return list of {@link Authority} as a representation of permissions
 	 */
-	List<String> getSupportedAuthorities();
+	List<Authority> getSupportedAuthorities();
 }

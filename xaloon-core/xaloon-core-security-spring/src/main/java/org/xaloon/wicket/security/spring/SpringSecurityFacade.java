@@ -36,8 +36,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityFacade;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.external.AuthenticationAttribute;
 import org.xaloon.core.api.security.external.AuthenticationToken;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -101,7 +101,7 @@ public class SpringSecurityFacade implements SecurityFacade {
 	}
 
 	public boolean isAdministrator() {
-		return hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR);
+		return hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR);
 	}
 
 	public String getCurrentUsername() {

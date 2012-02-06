@@ -67,8 +67,8 @@ public abstract class CheckboxMultipleChoiceManagement<T> extends WebMarkupConta
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return CheckboxMultipleChoiceManagement.this.getOnCloseComponent();
+			protected void addComponentsToRefresh(List<Component> components) {
+				CheckboxMultipleChoiceManagement.this.addComponentsToRefresh(components);
 			}
 		};
 		add(addGroupModalWindow);
@@ -115,7 +115,8 @@ public abstract class CheckboxMultipleChoiceManagement<T> extends WebMarkupConta
 		});
 	}
 
-	abstract Component getOnCloseComponent();
+	protected void addComponentsToRefresh(List<Component> components) {
+	}
 
 	abstract void onFormSubmit(AjaxRequestTarget target);
 }

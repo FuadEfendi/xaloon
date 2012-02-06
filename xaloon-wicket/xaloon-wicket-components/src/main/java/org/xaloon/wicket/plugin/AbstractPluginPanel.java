@@ -70,7 +70,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	private PluginRegistry registry;
 
 	@Inject
-	private SecurityFacade securityFacade;
+	protected SecurityFacade securityFacade;
 
 	/**
 	 * plugin instance

@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -33,8 +33,7 @@ public class RolesPageTest extends AbstractUserAdminTestCase {
 	public void testPage() throws Exception {
 		MockedApplication app = createMockedApplication();
 
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR))
-				.thenReturn(true);
+		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		WicketTester tester = new WicketTester(app);
 		tester.startPage(RolesPage.class);

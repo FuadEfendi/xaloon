@@ -52,9 +52,9 @@ public class JpaAuthorityService implements AuthorityService {
 
 	@Override
 	public void registerPermissions(Plugin plugin) {
-		List<String> authorities = plugin.getSupportedAuthorities();
-		for (String authority : authorities) {
-			findOrCreateAuthority(authority);
+		List<Authority> authorities = plugin.getSupportedAuthorities();
+		for (Authority authority : authorities) {
+			findOrCreateAuthority(authority.getName());
 		}
 	}
 
@@ -86,5 +86,4 @@ public class JpaAuthorityService implements AuthorityService {
 		}
 		persistenceServices.create(entity);
 	}
-
 }

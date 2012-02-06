@@ -79,6 +79,7 @@
 			</div>
 		</fieldset>
 		
+		<wicket:enclosure child="image-administration-panel">
 		<fieldset id="thumbnail">
 			<legend>THUMBNAIL</legend>
 			<div  wicket:id="image-administration-panel">
@@ -112,14 +113,14 @@
 			</div>
 			</div>
 		</fieldset>
-		
+		</wicket:enclosure>
 		<fieldset id="blog-entry-content">
 			<legend>Content</legend>
 			<div>
 				<textarea wicket:id="content"></textarea>
 			</div>
 		</fieldset>
-		
+		<wicket:enclosure child="images-administration">
 		<fieldset id="images">
 			<legend>IMAGES</legend>
 			<div  wicket:id="images-administration">
@@ -153,6 +154,7 @@
 			</div>
 			</div>
 		</fieldset>
+		</wicket:enclosure>
 		<div>
 			<div class="spacer"></div>
 			<button type="submit">Create blog entry</button>

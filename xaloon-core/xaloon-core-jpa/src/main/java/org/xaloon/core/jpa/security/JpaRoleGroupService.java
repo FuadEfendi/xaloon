@@ -216,4 +216,30 @@ public class JpaRoleGroupService implements RoleGroupService {
 	public void delete(SecurityRole role) {
 		persistenceServices.remove(role);
 	}
+
+	@Override
+	public SecurityRole findOrCreateRole(String name) {
+		SecurityRole securityRole = getRoleByPath(UrlUtil.encode(name));
+		if (securityRole == null) {
+			securityRole = createNewRole(name);
+		}
+		return securityRole;
+	}
+
+	private SecurityRole createNewRole(String name) {
+		SecurityRole role = newRole();
+		role.setName(name);
+		save(role);
+		return role;
+	}
+
+	@Override
+	public void assignRolesByName(UserDetails userDetails, List<String> selections) {
+		userDetails = persistenceServices.find(userDetails.getClass(), userDetails.getId());
+		for (String roleName : selections) {
+			SecurityRole role = findOrCreateRole(roleName);
+			userDetails.getRoles().add(role);
+		}
+		persistenceServices.edit(userDetails);
+	}
 }

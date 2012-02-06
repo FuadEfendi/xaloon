@@ -110,9 +110,9 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 			}
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return GroupDetailPanel.this;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(GroupDetailPanel.this);
+			};
 
 			@Override
 			protected List<SecurityRole> getAvailableItemsForSelection() {

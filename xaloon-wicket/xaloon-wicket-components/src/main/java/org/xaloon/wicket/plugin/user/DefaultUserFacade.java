@@ -31,7 +31,9 @@ import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.plugin.email.EmailFacade;
 import org.xaloon.core.api.resource.StringResourceLoader;
+import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.LoginService;
+import org.xaloon.core.api.security.SecurityRole;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -231,5 +233,15 @@ public class DefaultUserFacade implements UserFacade {
 	@Override
 	public String getFullNameForUser(String username) {
 		return userDao.getFullNameForUser(username);
+	}
+
+	@Override
+	public List<Authority> getAuthorities(String username) {
+		return loginService.getAuthorities(username);
+	}
+
+	@Override
+	public List<SecurityRole> getRoles(String username) {
+		return loginService.getRoles(username);
 	}
 }

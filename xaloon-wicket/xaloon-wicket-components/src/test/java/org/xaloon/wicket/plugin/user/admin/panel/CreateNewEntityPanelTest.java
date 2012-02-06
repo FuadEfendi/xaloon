@@ -8,8 +8,8 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityGroup;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.jpa.security.model.JpaGroup;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
@@ -59,7 +59,7 @@ public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 		WicketTester tester = new WicketTester(app);
 
 		// Set security to True by default
-		when(app.getSecurityFacade().hasAny(SecurityRoles.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Start panel
 		SecurityGroup group = new JpaGroup();

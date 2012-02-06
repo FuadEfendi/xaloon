@@ -38,7 +38,8 @@ import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
-import org.xaloon.wicket.plugin.image.plugin.GallerySecurityRoles;
+import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
+import org.xaloon.wicket.plugin.user.admin.panel.GroupsPanel;
 
 /**
  * @author vytautas r.
@@ -124,16 +125,15 @@ public class ImagePanel extends Panel {
 					target.add(componentToRefresh);
 				}
 			}
-		}.setVisible(securityFacade.hasAny(GallerySecurityRoles.IMAGE_DELETE)));
+		}.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_DELETE)));
 
 		// Add the modal window to edit image information
 		final ModalWindow imageInformationModalWindow = new CustomModalWindow("modal-image-information", "Image information") {
 			private static final long serialVersionUID = 1L;
-
 			@Override
-			protected Component getOnCloseComponent() {
-				return ImagePanel.this;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(ImagePanel.this);
+			};
 		};
 		imageInformationModalWindow.setContent(new ImageDescriptionPanel(imageInformationModalWindow.getContentId(), new Model<org.xaloon.core.api.image.model.Image>(image)) {
 			private static final long serialVersionUID = 1L;
@@ -158,7 +158,7 @@ public class ImagePanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 				imageInformationModalWindow.show(target);
 			}
-		}.setVisible(securityFacade.hasAny(GallerySecurityRoles.IMAGE_EDIT)));
+		}.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT)));
 	}
 
 	protected Component getOnCloseRefreshComponent() {

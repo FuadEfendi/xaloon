@@ -34,9 +34,9 @@ import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.SecurityGroup;
 import org.xaloon.core.api.security.SecurityRole;
-import org.xaloon.core.api.security.SecurityRoles;
 import org.xaloon.core.api.security.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
@@ -104,13 +104,13 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		addUserDetails(userDetails, userInfo);
 
 		// Add user authorities/permissions
-		addAuthorities();
+		WebMarkupContainer authorityMarkupContainer = addAuthorities();
 
 		// Add user roles
-		addRoles();
+		WebMarkupContainer roleMarkupContainer = addRoles(authorityMarkupContainer);
 
 		// Add user groups
-		addGroups();
+		addGroups(roleMarkupContainer, authorityMarkupContainer);
 	}
 
 
@@ -118,7 +118,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		add(new UserProfilePanel<User>("user-details", getPageRequestParameters()));
 	}
 
-	private void addGroups() {
+	private void addGroups(final WebMarkupContainer roleMarkupContainer, final WebMarkupContainer authorityMarkupContainer) {
 		final WebMarkupContainer groupContainer = new WebMarkupContainer("group-container");
 		groupContainer.setOutputMarkupId(true);
 		add(groupContainer);
@@ -144,7 +144,9 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						roleGroupService.revokeGroup(getUserDetails(), group);
-						target.add(getOnCloseComponent());
+						target.add(groupContainer);
+						target.add(authorityMarkupContainer);
+						target.add(roleMarkupContainer);
 					}
 				});
 			}
@@ -155,9 +157,11 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			}
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return groupContainer;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(groupContainer);
+				components.add(authorityMarkupContainer);
+				components.add(roleMarkupContainer);
+			};
 
 			@Override
 			protected List<SecurityGroup> getAvailableItemsForSelection() {
@@ -171,7 +175,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 		}.setChoiceRenderer(new GroupChoiceRenderer()));
 	}
 
-	private void addRoles() {
+	private WebMarkupContainer addRoles(final WebMarkupContainer authorityMarkupContainer) {
 		final WebMarkupContainer roleContainer = new WebMarkupContainer("role-container");
 		roleContainer.setOutputMarkupId(true);
 		add(roleContainer);
@@ -197,7 +201,8 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						roleGroupService.revokeRole(getUserDetails(), role);
-						target.add(getOnCloseComponent());
+						target.add(roleContainer);
+						target.add(authorityMarkupContainer);
 					}
 				});
 			}
@@ -208,13 +213,17 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			}
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return roleContainer;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(roleContainer);
+				components.add(authorityMarkupContainer);
+			};
 
 			@Override
 			protected List<SecurityRole> getAvailableItemsForSelection() {
-				return roleGroupService.getRoleList(0, -1);
+				List<SecurityRole> userRoles = userFacade.getRoles(username);
+				List<SecurityRole> allRoles = roleGroupService.getRoleList(0, -1);
+				allRoles.removeAll(userRoles);
+				return allRoles;
 			}
 
 			@Override
@@ -222,10 +231,10 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 				return getUserDetails().getRoles();
 			}
 		}.setChoiceRenderer(new RoleChoiceRenderer()));
-
+		return roleContainer;
 	}
 
-	private void addAuthorities() {
+	private WebMarkupContainer addAuthorities() {
 		final WebMarkupContainer authorityContainer = new WebMarkupContainer("authority-container");
 		authorityContainer.setOutputMarkupId(true);
 		add(authorityContainer);
@@ -237,14 +246,14 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			@Override
 			protected void onItemAddedToView(ListItem<Authority> item) {
 				final Authority authority = item.getModelObject();
-				item.add(new Label("name", new Model<String>(stringResourceLoader.getString(SecurityRoles.class, authority.getName()))));
+				item.add(new Label("name", new Model<String>(stringResourceLoader.getString(SecurityAuthorities.class, authority.getName()))));
 				item.add(new ConfirmationAjaxLink<Void>("revoke") {
 					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						roleGroupService.revokeAuthority(getUserDetails(), authority);
-						target.add(getOnCloseComponent());
+						target.add(authorityContainer);
 					}
 				});
 			}
@@ -255,13 +264,16 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 			}
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return authorityContainer;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(authorityContainer);
+			};
 
 			@Override
 			protected List<Authority> getAvailableItemsForSelection() {
-				return roleGroupService.getAuthorityList(0, -1);
+				List<Authority> userAuthorities = userFacade.getAuthorities(username);
+				List<Authority> allAuthorities = roleGroupService.getAuthorityList(0, -1);
+				allAuthorities.removeAll(userAuthorities);
+				return allAuthorities;
 			}
 
 			@Override
@@ -273,9 +285,11 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			public Object getDisplayValue(Authority object) {
-				return stringResourceLoader.getString(SecurityRoles.class, object.getName());
+				return stringResourceLoader.getString(SecurityAuthorities.class, object.getName());
 			}
 		}));
+
+		return authorityContainer;
 	}
 
 	private UserDetails getUserDetails() {
