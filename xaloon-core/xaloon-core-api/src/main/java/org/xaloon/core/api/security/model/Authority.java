@@ -14,51 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.impl.security;
+package org.xaloon.core.api.security.model;
 
-import org.xaloon.core.api.security.model.Authority;
-import org.xaloon.core.api.util.UrlUtil;
-import org.xaloon.core.impl.persistence.DefaultPersistentObject;
+
 
 /**
- * Default authority in memory
- * 
  * @author vytautas r.
  */
-public class DefaultSecurityEntity extends DefaultPersistentObject implements Authority {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public interface Authority extends SecurityEntity {
 
-	private String name;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public DefaultSecurityEntity(String name) {
-		this.name = name;
-		setPath(UrlUtil.encode(name));
-	}
-
-	/**
-	 * Gets name.
-	 * 
-	 * @return name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets name.
-	 * 
-	 * @param name
-	 *            name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 }

@@ -22,8 +22,8 @@ import java.util.List;
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
-import org.xaloon.core.api.security.Authority;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
 import org.xaloon.core.impl.security.DefaultSecurityEntity;
 import org.xaloon.core.impl.security.DefaultSecurityRole;

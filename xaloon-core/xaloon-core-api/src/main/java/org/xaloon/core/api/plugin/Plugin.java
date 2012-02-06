@@ -19,8 +19,8 @@ package org.xaloon.core.api.plugin;
 import java.io.Serializable;
 import java.util.List;
 
-import org.xaloon.core.api.security.Authority;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 
 /**
  * Core plugin interface. It defines required methods provided by plugin implementation. Plugin contains property <b>pluginBean</b> which represents

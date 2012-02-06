@@ -16,11 +16,6 @@
  */
 package org.xaloon.core.api.security;
 
-import java.util.List;
+public interface RoleService {
 
-/**
- * @author vytautas r.
- */
-public interface SecurityGroup extends SecurityEntity {
-	<T extends SecurityRole> List<T> getRoles();
 }

@@ -30,7 +30,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.jpa.model.AbstractEntity;
 
 /**

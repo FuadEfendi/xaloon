@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.security;
+package org.xaloon.core.api.security.model;
 
 import java.util.List;
 

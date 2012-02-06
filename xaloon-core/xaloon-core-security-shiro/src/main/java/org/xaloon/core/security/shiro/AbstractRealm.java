@@ -26,9 +26,9 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.xaloon.core.api.inject.ServiceLocator;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.external.ExternalParameterResolver;
+import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.user.dao.UserDao;
 import org.xaloon.core.api.user.model.User;
 
@@ -80,7 +80,7 @@ public abstract class AbstractRealm extends AuthorizingRealm {
 	}
 
 	protected AuthenticationInfo doGetAuthenticationInfoInternal(String username) {
-		org.xaloon.core.api.security.UserDetails userDetailPrincipal = getLoginService().loadUserDetails(username);
+		org.xaloon.core.api.security.model.UserDetails userDetailPrincipal = getLoginService().loadUserDetails(username);
 		if (userDetailPrincipal != null && userDetailPrincipal.isEnabled()) {
 			User userPrincipal = getUserDao().getUserByUsername(username);
 			Collection<Object> principalCollection = new ArrayList<Object>();
@@ -92,7 +92,7 @@ public abstract class AbstractRealm extends AuthorizingRealm {
 		}
 	}
 
-	protected void addInternalUserRoles(SimpleAuthorizationInfo info, org.xaloon.core.api.security.UserDetails userDetails) {
+	protected void addInternalUserRoles(SimpleAuthorizationInfo info, org.xaloon.core.api.security.model.UserDetails userDetails) {
 		List<String> authorities = loginService.getAuthoritiesByUsername(userDetails.getUsername());
 		for (String authority : authorities) {
 			info.addRole(authority);//TODO check

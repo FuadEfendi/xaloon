@@ -19,6 +19,7 @@ package org.xaloon.core.api.security;
 import java.io.Serializable;
 
 import org.xaloon.core.api.plugin.Plugin;
+import org.xaloon.core.api.security.model.Authority;
 
 /**
  * @author vytautas r.

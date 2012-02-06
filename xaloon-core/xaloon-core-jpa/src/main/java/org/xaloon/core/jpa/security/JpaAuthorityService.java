@@ -29,8 +29,8 @@ import org.apache.commons.lang.StringUtils;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.plugin.Plugin;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.AuthorityService;
+import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
 

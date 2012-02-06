@@ -34,7 +34,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.security.RoleGroupService;
-import org.xaloon.core.api.security.SecurityGroup;
+import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;

@@ -19,6 +19,12 @@ package org.xaloon.core.api.security;
 import java.io.Serializable;
 import java.util.List;
 
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityEntity;
+import org.xaloon.core.api.security.model.SecurityGroup;
+import org.xaloon.core.api.security.model.SecurityRole;
+import org.xaloon.core.api.security.model.UserDetails;
+
 /**
  * @author vytautas r.
  */

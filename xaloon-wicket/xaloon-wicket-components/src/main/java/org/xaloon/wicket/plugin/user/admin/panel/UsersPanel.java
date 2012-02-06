@@ -30,7 +30,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.plugin.user.admin.page.UserSecurityPage;

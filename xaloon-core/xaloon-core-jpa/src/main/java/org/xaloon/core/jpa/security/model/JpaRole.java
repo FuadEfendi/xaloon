@@ -31,7 +31,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.model.BookmarkableEntity;
 

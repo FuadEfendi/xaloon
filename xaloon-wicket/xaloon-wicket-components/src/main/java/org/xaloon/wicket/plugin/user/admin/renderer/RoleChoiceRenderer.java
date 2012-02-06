@@ -17,7 +17,7 @@
 package org.xaloon.wicket.plugin.user.admin.renderer;
 
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.SecurityRole;
 
 /**
  * @author vytautas r.

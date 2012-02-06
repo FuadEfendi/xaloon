@@ -23,11 +23,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.Plugin;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.AuthorityFacade;
 import org.xaloon.core.api.security.AuthorityService;
 import org.xaloon.core.api.security.RoleGroupService;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 
 /**
  * Default implementation for authority facade

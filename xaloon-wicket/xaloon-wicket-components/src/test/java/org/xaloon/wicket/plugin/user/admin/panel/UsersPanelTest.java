@@ -30,7 +30,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityAuthorities;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 

@@ -26,8 +26,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.LoginService;
+import org.xaloon.core.api.security.model.Authority;
 
 /**
  * @author vytautas r.
@@ -41,14 +41,14 @@ public class SpringUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException, DataAccessException {
-		org.xaloon.core.api.security.UserDetails userDetails = loginService.loadUserDetails(arg0);
+		org.xaloon.core.api.security.model.UserDetails userDetails = loginService.loadUserDetails(arg0);
 		if (userDetails != null) {
 			return createAdaptor(userDetails);
 		}
 		throw new UsernameNotFoundException("User not found.");
 	}
 
-	private UserDetails createAdaptor(org.xaloon.core.api.security.UserDetails userDetails) {
+	private UserDetails createAdaptor(org.xaloon.core.api.security.model.UserDetails userDetails) {
 		DefaultUserDetails details = new DefaultUserDetails();
 		details.setAccountNonExpired(userDetails.isAccountNonExpired());
 		details.setAccountNonLocked(userDetails.isAccountNonLocked());

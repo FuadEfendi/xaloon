@@ -31,10 +31,10 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xaloon.core.api.bookmark.Bookmarkable;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.SecurityAuthorities;
-import org.xaloon.core.api.security.SecurityGroup;
-import org.xaloon.core.api.security.SecurityRole;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityGroup;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 

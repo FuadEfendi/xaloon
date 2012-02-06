@@ -18,7 +18,7 @@ package org.xaloon.wicket.plugin.user.admin.renderer;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xaloon.core.api.security.Authority;
+import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
 
 /**
