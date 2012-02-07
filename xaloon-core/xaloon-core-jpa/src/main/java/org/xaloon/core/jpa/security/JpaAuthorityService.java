@@ -25,12 +25,14 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.plugin.Plugin;
 import org.xaloon.core.api.security.AuthorityService;
 import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
 
@@ -58,8 +60,9 @@ public class JpaAuthorityService implements AuthorityService {
 		}
 	}
 
+	@Override
 	public Authority findOrCreateAuthority(String permission) {
-		Authority authority = findAuthority(permission);
+		Authority authority = getAuthorityByName(permission);
 		if (authority == null) {
 			authority = newAuthority();
 			authority.setName(permission);
@@ -73,17 +76,85 @@ public class JpaAuthorityService implements AuthorityService {
 		return new JpaAuthority();
 	}
 
-	public Authority findAuthority(String authorityName) {
-		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
-		queryBuilder.addParameter("a.name", "_AUTHORITY_NAME", authorityName);
-		return persistenceServices.executeQuerySingle(queryBuilder);
-	}
-
 	@Override
 	public void save(Authority entity) {
 		if (StringUtils.isEmpty(entity.getPath())) {
 			entity.setPath(UrlUtil.encode(entity.getName()));
 		}
 		persistenceServices.create(entity);
+	}
+
+	@Override
+	public List<Authority> getAuthorities(int first, int count) {
+		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
+		queryBuilder.setCount(count);
+		queryBuilder.setFirstRow(first);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
+	public int getCount() {
+		QueryBuilder queryBuilder = new QueryBuilder("select count(a) from " + JpaAuthority.class.getSimpleName() + " a");
+		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
+	}
+
+	@Override
+	public void delete(Authority authority) {
+		throw new NotImplementedException("This method is not supported! This is an application attribute!");
+	}
+
+	@Override
+	public List<Authority> getAuthoritiesByUsername(String username) {
+		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a join a.users u");
+		queryBuilder.addParameter("u.username", "USERNAME", username);
+		return persistenceServices.executeQuery(queryBuilder);
+	}
+
+	@Override
+	public UserDetails revoke(UserDetails userDetails, Authority authority) {
+		UserDetails tmp = persistenceServices.find(userDetails.getClass(), userDetails.getId());
+		tmp.getAuthorities().remove(authority);
+		return persistenceServices.edit(tmp);
+	}
+
+	@Override
+	public Authority getAuthorityByName(String name) {
+		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
+		queryBuilder.addParameter("a.name", "_AUTHORITY_NAME", name);
+		return persistenceServices.executeQuerySingle(queryBuilder);
+	}
+
+	@Override
+	public Authority getAuthorityByPath(String path) {
+		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
+		queryBuilder.addParameter("a.path", "PATH", path);
+		return persistenceServices.executeQuerySingle(queryBuilder);
+	}
+
+	@Override
+	public UserDetails assignAuthoritiesByName(UserDetails userDetails, List<String> selections) {
+		UserDetails tmp = persistenceServices.find(userDetails.getClass(), userDetails.getId());
+		for (String authorityName : selections) {
+			Authority authority = findOrCreateAuthority(authorityName);
+			tmp.getAuthorities().add(authority);
+		}
+		return persistenceServices.edit(tmp);
+	}
+
+	@Override
+	public UserDetails assignAuthorities(UserDetails userDetails, List<Authority> selections) {
+		UserDetails tmp = persistenceServices.find(userDetails.getClass(), userDetails.getId());
+		tmp.getAuthorities().addAll(selections);
+		return persistenceServices.edit(tmp);
+	}
+
+	@Override
+	public Authority assignChildren(Authority parent, List<Authority> selections) {
+		throw new NotImplementedException("This method is not supported!");
+	}
+
+	@Override
+	public Authority revokeChild(Authority parent, Authority authority) {
+		throw new NotImplementedException("This method is not supported!");
 	}
 }

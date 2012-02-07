@@ -57,7 +57,7 @@ public class SpringUserDetailsService implements UserDetailsService {
 		details.setPassword(userDetails.getPassword());
 		details.setUsername(userDetails.getUsername());
 		
-		List<String> authorities = loginService.getAuthoritiesByUsername(userDetails.getUsername());
+		List<Authority> authorities = loginService.getIndirectAuthoritiesForUsername(userDetails.getUsername());
 		if (!authorities.isEmpty()) {
 			createAdaptorForAuthorities(details, authorities);
 		}
@@ -67,9 +67,9 @@ public class SpringUserDetailsService implements UserDetailsService {
 		return details;
 	}
 
-	private void createAdaptorForAuthorities(DefaultUserDetails details, List<String> authorities) {
-		for (String authority : authorities) {
-			details.getAuthorities().add(new SimpleGrantedAuthority(authority));
+	private void createAdaptorForAuthorities(DefaultUserDetails details, List<Authority> authorities) {
+		for (Authority authority : authorities) {
+			details.getAuthorities().add(new SimpleGrantedAuthority(authority.getName()));
 		}
 	}
 }

@@ -16,15 +16,13 @@
  */
 package org.xaloon.core.api.security;
 
-import java.io.Serializable;
-
 import org.xaloon.core.api.plugin.Plugin;
 import org.xaloon.core.api.security.model.Authority;
 
 /**
  * @author vytautas r.
  */
-public interface AuthorityService extends Serializable {
+public interface AuthorityService extends AbstractAuthorityService<Authority, Authority> {
 
 	/**
 	 * Registers supported permissions by plugin
@@ -32,37 +30,4 @@ public interface AuthorityService extends Serializable {
 	 * @param plugin
 	 */
 	void registerPermissions(Plugin plugin);
-
-	/**
-	 * Returns existing permission or creates new one if there is no exising
-	 * 
-	 * @param permission
-	 *            string permission to search for
-	 * @return authority object found or created
-	 */
-	Authority findOrCreateAuthority(String permission);
-
-	/**
-	 * Returns new instance of {@link Authority}
-	 * 
-	 * @return new instance of {@link Authority}
-	 */
-	Authority newAuthority();
-
-	/**
-	 * Searches for permission and returns {@link Authority} object if found. null is returned otherwise
-	 * 
-	 * @param permission
-	 *            permission to search
-	 * @return instance of {@link Authority}
-	 */
-	Authority findAuthority(String permission);
-
-	/**
-	 * Saves provided authority in storage
-	 * 
-	 * @param entity
-	 *            entity to save
-	 */
-	void save(Authority entity);
 }

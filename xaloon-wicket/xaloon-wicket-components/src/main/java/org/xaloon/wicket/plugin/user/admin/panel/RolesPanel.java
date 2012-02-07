@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
@@ -53,7 +53,7 @@ public class RolesPanel extends AbstractAdministrationPanel {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private RoleService roleService;
 
 	/**
 	 * Construct.
@@ -97,7 +97,7 @@ public class RolesPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.delete(role);
+						roleService.delete(role);
 						target.add(dataContainer);
 					}
 
@@ -116,12 +116,12 @@ public class RolesPanel extends AbstractAdministrationPanel {
 			};
 		};
 		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityRole>(addNewGroupModalWindow.getContentId(), new Model<SecurityRole>(
-			roleGroupService.newRole())) {
+			roleService.newAuthority())) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onNewEntitySubmit(AjaxRequestTarget target, SecurityRole entity) {
-				roleGroupService.save(entity);
+				roleService.save(entity);
 				addNewGroupModalWindow.close(target);
 			}
 		});
@@ -155,12 +155,12 @@ public class RolesPanel extends AbstractAdministrationPanel {
 
 		@Override
 		public Iterator<SecurityRole> iterator(int first, int count) {
-			return roleGroupService.getRoleList(first, count).iterator();
+			return roleService.getAuthorities(first, count).iterator();
 		}
 
 		@Override
 		public int size() {
-			return roleGroupService.getRoleCount();
+			return roleService.getCount();
 		}
 
 		@Override

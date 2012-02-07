@@ -25,7 +25,7 @@ import javax.inject.Named;
 import org.xaloon.core.api.plugin.Plugin;
 import org.xaloon.core.api.security.AuthorityFacade;
 import org.xaloon.core.api.security.AuthorityService;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
 
@@ -41,7 +41,7 @@ public class DefaultAuthorityFacade implements AuthorityFacade {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private RoleService roleService;
 
 	@Inject
 	private AuthorityService authorityService;
@@ -49,7 +49,7 @@ public class DefaultAuthorityFacade implements AuthorityFacade {
 	@Override
 	public void registerRoles(Plugin plugin) {
 		for (SecurityRole role : plugin.getSupportedRoles()) {
-			SecurityRole securityRole = roleGroupService.findOrCreateRole(role.getName());
+			SecurityRole securityRole = roleService.findOrCreateAuthority(role.getName());
 			registerAuthoritiesForRole(securityRole, role.getAuthorities());
 		}
 	}
@@ -61,7 +61,7 @@ public class DefaultAuthorityFacade implements AuthorityFacade {
 			authoritiesToAssign.add(persistedAuthority);
 		}
 		if (!authoritiesToAssign.isEmpty()) {
-			roleGroupService.assignAuthorities(securityRole, authoritiesToAssign);
+			roleService.assignChildren(securityRole, authoritiesToAssign);
 		}
 	}
 }

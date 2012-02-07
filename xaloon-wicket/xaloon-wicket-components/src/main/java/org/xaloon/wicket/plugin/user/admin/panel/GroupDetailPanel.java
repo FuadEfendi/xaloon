@@ -29,7 +29,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.GroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
@@ -48,7 +49,10 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private GroupService groupService;
+
+	@Inject
+	private RoleService roleService;
 
 	/**
 	 * Construct.
@@ -71,12 +75,15 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 
 		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 
-		final SecurityGroup group = roleGroupService.getGroupByPath(path);
+		final SecurityGroup group = groupService.getAuthorityByPath(path);
 
+		if (group == null) {
+			throw new RestartResponseException(GroupsPage.class);
+		}
 		// Add name
 		add(new Label("name", new Model<String>(group.getName())));
 
-		final List<SecurityRole> availableItemsForSelection = roleGroupService.getRoleList(0, -1);
+		final List<SecurityRole> availableItemsForSelection = roleService.getAuthorities(0, -1);
 
 		// Add role list
 		add(new AuthorityManagementContainer<SecurityRole>("role-admin") {
@@ -98,7 +105,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeRoleFromGroup(group, role);
+						groupService.revokeChild(group, role);
 						target.add(GroupDetailPanel.this);
 					}
 				});
@@ -106,7 +113,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<SecurityRole> selections) {
-				roleGroupService.assignRolesToGroup(group, selections);
+				groupService.assignChildren(group, selections);
 			}
 
 			@Override

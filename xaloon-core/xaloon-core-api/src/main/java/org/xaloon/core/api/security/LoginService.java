@@ -120,17 +120,21 @@ public interface LoginService extends Serializable {
 	 */
 	UserDetails loadUserDetails(String username);
 
-	List<String> getAuthoritiesByUsername(String username);
-
-	List<Authority> getAuthorities(String username);
+	/**
+	 * Returns direct and indirect permissions for selected username
+	 * 
+	 * @param username
+	 * @return list of direct and indirect {@link Authority}
+	 */
+	List<Authority> getIndirectAuthoritiesForUsername(String username);
 
 	/**
 	 * Returns direct and indirect roles for selected username
 	 * 
 	 * @param username
-	 * @return
+	 * @return list of direct and indirect {@link SecurityRole}
 	 */
-	List<SecurityRole> getRoles(String username);
+	List<SecurityRole> getIndirectRolesForUsername(String username);
 
 	/**
 	 * Returns total count of users in the system

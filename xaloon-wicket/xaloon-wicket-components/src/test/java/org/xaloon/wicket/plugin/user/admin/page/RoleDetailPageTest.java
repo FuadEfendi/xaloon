@@ -59,7 +59,7 @@ public class RoleDetailPageTest extends AbstractUserAdminTestCase {
 
 		SecurityRole role = new JpaRole();
 		role.setName("name");
-		when(roleGroupService.getRoleByPath("test")).thenReturn(role);
+		when(roleService.getAuthorityByPath("test")).thenReturn(role);
 		WicketTester tester = new WicketTester(app);
 
 		PageParameters params = new PageParameters();

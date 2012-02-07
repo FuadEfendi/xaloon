@@ -66,16 +66,16 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Return at least one group
-		when(roleGroupService.getGroupCount()).thenReturn(1);
+		when(groupService.getCount()).thenReturn(1);
 
 		SecurityGroup group = mock(SecurityGroup.class);
 		when(group.getPath()).thenReturn("group-name");
 
 		List<SecurityGroup> groups = new ArrayList<SecurityGroup>();
 		groups.add(group);
-		when(roleGroupService.getGroupList(0, 1)).thenReturn(groups);
+		when(groupService.getAuthorities(0, 1)).thenReturn(groups);
 		SecurityGroup securityGroup = new JpaGroup();
-		when(roleGroupService.newGroup()).thenReturn(securityGroup);
+		when(groupService.newAuthority()).thenReturn(securityGroup);
 
 		tester.startComponentInPage(new GroupsPanel("id", new PageParameters()));
 

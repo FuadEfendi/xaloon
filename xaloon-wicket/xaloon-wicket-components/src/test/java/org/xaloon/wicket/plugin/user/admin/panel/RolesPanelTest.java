@@ -69,17 +69,17 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Return at least one role
-		when(roleGroupService.getRoleCount()).thenReturn(1);
+		when(roleService.getCount()).thenReturn(1);
 
 		SecurityRole role = mock(SecurityRole.class);
 		when(role.getPath()).thenReturn("role-name");
 
 		List<SecurityRole> roles = new ArrayList<SecurityRole>();
 		roles.add(role);
-		when(roleGroupService.getRoleList(0, 1)).thenReturn(roles);
+		when(roleService.getAuthorities(0, 1)).thenReturn(roles);
 
 		SecurityRole securityRole = new JpaRole();
-		when(roleGroupService.newRole()).thenReturn(securityRole);
+		when(roleService.newAuthority()).thenReturn(securityRole);
 
 		tester.startComponentInPage(new RolesPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));

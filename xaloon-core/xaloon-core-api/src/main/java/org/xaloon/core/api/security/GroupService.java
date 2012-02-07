@@ -16,12 +16,12 @@
  */
 package org.xaloon.core.api.security;
 
-import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.core.api.security.model.SecurityRole;
 
 /**
  * @author vytautas r.
  */
-public interface RoleService extends AbstractAuthorityService<SecurityRole, Authority> {
+public interface GroupService extends AbstractAuthorityService<SecurityGroup, SecurityRole> {
 
 }

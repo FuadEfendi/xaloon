@@ -11,7 +11,9 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.util.tester.WicketTester;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.AuthorityService;
+import org.xaloon.core.api.security.GroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.core.api.security.model.SecurityRole;
@@ -29,13 +31,18 @@ import org.xaloon.wicket.plugin.system.SystemPluginBean;
  * @author vytautas r.
  */
 public abstract class AbstractUserAdminTestCase {
-	protected RoleGroupService roleGroupService = mock(RoleGroupService.class);
+	protected RoleService roleService = mock(RoleService.class);
+	protected GroupService groupService = mock(GroupService.class);
+	protected AuthorityService authorityService = mock(AuthorityService.class);
+
 
 	protected UserDetails details = mock(UserDetails.class);
 
 	protected MockedApplication createMockedApplication() {
 		MockedApplication app = new MockedApplication();
-		app.getMockedServices().put(RoleGroupService.class.getName(), roleGroupService);
+		app.getMockedServices().put(RoleService.class.getName(), roleService);
+		app.getMockedServices().put(GroupService.class.getName(), groupService);
+		app.getMockedServices().put(AuthorityService.class.getName(), authorityService);
 
 		SystemPluginBean systemPluginBean = new SystemPluginBean();
 

@@ -53,6 +53,7 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	@Audited(state = AuditState.DELETE)
 	public <T> void remove(T o) {
 		getEm().remove(getEm().merge(o));
+		getEm().flush();
 	}
 
 	/**
@@ -62,6 +63,7 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	@Audited(state = AuditState.DELETE)
 	public <T> void remove(Class<T> clazz, Long id) {
 		getEm().remove(getEm().getReference(clazz, id));
+		getEm().flush();
 	}
 
 	/**

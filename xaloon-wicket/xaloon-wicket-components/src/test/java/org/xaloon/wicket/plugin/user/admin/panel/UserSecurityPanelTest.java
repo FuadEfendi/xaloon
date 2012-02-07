@@ -152,14 +152,14 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available authorities
-		Mockito.when(roleGroupService.getAuthorityList(0, -1)).thenReturn(availableAuthorities);
+		Mockito.when(authorityService.getAuthorities(0, -1)).thenReturn(availableAuthorities);
 
 		// return given authorities to user
 		final List<Authority> givenAuthorities = new ArrayList<Authority>();
 		givenAuthorities.add(newAuthority(777L, "fake-authority"));
 		Mockito.when(details.getAuthorities()).thenReturn(givenAuthorities);
 
-		Mockito.when(roleGroupService.assignAuthorities((UserDetails)Matchers.anyObject(), Matchers.anyListOf(Authority.class))).thenAnswer(
+		Mockito.when(authorityService.assignAuthorities((UserDetails)Matchers.anyObject(), Matchers.anyListOf(Authority.class))).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@SuppressWarnings("unchecked")
@@ -210,13 +210,13 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available authorities
-		Mockito.when(roleGroupService.getAuthorityList(0, -1)).thenReturn(availableAuthorities);
+		Mockito.when(authorityService.getAuthorities(0, -1)).thenReturn(availableAuthorities);
 
 		// return given authorities to user
 		final List<Authority> givenAuthorities = newSecurityAuthorityListWithItems(1);
 		Mockito.when(details.getAuthorities()).thenReturn(givenAuthorities);
 
-		Mockito.when(roleGroupService.revokeAuthority((UserDetails)Matchers.anyObject(), (Authority)Matchers.anyObject())).thenAnswer(
+		Mockito.when(authorityService.revoke((UserDetails)Matchers.anyObject(), (Authority)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@Override
@@ -249,7 +249,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 	@Test
 	public void testPanelAuthoritiesCloseWindow() throws Exception {
 		// return available authorities
-		Mockito.when(roleGroupService.getAuthorityList(0, -1)).thenReturn(availableAuthorities);
+		Mockito.when(authorityService.getAuthorities(0, -1)).thenReturn(availableAuthorities);
 
 		// return given authorities to user
 		final List<Authority> givenAuthorities = newSecurityAuthorityListWithItems(1);
@@ -278,14 +278,14 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available roles
-		Mockito.when(roleGroupService.getRoleList(0, -1)).thenReturn(availableRoles);
+		Mockito.when(roleService.getAuthorities(0, -1)).thenReturn(availableRoles);
 
 		// return given roles to user
 		final List<SecurityRole> givenRoles = new ArrayList<SecurityRole>();
 		givenRoles.add(newRole(777L, "fake-role"));
 		Mockito.when(details.getRoles()).thenReturn(givenRoles);
 
-		Mockito.when(roleGroupService.assignRoles((UserDetails)Matchers.anyObject(), Matchers.anyListOf(SecurityRole.class))).thenAnswer(
+		Mockito.when(roleService.assignAuthorities((UserDetails)Matchers.anyObject(), Matchers.anyListOf(SecurityRole.class))).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@SuppressWarnings("unchecked")
@@ -336,14 +336,14 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available roles
-		Mockito.when(roleGroupService.getRoleList(0, -1)).thenReturn(availableRoles);
+		Mockito.when(roleService.getAuthorities(0, -1)).thenReturn(availableRoles);
 
 		// return given roles to user
 		final List<SecurityRole> givenRoles = new ArrayList<SecurityRole>();
 		givenRoles.add(newRole(777L, "fake-role"));
 		Mockito.when(details.getRoles()).thenReturn(givenRoles);
 
-		Mockito.when(roleGroupService.revokeRole((UserDetails)Matchers.anyObject(), (SecurityRole)Matchers.anyObject())).thenAnswer(
+		Mockito.when(roleService.revoke((UserDetails)Matchers.anyObject(), (SecurityRole)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@Override
@@ -376,7 +376,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 	@Test
 	public void testPanelRolesCloseWindow() throws Exception {
 		// return available roles
-		Mockito.when(roleGroupService.getRoleList(0, -1)).thenReturn(availableRoles);
+		Mockito.when(roleService.getAuthorities(0, -1)).thenReturn(availableRoles);
 
 		// return given roles to user
 		final List<SecurityRole> givenRoles = new ArrayList<SecurityRole>();
@@ -406,14 +406,14 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available groups
-		Mockito.when(roleGroupService.getGroupList(0, -1)).thenReturn(availableGroups);
+		Mockito.when(groupService.getAuthorities(0, -1)).thenReturn(availableGroups);
 
 		// return given groups to user
 		final List<SecurityGroup> givenGroups = new ArrayList<SecurityGroup>();
 		givenGroups.add(newGroup(777L, "fake-group"));
 		Mockito.when(details.getGroups()).thenReturn(givenGroups);
 
-		Mockito.when(roleGroupService.assignGroups((UserDetails)Matchers.anyObject(), Matchers.anyListOf(SecurityGroup.class))).thenAnswer(
+		Mockito.when(groupService.assignAuthorities((UserDetails)Matchers.anyObject(), Matchers.anyListOf(SecurityGroup.class))).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@SuppressWarnings("unchecked")
@@ -464,14 +464,14 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// Add mocked invocations
 
 		// return available groups
-		Mockito.when(roleGroupService.getGroupList(0, -1)).thenReturn(availableGroups);
+		Mockito.when(groupService.getAuthorities(0, -1)).thenReturn(availableGroups);
 
 		// return given groups to user
 		final List<SecurityGroup> givenGroups = new ArrayList<SecurityGroup>();
 		givenGroups.add(newGroup(777L, "fake-group"));
 		Mockito.when(details.getGroups()).thenReturn(givenGroups);
 
-		Mockito.when(roleGroupService.revokeGroup((UserDetails)Matchers.anyObject(), (SecurityGroup)Matchers.anyObject())).thenAnswer(
+		Mockito.when(groupService.revoke((UserDetails)Matchers.anyObject(), (SecurityGroup)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@Override
@@ -504,7 +504,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 	@Test
 	public void testPanelGroupsCloseWindow() throws Exception {
 		// return available groups
-		Mockito.when(roleGroupService.getGroupList(0, -1)).thenReturn(availableGroups);
+		Mockito.when(groupService.getAuthorities(0, -1)).thenReturn(availableGroups);
 
 		// return given groups to user
 		final List<SecurityGroup> givenGroups = new ArrayList<SecurityGroup>();

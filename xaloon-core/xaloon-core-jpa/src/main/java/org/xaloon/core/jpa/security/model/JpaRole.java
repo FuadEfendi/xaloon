@@ -50,7 +50,7 @@ public class JpaRole extends BookmarkableEntity implements SecurityRole {
 	@Column(name = "ROLE_NAME", nullable = false)
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "XAL_SECURITY_USER_ROLES", joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
 	private List<JpaUserDetails> users = new ArrayList<JpaUserDetails>();
 
@@ -118,14 +118,14 @@ public class JpaRole extends BookmarkableEntity implements SecurityRole {
 		JpaRole entity = (JpaRole)obj;
 
 		EqualsBuilder equalsBuilder = new EqualsBuilder();
-		equalsBuilder.append(getName(), entity.getName());
+		equalsBuilder.append(getId(), entity.getId());
 		return equalsBuilder.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-		hashCodeBuilder.append(getName());
+		hashCodeBuilder.append(getId());
 		return hashCodeBuilder.hashCode();
 	}
 

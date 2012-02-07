@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
+import org.xaloon.core.api.security.model.UserDetails;
 
 /**
  * @author vytautas r.
@@ -33,6 +34,7 @@ public class DefaultSecurityRole extends DefaultSecurityEntity implements Securi
 	 */
 	private static final long serialVersionUID = 1L;
 	private List<Authority> authorities = new ArrayList<Authority>();
+	private List<UserDetails> users = new ArrayList<UserDetails>();
 
 	/**
 	 * Construct.
@@ -41,6 +43,25 @@ public class DefaultSecurityRole extends DefaultSecurityEntity implements Securi
 	 */
 	public DefaultSecurityRole(String name) {
 		super(name);
+	}
+
+	/**
+	 * Gets users.
+	 * 
+	 * @return users
+	 */
+	public List<UserDetails> getUsers() {
+		return users;
+	}
+
+	/**
+	 * Sets users.
+	 * 
+	 * @param users
+	 *            users
+	 */
+	public void setUsers(List<UserDetails> users) {
+		this.users = users;
 	}
 
 	/**

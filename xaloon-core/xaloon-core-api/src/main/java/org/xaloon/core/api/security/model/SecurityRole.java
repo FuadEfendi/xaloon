@@ -24,4 +24,7 @@ import java.util.List;
  */
 public interface SecurityRole extends SecurityEntity {
 	<T extends Authority> List<T> getAuthorities();
+
+	<T extends UserDetails> List<T> getUsers();
+
 }

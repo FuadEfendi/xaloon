@@ -44,7 +44,7 @@ public class JpaAuthority extends BookmarkableEntity implements Authority {
 	@Column(name = "AUTHORITY", nullable = false)
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"))
 	private List<JpaUserDetails> users = new ArrayList<JpaUserDetails>();
 
@@ -92,17 +92,17 @@ public class JpaAuthority extends BookmarkableEntity implements Authority {
 		if (obj == null || !(obj instanceof JpaAuthority)) {
 			return false;
 		}
-		JpaAuthority jpaAuthority = (JpaAuthority)obj;
+		JpaAuthority entity = (JpaAuthority)obj;
 
 		EqualsBuilder equalsBuilder = new EqualsBuilder();
-		equalsBuilder.append(getName(), jpaAuthority.getName());
+		equalsBuilder.append(getId(), entity.getId());
 		return equalsBuilder.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-		hashCodeBuilder.append(getName());
+		hashCodeBuilder.append(getId());
 		return hashCodeBuilder.hashCode();
 	}
 

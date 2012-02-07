@@ -211,11 +211,6 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public List<String> getAuthoritiesByUsername(String username) {
-		return loginService.getAuthoritiesByUsername(username);
-	}
-
-	@Override
 	public int count() {
 		return loginService.count();
 	}
@@ -231,12 +226,12 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public List<Authority> getAuthorities(String username) {
-		return loginService.getAuthorities(username);
+	public List<Authority> getIndirectAuthoritiesForUsername(String username) {
+		return loginService.getIndirectAuthoritiesForUsername(username);
 	}
 
 	@Override
-	public List<SecurityRole> getRoles(String username) {
-		return loginService.getRoles(username);
+	public List<SecurityRole> getIndirectRolesForUsername(String username) {
+		return loginService.getIndirectRolesForUsername(username);
 	}
 }

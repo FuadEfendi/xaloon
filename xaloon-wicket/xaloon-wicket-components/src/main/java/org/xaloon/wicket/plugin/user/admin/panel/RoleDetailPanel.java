@@ -29,7 +29,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.resource.StringResourceLoader;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.AuthorityService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
@@ -48,7 +49,10 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private RoleService roleService;
+
+	@Inject
+	private AuthorityService authorityService;
 
 	@Inject
 	private StringResourceLoader stringResourceLoader;
@@ -74,12 +78,15 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 
-		final SecurityRole role = roleGroupService.getRoleByPath(path);
+		final SecurityRole role = roleService.getAuthorityByPath(path);
 
+		if (role == null) {
+			throw new RestartResponseException(RolesPage.class);
+		}
 		// Add name
 		add(new Label("name", new Model<String>(role.getName())));
 
-		final List<Authority> availableItemsForSelection = roleGroupService.getAuthorityList(0, -1);
+		final List<Authority> availableItemsForSelection = authorityService.getAuthorities(0, -1);
 
 		// Add permission list
 		add(new AuthorityManagementContainer<Authority>("authority-admin") {
@@ -94,7 +101,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeAuthority(role, authority);
+						roleService.revokeChild(role, authority);
 						target.add(RoleDetailPanel.this);
 					}
 				});
@@ -102,7 +109,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<Authority> selections) {
-				roleGroupService.assignAuthorities(role, selections);
+				roleService.assignChildren(role, selections);
 			}
 
 			@Override

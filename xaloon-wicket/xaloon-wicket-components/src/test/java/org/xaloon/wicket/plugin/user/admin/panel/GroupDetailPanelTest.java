@@ -62,10 +62,10 @@ public class GroupDetailPanelTest extends AbstractUserAdminTestCase {
 		selectedGroup = newGroup(1L, "group");
 		selectedGroup.getRoles().add(newRole(1L, "assignedRole"));
 		Mockito.when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
-		Mockito.when(roleGroupService.getGroupByPath(groupPath)).thenReturn(selectedGroup);
+		Mockito.when(groupService.getAuthorityByPath(groupPath)).thenReturn(selectedGroup);
 
 
-		Mockito.when(roleGroupService.getRoleList(0, -1)).thenReturn(availableRoles);
+		Mockito.when(roleService.getAuthorities(0, -1)).thenReturn(availableRoles);
 
 		PageParameters params = new PageParameters();
 		params.add(Bookmarkable.PARAM_PATH, groupPath);
@@ -109,7 +109,7 @@ public class GroupDetailPanelTest extends AbstractUserAdminTestCase {
 		FormTester form = tester.newFormTester(formPath);
 		form.selectMultiple("choices", new int[] { 1 });
 
-		Mockito.when(roleGroupService.assignRolesToGroup((SecurityGroup)Matchers.anyObject(), Matchers.anyListOf(SecurityRole.class))).thenAnswer(
+		Mockito.when(groupService.assignChildren((SecurityGroup)Matchers.anyObject(), Matchers.anyListOf(SecurityRole.class))).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@SuppressWarnings("unchecked")
@@ -134,7 +134,7 @@ public class GroupDetailPanelTest extends AbstractUserAdminTestCase {
 		// TEST REVOKE A ROLE FROM GROUP
 		Assert.assertNotNull(tester.getTagByWicketId("role-admin"));
 
-		Mockito.when(roleGroupService.revokeRoleFromGroup((SecurityGroup)Matchers.anyObject(), (SecurityRole)Matchers.anyObject())).thenAnswer(
+		Mockito.when(groupService.revokeChild((SecurityGroup)Matchers.anyObject(), (SecurityRole)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@Override

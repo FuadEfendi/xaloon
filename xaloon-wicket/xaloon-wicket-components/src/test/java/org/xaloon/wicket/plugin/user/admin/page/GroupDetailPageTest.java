@@ -58,7 +58,7 @@ public class GroupDetailPageTest extends AbstractUserAdminTestCase {
 
 		SecurityGroup group = new JpaGroup();
 		group.setName("name");
-		when(roleGroupService.getGroupByPath("test")).thenReturn(group);
+		when(groupService.getAuthorityByPath("test")).thenReturn(group);
 
 		WicketTester tester = new WicketTester(app);
 		PageParameters params = new PageParameters();

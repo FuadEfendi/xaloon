@@ -93,9 +93,9 @@ public abstract class AbstractRealm extends AuthorizingRealm {
 	}
 
 	protected void addInternalUserRoles(SimpleAuthorizationInfo info, org.xaloon.core.api.security.model.UserDetails userDetails) {
-		List<String> authorities = loginService.getAuthoritiesByUsername(userDetails.getUsername());
-		for (String authority : authorities) {
-			info.addRole(authority);//TODO check
+		List<Authority> authorities = loginService.getIndirectAuthoritiesForUsername(userDetails.getUsername());
+		for (Authority authority : authorities) {
+			info.addRole(authority.getName());//TODO check
 		}
 	}
 }

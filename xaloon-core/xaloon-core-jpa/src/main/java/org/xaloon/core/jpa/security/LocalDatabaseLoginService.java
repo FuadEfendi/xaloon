@@ -37,7 +37,7 @@ import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.persistence.QueryBuilder.Condition;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
@@ -62,7 +62,7 @@ public class LocalDatabaseLoginService implements LoginService {
 	private PersistenceServices persistenceServices;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private RoleService roleService;
 
 	@Override
 	public boolean performLogin(String username, String password) {
@@ -104,7 +104,7 @@ public class LocalDatabaseLoginService implements LoginService {
 		persistenceServices.create(jpaUserDetails);
 		List<String> selections = new ArrayList<String>();
 		selections.add(SecurityAuthorities.ROLE_REGISTERED_USER);
-		roleGroupService.assignRolesByName(jpaUserDetails, selections);
+		roleService.assignAuthoritiesByName(jpaUserDetails, selections);
 		return activationKey;
 	}
 
@@ -226,24 +226,21 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public List<String> getAuthoritiesByUsername(String username) {
-		List<String> result = new ArrayList<String>();
-		if (StringUtils.isEmpty(username)) {
-			return result;
-		}
-		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
-		if (userDetails == null) {
-			return result;
-		}
-		Set<String> items = new HashSet<String>();
-		addByAuthorityMember(userDetails.getAuthorities(), items);
-		addByRoleMember(userDetails.getRoles(), items);
-		addByGroupMember(userDetails.getGroups(), items);
-		return new ArrayList<String>(items);
+	public int count() {
+		QueryBuilder query = new QueryBuilder("select count(u) from " + JpaUserDetails.class.getSimpleName() + " u");
+		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
 	}
 
 	@Override
-	public List<Authority> getAuthorities(String username) {
+	public List<UserDetails> findUsers(int first, int count) {
+		QueryBuilder query = new QueryBuilder("select u from " + JpaUserDetails.class.getSimpleName() + " u");
+		query.setFirstRow(first);
+		query.setCount(count);
+		return persistenceServices.executeQuery(query);
+	}
+
+	@Override
+	public List<Authority> getIndirectAuthoritiesForUsername(String username) {
 		List<Authority> result = new ArrayList<Authority>();
 		if (StringUtils.isEmpty(username)) {
 			return result;
@@ -257,35 +254,6 @@ public class LocalDatabaseLoginService implements LoginService {
 		addByRoleMemberInternal(userDetails.getRoles(), items);
 		addByGroupMemberInternal(userDetails.getGroups(), items);
 		return new ArrayList<Authority>(items);
-	}
-
-	@Override
-	public List<SecurityRole> getRoles(String username) {
-		List<SecurityRole> result = new ArrayList<SecurityRole>();
-		if (StringUtils.isEmpty(username)) {
-			return result;
-		}
-		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
-		if (userDetails == null) {
-			return result;
-		}
-		Set<SecurityRole> items = new HashSet<SecurityRole>();
-		addRolesByRoleMember(userDetails.getRoles(), items);
-		addRolesByGroupMemberInternal(userDetails.getGroups(), items);
-		return new ArrayList<SecurityRole>(items);
-	}
-
-
-	private void addRolesByGroupMemberInternal(List<JpaGroup> groups, Set<SecurityRole> items) {
-		for (JpaGroup group : groups) {
-			addRolesByRoleMember(group.getRoles(), items);
-		}
-	}
-
-	private void addRolesByRoleMember(List<JpaRole> roles, Set<SecurityRole> items) {
-		if (!roles.isEmpty()) {
-			items.addAll(roles);
-		}
 	}
 
 	private void addByGroupMemberInternal(List<JpaGroup> groups, Set<Authority> items) {
@@ -306,36 +274,31 @@ public class LocalDatabaseLoginService implements LoginService {
 		}
 	}
 
-	private void addByAuthorityMember(List<JpaAuthority> authorities, Set<String> items) {
-		for (JpaAuthority authority : authorities) {
-			items.add(authority.getName());
+	@Override
+	public List<SecurityRole> getIndirectRolesForUsername(String username) {
+		List<SecurityRole> result = new ArrayList<SecurityRole>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
 		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<SecurityRole> items = new HashSet<SecurityRole>();
+		addRolesByRoleMember(userDetails.getRoles(), items);
+		addRolesByGroupMember(userDetails.getGroups(), items);
+		return new ArrayList<SecurityRole>(items);
 	}
 
-
-	private void addByRoleMember(List<JpaRole> roles, Set<String> items) {
-		for (JpaRole role : roles) {
-			addByAuthorityMember(role.getAuthorities(), items);
-		}
-	}
-
-	private void addByGroupMember(List<JpaGroup> groups, Set<String> items) {
+	private void addRolesByGroupMember(List<JpaGroup> groups, Set<SecurityRole> items) {
 		for (JpaGroup group : groups) {
-			addByRoleMember(group.getRoles(), items);
+			addRolesByRoleMember(group.getRoles(), items);
 		}
 	}
 
-	@Override
-	public int count() {
-		QueryBuilder query = new QueryBuilder("select count(u) from " + JpaUserDetails.class.getSimpleName() + " u");
-		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
-	}
-
-	@Override
-	public List<UserDetails> findUsers(int first, int count) {
-		QueryBuilder query = new QueryBuilder("select u from " + JpaUserDetails.class.getSimpleName() + " u");
-		query.setFirstRow(first);
-		query.setCount(count);
-		return persistenceServices.executeQuery(query);
+	private void addRolesByRoleMember(List<JpaRole> roles, Set<SecurityRole> items) {
+		if (!roles.isEmpty()) {
+			items.addAll(roles);
+		}
 	}
 }

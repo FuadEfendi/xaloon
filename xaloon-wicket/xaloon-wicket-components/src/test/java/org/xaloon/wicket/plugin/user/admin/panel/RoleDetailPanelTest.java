@@ -63,10 +63,10 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		selectedRole = newRole(1L, "role");
 		selectedRole.getAuthorities().add(newAuthority(1L, "assignedRole"));
 		Mockito.when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
-		Mockito.when(roleGroupService.getRoleByPath(path)).thenReturn(selectedRole);
+		Mockito.when(roleService.getAuthorityByPath(path)).thenReturn(selectedRole);
 
 
-		Mockito.when(roleGroupService.getAuthorityList(0, -1)).thenReturn(availableAuthorities);
+		Mockito.when(authorityService.getAuthorities(0, -1)).thenReturn(availableAuthorities);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		FormTester form = tester.newFormTester(formPath);
 		form.selectMultiple("choices", new int[] { 1 });
 
-		Mockito.when(roleGroupService.assignAuthorities((SecurityRole)Matchers.anyObject(), Matchers.anyListOf(Authority.class))).thenAnswer(
+		Mockito.when(roleService.assignChildren((SecurityRole)Matchers.anyObject(), Matchers.anyListOf(Authority.class))).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@SuppressWarnings("unchecked")
@@ -142,7 +142,7 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		// TEST REVOKE A ROLE FROM GROUP
 		Assert.assertNotNull(tester.getTagByWicketId("authority-admin"));
 
-		Mockito.when(roleGroupService.revokeAuthority((SecurityRole)Matchers.anyObject(), (Authority)Matchers.anyObject())).thenAnswer(
+		Mockito.when(roleService.revokeChild((SecurityRole)Matchers.anyObject(), (Authority)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
 
 				@Override

@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.GroupService;
 import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
@@ -53,7 +53,7 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private GroupService groupService;
 
 	/**
 	 * Construct.
@@ -96,7 +96,7 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.delete(group);
+						groupService.delete(group);
 						target.add(dataContainer);
 					}
 				});
@@ -115,12 +115,12 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 			};
 		};
 		addNewGroupModalWindow.setContent(new CreateNewEntityPanel<SecurityGroup>(addNewGroupModalWindow.getContentId(), new Model<SecurityGroup>(
-			roleGroupService.newGroup())) {
+			groupService.newAuthority())) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onNewEntitySubmit(AjaxRequestTarget target, SecurityGroup entity) {
-				roleGroupService.save(entity);
+				groupService.save(entity);
 				addNewGroupModalWindow.close(target);
 			}
 		});
@@ -154,12 +154,12 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 
 		@Override
 		public Iterator<? extends SecurityGroup> iterator(int first, int count) {
-			return roleGroupService.getGroupList(first, count).iterator();
+			return groupService.getAuthorities(first, count).iterator();
 		}
 
 		@Override
 		public int size() {
-			return roleGroupService.getGroupCount();
+			return groupService.getCount();
 		}
 
 		@Override

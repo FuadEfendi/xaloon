@@ -32,7 +32,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 import org.xaloon.core.api.resource.StringResourceLoader;
-import org.xaloon.core.api.security.RoleGroupService;
+import org.xaloon.core.api.security.AuthorityService;
+import org.xaloon.core.api.security.GroupService;
+import org.xaloon.core.api.security.RoleService;
 import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityGroup;
@@ -64,7 +66,13 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	private UserFacade userFacade;
 
 	@Inject
-	private RoleGroupService roleGroupService;
+	private GroupService groupService;
+
+	@Inject
+	private RoleService roleService;
+
+	@Inject
+	private AuthorityService authorityService;
 
 	@Inject
 	private StringResourceLoader stringResourceLoader;
@@ -143,7 +151,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeGroup(getUserDetails(), group);
+						groupService.revoke(getUserDetails(), group);
 						target.add(groupContainer);
 						target.add(authorityMarkupContainer);
 						target.add(roleMarkupContainer);
@@ -153,7 +161,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<SecurityGroup> selections) {
-				roleGroupService.assignGroups(getUserDetails(), selections);
+				groupService.assignAuthorities(getUserDetails(), selections);
 			}
 
 			@Override
@@ -165,12 +173,12 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected List<SecurityGroup> getAvailableItemsForSelection() {
-				return roleGroupService.getGroupList(0, -1);
+				return groupService.getAuthorities(0, -1);
 			}
 
 			@Override
 			protected List<SecurityGroup> getProvidedSelections() {
-				return getUserDetails().getGroups();
+				return groupService.getAuthoritiesByUsername(username);
 			}
 		}.setChoiceRenderer(new GroupChoiceRenderer()));
 	}
@@ -200,7 +208,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeRole(getUserDetails(), role);
+						roleService.revoke(getUserDetails(), role);
 						target.add(roleContainer);
 						target.add(authorityMarkupContainer);
 					}
@@ -209,7 +217,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<SecurityRole> selections) {
-				roleGroupService.assignRoles(getUserDetails(), selections);
+				roleService.assignAuthorities(getUserDetails(), selections);
 			}
 
 			@Override
@@ -220,15 +228,15 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected List<SecurityRole> getAvailableItemsForSelection() {
-				List<SecurityRole> userRoles = userFacade.getRoles(username);
-				List<SecurityRole> allRoles = roleGroupService.getRoleList(0, -1);
+				List<SecurityRole> userRoles = userFacade.getIndirectRolesForUsername(username);
+				List<SecurityRole> allRoles = roleService.getAuthorities(0, -1);
 				allRoles.removeAll(userRoles);
 				return allRoles;
 			}
 
 			@Override
 			protected List<SecurityRole> getProvidedSelections() {
-				return getUserDetails().getRoles();
+				return roleService.getAuthoritiesByUsername(username);
 			}
 		}.setChoiceRenderer(new RoleChoiceRenderer()));
 		return roleContainer;
@@ -252,7 +260,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						roleGroupService.revokeAuthority(getUserDetails(), authority);
+						authorityService.revoke(getUserDetails(), authority);
 						target.add(authorityContainer);
 					}
 				});
@@ -260,7 +268,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void onAssign(List<Authority> selections) {
-				roleGroupService.assignAuthorities(getUserDetails(), selections);
+				authorityService.assignAuthorities(getUserDetails(), selections);
 			}
 
 			@Override
@@ -270,15 +278,15 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected List<Authority> getAvailableItemsForSelection() {
-				List<Authority> userAuthorities = userFacade.getAuthorities(username);
-				List<Authority> allAuthorities = roleGroupService.getAuthorityList(0, -1);
+				List<Authority> userAuthorities = userFacade.getIndirectAuthoritiesForUsername(username);
+				List<Authority> allAuthorities = authorityService.getAuthorities(0, -1);
 				allAuthorities.removeAll(userAuthorities);
 				return allAuthorities;
 			}
 
 			@Override
 			protected List<Authority> getProvidedSelections() {
-				return getUserDetails().getAuthorities();
+				return authorityService.getAuthoritiesByUsername(username);
 			}
 		}.setChoiceRenderer(new AuthorityChoiceRenderer() {
 			private static final long serialVersionUID = 1L;
@@ -293,6 +301,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	}
 
 	private UserDetails getUserDetails() {
-		return userFacade.loadUserDetails(username);
+		UserDetails userDetails = userFacade.loadUserDetails(username);
+		return userDetails;
 	}
 }
