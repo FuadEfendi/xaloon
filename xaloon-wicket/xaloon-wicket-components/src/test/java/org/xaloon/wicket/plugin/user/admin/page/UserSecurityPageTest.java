@@ -21,7 +21,9 @@ import static org.mockito.Mockito.when;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xaloon.core.api.security.SecurityAuthorities;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -52,6 +54,8 @@ public class UserSecurityPageTest extends AbstractUserAdminTestCase {
 		MockedApplication app = createMockedApplication();
 
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
+		User user = Mockito.mock(User.class);
+		Mockito.when(app.getSecurityFacade().getCurrentUser()).thenReturn(user);
 
 		WicketTester tester = new WicketTester(app);
 		PageParameters params = new PageParameters();

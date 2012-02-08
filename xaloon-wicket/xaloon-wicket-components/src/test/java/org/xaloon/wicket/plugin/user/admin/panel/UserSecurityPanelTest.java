@@ -42,6 +42,7 @@ import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityGroup;
 import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.api.security.model.UserDetails;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
@@ -61,6 +62,8 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 
 	MockedApplication app;
 
+	User user;
+
 	/**
 	 * 
 	 */
@@ -69,6 +72,8 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		app = createMockedApplication();
 		tester = new WicketTester(app);
 
+		user = Mockito.mock(User.class);
+		Mockito.when(app.getSecurityFacade().getCurrentUser()).thenReturn(user);
 		Mockito.when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 	}
 
@@ -186,10 +191,10 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
 
 		// Open the modal window
-		tester.clickLink("id:authority-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:authority-container:authority-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:authority-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:authority-container:authority-admin:choice-management:modal-assign-entities");
 		String modalPath = modalWindow.getPageRelativePath() + ":" + modalWindow.getContentId();
 		Assert.assertTrue(modalWindow.isVisible());
 
@@ -214,7 +219,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 
 		// return given authorities to user
 		final List<Authority> givenAuthorities = newSecurityAuthorityListWithItems(1);
-		Mockito.when(details.getAuthorities()).thenReturn(givenAuthorities);
+		Mockito.when(authorityService.getAuthoritiesByUsername("demo")).thenReturn(givenAuthorities);
 
 		Mockito.when(authorityService.revoke((UserDetails)Matchers.anyObject(), (Authority)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
@@ -239,7 +244,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("revoke"));
 
 		// Click revoke link for the first assigned authority
-		tester.clickLink("id:authority-admin:current-view:0:revoke");
+		tester.clickLink("id:authority-container:authority-admin:current-view:0:revoke");
 		tester.assertNoErrorMessage();
 	}
 
@@ -261,11 +266,11 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("authority-admin"));
 
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
-		tester.clickLink("id:authority-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:authority-container:authority-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 		tester.assertRenderedPage(BaseWicketTester.StartComponentInPage.class);
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:authority-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:authority-container:authority-admin:choice-management:modal-assign-entities");
 		Assert.assertTrue(modalWindow.isVisible());
 		closeModalWindow(modalWindow, tester);
 	}
@@ -312,10 +317,10 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
 
 		// Open the modal window
-		tester.clickLink("id:role-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:role-container:role-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:role-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:role-container:role-admin:choice-management:modal-assign-entities");
 		String modalPath = modalWindow.getPageRelativePath() + ":" + modalWindow.getContentId();
 		Assert.assertTrue(modalWindow.isVisible());
 
@@ -341,7 +346,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// return given roles to user
 		final List<SecurityRole> givenRoles = new ArrayList<SecurityRole>();
 		givenRoles.add(newRole(777L, "fake-role"));
-		Mockito.when(details.getRoles()).thenReturn(givenRoles);
+		Mockito.when(roleService.getAuthoritiesByUsername("demo")).thenReturn(givenRoles);
 
 		Mockito.when(roleService.revoke((UserDetails)Matchers.anyObject(), (SecurityRole)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
@@ -366,7 +371,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("revoke"));
 
 		// Click revoke link for the first assigned authority
-		tester.clickLink("id:role-admin:current-view:0:revoke");
+		tester.clickLink("id:role-container:role-admin:current-view:0:revoke");
 		tester.assertNoErrorMessage();
 	}
 
@@ -389,11 +394,11 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("role-admin"));
 
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
-		tester.clickLink("id:role-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:role-container:role-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 		tester.assertRenderedPage(BaseWicketTester.StartComponentInPage.class);
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:role-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:role-container:role-admin:choice-management:modal-assign-entities");
 		Assert.assertTrue(modalWindow.isVisible());
 		closeModalWindow(modalWindow, tester);
 	}
@@ -440,10 +445,10 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
 
 		// Open the modal window
-		tester.clickLink("id:group-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:group-container:group-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:group-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:group-container:group-admin:choice-management:modal-assign-entities");
 		String modalPath = modalWindow.getPageRelativePath() + ":" + modalWindow.getContentId();
 		Assert.assertTrue(modalWindow.isVisible());
 
@@ -469,7 +474,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		// return given groups to user
 		final List<SecurityGroup> givenGroups = new ArrayList<SecurityGroup>();
 		givenGroups.add(newGroup(777L, "fake-group"));
-		Mockito.when(details.getGroups()).thenReturn(givenGroups);
+		Mockito.when(groupService.getAuthoritiesByUsername("demo")).thenReturn(givenGroups);
 
 		Mockito.when(groupService.revoke((UserDetails)Matchers.anyObject(), (SecurityGroup)Matchers.anyObject())).thenAnswer(
 			new Answer<SecurityGroup>() {
@@ -494,7 +499,7 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("revoke"));
 
 		// Click revoke link for the first assigned authority
-		tester.clickLink("id:group-admin:current-view:0:revoke");
+		tester.clickLink("id:group-container:group-admin:current-view:0:revoke");
 		tester.assertNoErrorMessage();
 	}
 
@@ -517,11 +522,11 @@ public class UserSecurityPanelTest extends AbstractUserAdminTestCase {
 		Assert.assertNotNull(tester.getTagByWicketId("group-admin"));
 
 		Assert.assertNotNull(tester.getTagByWicketId("link-assign-entities"));
-		tester.clickLink("id:group-admin:choice-management:link-assign-entities");
+		tester.clickLink("id:group-container:group-admin:choice-management:link-assign-entities");
 		tester.assertNoErrorMessage();
 		tester.assertRenderedPage(BaseWicketTester.StartComponentInPage.class);
 
-		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:group-admin:choice-management:modal-assign-entities");
+		ModalWindow modalWindow = (ModalWindow)tester.getComponentFromLastRenderedPage("id:group-container:group-admin:choice-management:modal-assign-entities");
 		Assert.assertTrue(modalWindow.isVisible());
 		closeModalWindow(modalWindow, tester);
 	}
