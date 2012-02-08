@@ -22,11 +22,16 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.xaloon.core.api.security.LoginService;
+import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.model.Authority;
 
 /**
@@ -49,6 +54,19 @@ public class SpringUserDetailsService implements UserDetailsService {
 	}
 
 	private UserDetails createAdaptor(org.xaloon.core.api.security.model.UserDetails userDetails) {
+		if (!userDetails.isEnabled()) {
+			throw new DisabledException(SecurityFacade.ACCOUNT_DISABLED);
+		}
+		if (!userDetails.isAccountNonExpired()) {
+			throw new AccountExpiredException(SecurityFacade.ACCOUNT_EXPIRED);
+		}
+		if (!userDetails.isAccountNonLocked()) {
+			throw new LockedException(SecurityFacade.ACCOUNT_LOCKED);
+		}
+		if (!userDetails.isCredentialsNonExpired()) {
+			throw new CredentialsExpiredException(SecurityFacade.CREDENTIALS_EXPIRED);
+		}
+		
 		DefaultUserDetails details = new DefaultUserDetails();
 		details.setAccountNonExpired(userDetails.isAccountNonExpired());
 		details.setAccountNonLocked(userDetails.isAccountNonLocked());
