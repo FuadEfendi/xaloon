@@ -21,8 +21,9 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -79,7 +80,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 			@Override
 			protected void populateItem(Item<UserDetails> item) {
-				UserDetails user = item.getModelObject();
+				final UserDetails user = item.getModelObject();
 
 				// Add link to user details
 				PageParameters params = new PageParameters();
@@ -91,16 +92,48 @@ public class UsersPanel extends AbstractAdministrationPanel {
 				userDetailsLink.add(new Label("username", new Model<String>(userFacade.getFullNameForUser(user.getUsername()))));
 
 				// Add checkbox if account enabled
-				item.add(new CheckBox("accountEnabled", new Model<Boolean>(user.isEnabled())).setEnabled(false));
+				item.add(new AjaxCheckBox("accountEnabled", new Model<Boolean>(user.isEnabled())) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected void onUpdate(AjaxRequestTarget target) {
+						userFacade.modifyAccountEnabled(user, getModelObject());
+						target.add(dataContainer);
+					}
+				});
 
 				// Add checkbox if account not expired
-				item.add(new CheckBox("accountNonExpired", new Model<Boolean>(user.isAccountNonExpired())).setEnabled(false));
+				item.add(new AjaxCheckBox("accountNonExpired", new Model<Boolean>(user.isAccountNonExpired())) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected void onUpdate(AjaxRequestTarget target) {
+						userFacade.modifyAccountNonExpired(user, getModelObject());
+						target.add(dataContainer);
+					}
+				});
 
 				// Add checkbox if account not locked
-				item.add(new CheckBox("accountNonLocked", new Model<Boolean>(user.isAccountNonLocked())).setEnabled(false));
+				item.add(new AjaxCheckBox("accountNonLocked", new Model<Boolean>(user.isAccountNonLocked())) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected void onUpdate(AjaxRequestTarget target) {
+						userFacade.modifyAccountNonLocked(user, getModelObject());
+						target.add(dataContainer);
+					}
+				});
 
 				// Add checkbox if credentials not expired
-				item.add(new CheckBox("credentialsNonExpired", new Model<Boolean>(user.isCredentialsNonExpired())).setEnabled(false));
+				item.add(new AjaxCheckBox("credentialsNonExpired", new Model<Boolean>(user.isCredentialsNonExpired())) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected void onUpdate(AjaxRequestTarget target) {
+						userFacade.modifyCredentialsNonExpired(user, getModelObject());
+						target.add(dataContainer);
+					}
+				});
 
 			}
 

@@ -153,4 +153,12 @@ public interface LoginService extends Serializable {
 	 * @return sublist of users starting first and max count
 	 */
 	List<UserDetails> findUsers(int first, int count);
+
+	UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue);
+
+	UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue);
+
+	UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue);
+
+	UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue);
 }

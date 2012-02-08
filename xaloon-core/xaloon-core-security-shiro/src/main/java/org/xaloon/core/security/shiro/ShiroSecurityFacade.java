@@ -73,7 +73,11 @@ public class ShiroSecurityFacade implements SecurityFacade {
 		} catch (final UnknownAccountException uae) {
 			errorMessage = NO_ACCOUNT_FOR_USERNAME;
 		} catch (final AuthenticationException ae) {
-			errorMessage = INVALID_USERNAME_PASSWORD;
+			if (ae.getCause() == null) {
+				errorMessage = ae.getMessage();
+			} else {
+				errorMessage = ae.getCause().getMessage();
+			}
 		} catch (final Exception ex) {
 			errorMessage = LOGIN_FAILED;
 		}

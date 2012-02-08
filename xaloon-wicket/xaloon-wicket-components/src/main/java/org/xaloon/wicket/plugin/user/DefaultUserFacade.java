@@ -234,4 +234,24 @@ public class DefaultUserFacade implements UserFacade {
 	public List<SecurityRole> getIndirectRolesForUsername(String username) {
 		return loginService.getIndirectRolesForUsername(username);
 	}
+
+	@Override
+	public UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue) {
+		return loginService.modifyCredentialsNonExpired(user, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonLocked(user, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonExpired(user, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue) {
+		return loginService.modifyAccountEnabled(user, newPropertyValue);
+	}
 }

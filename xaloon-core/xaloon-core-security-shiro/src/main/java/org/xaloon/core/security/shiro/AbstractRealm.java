@@ -21,12 +21,17 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.CredentialsException;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.security.LoginService;
+import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.external.ExternalParameterResolver;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -81,21 +86,36 @@ public abstract class AbstractRealm extends AuthorizingRealm {
 
 	protected AuthenticationInfo doGetAuthenticationInfoInternal(String username) {
 		org.xaloon.core.api.security.model.UserDetails userDetailPrincipal = getLoginService().loadUserDetails(username);
-		if (userDetailPrincipal != null && userDetailPrincipal.isEnabled()) {
-			User userPrincipal = getUserDao().getUserByUsername(username);
-			Collection<Object> principalCollection = new ArrayList<Object>();
-			principalCollection.add(userDetailPrincipal);
-			principalCollection.add(userPrincipal);
-			return new SimpleAuthenticationInfo(new SimplePrincipalCollection(principalCollection, getName()), userDetailPrincipal.getPassword(), getName());
-		} else {
-			return null;
+		if (userDetailPrincipal == null) {
+			throw new CredentialsException(SecurityFacade.INVALID_USERNAME_PASSWORD);
 		}
+		if (!userDetailPrincipal.isEnabled()) {
+			throw new DisabledAccountException(SecurityFacade.ACCOUNT_DISABLED);
+		}
+		if (!userDetailPrincipal.isAccountNonExpired()) {
+			throw new ExpiredCredentialsException(SecurityFacade.ACCOUNT_EXPIRED);
+		}
+		if (!userDetailPrincipal.isAccountNonLocked()) {
+			throw new LockedAccountException(SecurityFacade.ACCOUNT_LOCKED);
+		}
+		if (!userDetailPrincipal.isCredentialsNonExpired()) {
+			throw new ExpiredCredentialsException(SecurityFacade.CREDENTIALS_EXPIRED);
+		}
+		
+		//Everything should be fine now.
+		User userPrincipal = getUserDao().getUserByUsername(username);
+		Collection<Object> principalCollection = new ArrayList<Object>();
+		principalCollection.add(userDetailPrincipal);
+		principalCollection.add(userPrincipal);
+		return new SimpleAuthenticationInfo(new SimplePrincipalCollection(principalCollection, getName()), userDetailPrincipal.getPassword(),
+				getName());
+
 	}
 
 	protected void addInternalUserRoles(SimpleAuthorizationInfo info, org.xaloon.core.api.security.model.UserDetails userDetails) {
 		List<Authority> authorities = loginService.getIndirectAuthoritiesForUsername(userDetails.getUsername());
 		for (Authority authority : authorities) {
-			info.addRole(authority.getName());//TODO check
+			info.addRole(authority.getName());// TODO check
 		}
 	}
 }

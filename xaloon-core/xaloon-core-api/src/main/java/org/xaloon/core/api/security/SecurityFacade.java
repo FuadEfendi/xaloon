@@ -46,6 +46,26 @@ public interface SecurityFacade extends Serializable {
 	String LOGIN_FAILED = "LOGIN_FAILED";
 
 	/**
+	 * Default message key if account is disabled
+	 */
+	String ACCOUNT_DISABLED = "ACCOUNT_DISABLED";
+
+	/**
+	 * Default message key if account is expired
+	 */
+	String ACCOUNT_EXPIRED = "ACCOUNT_EXPIRED";
+
+	/**
+	 * Default message key if account is locked
+	 */
+	String ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
+
+	/**
+	 * Default message key if credentials expired
+	 */
+	String CREDENTIALS_EXPIRED = "CREDENTIALS_EXPIRED";
+
+	/**
 	 * Authenticate user
 	 * 
 	 * @param username

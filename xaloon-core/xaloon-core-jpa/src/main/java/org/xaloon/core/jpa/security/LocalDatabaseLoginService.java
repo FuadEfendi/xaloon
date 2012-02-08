@@ -301,4 +301,28 @@ public class LocalDatabaseLoginService implements LoginService {
 			items.addAll(roles);
 		}
 	}
+
+	@Override
+	public UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue) {
+		user.setCredentialsNonExpired(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue) {
+		user.setAccountNonLocked(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue) {
+		user.setAccountNonExpired(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue) {
+		user.setEnabled(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
 }

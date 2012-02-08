@@ -41,9 +41,21 @@ public interface UserDetails extends Persistable {
 	boolean isAccountNonExpired();
 
 	/**
+	 * @param flag
+	 *            new flag to set
+	 */
+	void setAccountNonExpired(boolean flag);
+
+	/**
 	 * @return account non locked
 	 */
 	boolean isAccountNonLocked();
+
+	/**
+	 * @param flag
+	 *            new flag to set
+	 */
+	void setAccountNonLocked(boolean flag);
 
 	/**
 	 * @return credentials non expired
@@ -51,9 +63,21 @@ public interface UserDetails extends Persistable {
 	boolean isCredentialsNonExpired();
 
 	/**
+	 * @param flag
+	 *            new flag to set
+	 */
+	void setCredentialsNonExpired(boolean flag);
+
+	/**
 	 * @return enabled
 	 */
 	boolean isEnabled();
+
+	/**
+	 * @param flag
+	 *            new flag to set
+	 */
+	void setEnabled(boolean flag);
 
 	/**
 	 * @return list of available user aliases.
