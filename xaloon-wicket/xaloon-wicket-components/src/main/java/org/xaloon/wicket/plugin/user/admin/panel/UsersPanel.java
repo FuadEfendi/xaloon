@@ -16,23 +16,30 @@
  */
 package org.xaloon.wicket.plugin.user.admin.panel;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.security.model.UserDetails;
+import org.apache.wicket.util.value.ValueMap;
 import org.xaloon.core.api.user.UserFacade;
+import org.xaloon.core.api.user.UserSearchResult;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.plugin.user.admin.page.UserSecurityPage;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
@@ -47,6 +54,11 @@ public class UsersPanel extends AbstractAdministrationPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final String QUERY_PARAM = "q";
+
+	final ValueMap properties = new ValueMap();
+
 
 	@Inject
 	@Named("userFacade")
@@ -69,18 +81,18 @@ public class UsersPanel extends AbstractAdministrationPanel {
 		removeAll();
 
 		// Add paging navigation container with navigation toolbar
-		final DecoratedPagingNavigatorContainer<UserDetails> dataContainer = new DecoratedPagingNavigatorContainer<UserDetails>("container",
-			getCurrentRedirectLink());
+		final DecoratedPagingNavigatorContainer<UserSearchResult> dataContainer = new DecoratedPagingNavigatorContainer<UserSearchResult>(
+			"container", getCurrentRedirectLink());
 		dataContainer.setOutputMarkupId(true);
 		addOrReplace(dataContainer);
 
 		// Add blog list data view
-		final DataView<UserDetails> securityGroupDataView = new DataView<UserDetails>("security-users", new JpaUserDetailsDataProvider()) {
+		final DataView<UserSearchResult> securityGroupDataView = new DataView<UserSearchResult>("security-users", new JpaUserDetailsDataProvider()) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(Item<UserDetails> item) {
-				final UserDetails user = item.getModelObject();
+			protected void populateItem(Item<UserSearchResult> item) {
+				final UserSearchResult user = item.getModelObject();
 
 				// Add link to user details
 				PageParameters params = new PageParameters();
@@ -97,7 +109,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
-						userFacade.modifyAccountEnabled(user, getModelObject());
+						userFacade.modifyAccountEnabled(user.getUsername(), getModelObject());
 						target.add(dataContainer);
 					}
 				});
@@ -108,7 +120,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
-						userFacade.modifyAccountNonExpired(user, getModelObject());
+						userFacade.modifyAccountNonExpired(user.getUsername(), getModelObject());
 						target.add(dataContainer);
 					}
 				});
@@ -119,7 +131,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
-						userFacade.modifyAccountNonLocked(user, getModelObject());
+						userFacade.modifyAccountNonLocked(user.getUsername(), getModelObject());
 						target.add(dataContainer);
 					}
 				});
@@ -130,7 +142,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
-						userFacade.modifyCredentialsNonExpired(user, getModelObject());
+						userFacade.modifyCredentialsNonExpired(user.getUsername(), getModelObject());
 						target.add(dataContainer);
 					}
 				});
@@ -139,13 +151,30 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 		};
 		dataContainer.addAbstractPageableView(securityGroupDataView);
+
+		// Add query form
+		Form<String> searchForm = new Form<String>("search");
+		searchForm.add(new TextField<String>(QUERY_PARAM, new PropertyModel<String>(properties, QUERY_PARAM)));
+		searchForm.add(new IndicatingAjaxButton("submit") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				target.add(dataContainer);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			}
+		});
+		add(searchForm);
 	}
 
 	protected Link getCurrentRedirectLink() {
 		return new Link(UsersPage.class, getPageRequestParameters());
 	}
 
-	class JpaUserDetailsDataProvider implements IDataProvider<UserDetails> {
+	class JpaUserDetailsDataProvider implements IDataProvider<UserSearchResult> {
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -153,18 +182,24 @@ public class UsersPanel extends AbstractAdministrationPanel {
 		}
 
 		@Override
-		public Iterator<? extends UserDetails> iterator(int first, int count) {
-			return userFacade.findUsers(first, count).iterator();
+		public Iterator<UserSearchResult> iterator(int first, int count) {
+			String userSearchProperty = properties.getString(QUERY_PARAM);
+			Map<String, String> filter = new HashMap<String, String>();
+			filter.put(QUERY_PARAM, userSearchProperty);
+			return userFacade.findCombinedUsers(filter, first, count).iterator();
 		}
 
 		@Override
 		public int size() {
-			return userFacade.count();
+			String userSearchProperty = properties.getString(QUERY_PARAM);
+			Map<String, String> filter = new HashMap<String, String>();
+			filter.put(QUERY_PARAM, userSearchProperty);
+			return userFacade.count(filter);
 		}
 
 		@Override
-		public IModel<UserDetails> model(UserDetails object) {
-			return new Model<UserDetails>(object);
+		public IModel<UserSearchResult> model(UserSearchResult object) {
+			return new Model<UserSearchResult>(object);
 		}
 	}
 }

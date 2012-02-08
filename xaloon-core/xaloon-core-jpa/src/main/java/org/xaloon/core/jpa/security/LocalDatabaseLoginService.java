@@ -226,20 +226,6 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public int count() {
-		QueryBuilder query = new QueryBuilder("select count(u) from " + JpaUserDetails.class.getSimpleName() + " u");
-		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
-	}
-
-	@Override
-	public List<UserDetails> findUsers(int first, int count) {
-		QueryBuilder query = new QueryBuilder("select u from " + JpaUserDetails.class.getSimpleName() + " u");
-		query.setFirstRow(first);
-		query.setCount(count);
-		return persistenceServices.executeQuery(query);
-	}
-
-	@Override
 	public List<Authority> getIndirectAuthoritiesForUsername(String username) {
 		List<Authority> result = new ArrayList<Authority>();
 		if (StringUtils.isEmpty(username)) {
@@ -303,25 +289,29 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue) {
+	public UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
 		user.setCredentialsNonExpired(newPropertyValue);
 		return persistenceServices.edit(user);
 	}
 
 	@Override
-	public UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue) {
+	public UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
 		user.setAccountNonLocked(newPropertyValue);
 		return persistenceServices.edit(user);
 	}
 
 	@Override
-	public UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue) {
+	public UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
 		user.setAccountNonExpired(newPropertyValue);
 		return persistenceServices.edit(user);
 	}
 
 	@Override
-	public UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue) {
+	public UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
 		user.setEnabled(newPropertyValue);
 		return persistenceServices.edit(user);
 	}

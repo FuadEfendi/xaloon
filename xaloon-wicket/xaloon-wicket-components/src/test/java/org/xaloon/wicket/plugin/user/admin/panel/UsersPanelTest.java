@@ -30,7 +30,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.xaloon.core.api.security.SecurityAuthorities;
-import org.xaloon.core.api.security.model.UserDetails;
+import org.xaloon.core.api.user.UserSearchResult;
 import org.xaloon.wicket.component.test.MockedApplication;
 import org.xaloon.wicket.plugin.user.admin.AbstractUserAdminTestCase;
 
@@ -61,14 +61,14 @@ public class UsersPanelTest extends AbstractUserAdminTestCase {
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
-		when(app.getUserFacade().count()).thenReturn(1);
+		when(app.getUserFacade().count(null)).thenReturn(1);
 
-		List<UserDetails> users = new ArrayList<UserDetails>();
+		List<UserSearchResult> users = new ArrayList<UserSearchResult>();
 
-		UserDetails user = mock(UserDetails.class);
+		UserSearchResult user = mock(UserSearchResult.class);
 		users.add(user);
 		when(user.getUsername()).thenReturn("test");
-		when(app.getUserFacade().findUsers(0, 1)).thenReturn(users);
+		when(app.getUserFacade().findCombinedUsers(null, 0, 1)).thenReturn(users);
 
 		tester.startComponentInPage(new UsersPanel("id", new PageParameters()));
 		assertNotNull(tester.getTagByWicketId("container"));

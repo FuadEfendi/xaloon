@@ -16,7 +16,9 @@
  */
 package org.xaloon.wicket.plugin.user;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -36,6 +38,7 @@ import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.api.user.UserFacade;
+import org.xaloon.core.api.user.UserSearchResult;
 import org.xaloon.core.api.user.dao.UserDao;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.email.template.EmailContentTemplatePage;
@@ -211,13 +214,36 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public int count() {
-		return loginService.count();
+	public int count(Map<String, String> filter) {
+		return userDao.count(filter);
 	}
 
 	@Override
-	public List<UserDetails> findUsers(int first, int count) {
-		return loginService.findUsers(first, count);
+	public List<UserSearchResult> findCombinedUsers(Map<String, String> filter, int first, int count) {
+		List<User> users = userDao.findUsers(filter, first, count);
+		return transform(users);
+	}
+
+	private List<UserSearchResult> transform(List<User> users) {
+		List<UserSearchResult> result = new ArrayList<UserSearchResult>();
+		for (User user : users) {
+			UserDetails details = loginService.loadUserDetails(user.getUsername());
+			result.add(format(user, details));
+		}
+		return result;
+	}
+
+	private UserSearchResult format(User user, UserDetails details) {
+		UserSearchResult entry = new UserSearchResult();
+		entry.setAccountNonExpired(details.isAccountNonExpired());
+		entry.setAccountNonLocked(details.isAccountNonLocked());
+		entry.setCredentialsNonExpired(details.isCredentialsNonExpired());
+		entry.setEnabled(details.isEnabled());
+		entry.setFirstName(user.getFirstName());
+		entry.setLastName(user.getLastName());
+		entry.setUsername(user.getUsername());
+		entry.setFullName(userDao.formatFullName(entry.getFirstName(), entry.getLastName()));
+		return entry;
 	}
 
 	@Override
@@ -236,22 +262,32 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue) {
-		return loginService.modifyCredentialsNonExpired(user, newPropertyValue);
+	public UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue) {
+		return loginService.modifyCredentialsNonExpired(username, newPropertyValue);
 	}
 
 	@Override
-	public UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue) {
-		return loginService.modifyAccountNonLocked(user, newPropertyValue);
+	public UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonLocked(username, newPropertyValue);
 	}
 
 	@Override
-	public UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue) {
-		return loginService.modifyAccountNonExpired(user, newPropertyValue);
+	public UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonExpired(username, newPropertyValue);
 	}
 
 	@Override
-	public UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue) {
-		return loginService.modifyAccountEnabled(user, newPropertyValue);
+	public UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountEnabled(username, newPropertyValue);
+	}
+
+	@Override
+	public String formatFullName(String firstName, String lastName) {
+		return userDao.formatFullName(firstName, lastName);
+	}
+
+	@Override
+	public List<User> findUsers(Map<String, String> filter, int first, int count) {
+		return userDao.findUsers(filter, first, count);
 	}
 }

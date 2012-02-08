@@ -136,29 +136,11 @@ public interface LoginService extends Serializable {
 	 */
 	List<SecurityRole> getIndirectRolesForUsername(String username);
 
-	/**
-	 * Returns total count of users in the system
-	 * 
-	 * @return integer value for total existing users in system
-	 */
-	int count();
+	UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue);
 
-	/**
-	 * Returns sublist of system users
-	 * 
-	 * @param first
-	 *            starting position
-	 * @param count
-	 *            how many users to fetch
-	 * @return sublist of users starting first and max count
-	 */
-	List<UserDetails> findUsers(int first, int count);
+	UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue);
 
-	UserDetails modifyCredentialsNonExpired(UserDetails user, Boolean newPropertyValue);
+	UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue);
 
-	UserDetails modifyAccountNonLocked(UserDetails user, Boolean newPropertyValue);
-
-	UserDetails modifyAccountNonExpired(UserDetails user, Boolean newPropertyValue);
-
-	UserDetails modifyAccountEnabled(UserDetails user, Boolean newPropertyValue);
+	UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue);
 }

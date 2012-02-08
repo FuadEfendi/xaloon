@@ -16,6 +16,9 @@
  */
 package org.xaloon.core.jpa.user;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
@@ -30,6 +33,7 @@ import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.exception.CreateClassInstanceException;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.persistence.QueryBuilder.Condition;
 import org.xaloon.core.api.user.dao.UserDao;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.api.util.ClassUtil;
@@ -116,16 +120,49 @@ public class JpaUserDao implements UserDao {
 		query.addParameter("u.username", "USERNAME", username);
 		Object[] queryResult = persistenceServices.executeQuerySingle(query);
 		if (queryResult != null && queryResult.length == 2) {
-			StringBuilder fullName = new StringBuilder();
-			Object o = queryResult[1];
-
-			if (o != null) {
-				fullName.append(o);
-				fullName.append(" ");
-			}
-			fullName.append(queryResult[0]);
-			return fullName.toString();
+			String firstName = (String)queryResult[0];
+			String lastName = (String)queryResult[1];
+			return formatFullName(firstName, lastName);
 		}
 		return null;
+	}
+
+	@Override
+	public String formatFullName(String firstName, String lastName) {
+		StringBuilder fullName = new StringBuilder();
+		if (lastName != null) {
+			fullName.append(lastName);
+			fullName.append(" ");
+		}
+		fullName.append(firstName);
+		return fullName.toString();
+	}
+
+	@Override
+	public int count(Map<String, String> filter) {
+		QueryBuilder query = createUserQuery("select count(u) from ", filter);
+
+		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
+	}
+
+	@Override
+	public List<User> findUsers(Map<String, String> filter, int first, int count) {
+		QueryBuilder query = createUserQuery("select u from ", filter);
+		query.setFirstRow(first);
+		query.setCount(count);
+		return persistenceServices.executeQuery(query);
+	}
+
+	private QueryBuilder createUserQuery(String selectStatement, Map<String, String> filter) {
+		QueryBuilder query = new QueryBuilder(selectStatement + getDiscriminator().getSimpleName() + " u");
+		if (filter != null) {
+			String name = filter.get("q");
+			if (!StringUtils.isEmpty(name) && name.length() > 2) {
+				query.addParameter("u.username", "_USERNAME", name, true);
+				query.addParameter("u.firstName", "_FIRST_NAME", name, Condition.OR, true, true);
+				query.addParameter("u.lastName", "_LAST_NAME", name, Condition.OR, true, true);
+			}
+		}
+		return query;
 	}
 }

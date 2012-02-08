@@ -17,6 +17,8 @@
 package org.xaloon.core.api.user.dao;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.xaloon.core.api.user.model.User;
 
@@ -69,4 +71,28 @@ public interface UserDao extends Serializable {
 	 * @return concatenated first and last name for provided username
 	 */
 	String getFullNameForUser(String username);
+
+	String formatFullName(String firstName, String lastName);
+
+	/**
+	 * Returns sublist of system users
+	 * 
+	 * @param filter
+	 *            filter properties to search
+	 * @param first
+	 *            starting position
+	 * @param count
+	 *            how many users to fetch
+	 * @return sublist of users starting first and max count
+	 */
+	List<User> findUsers(Map<String, String> filter, int first, int count);
+
+	/**
+	 * Returns total count of users in the system if no additional filter added
+	 * 
+	 * @param filter
+	 *            additional properties to search
+	 * @return integer value for total existing users in system
+	 */
+	int count(Map<String, String> filter);
 }

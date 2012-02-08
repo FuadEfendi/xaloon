@@ -20,6 +20,10 @@
 <body>
 <wicket:panel  xmlns:wicket>
 	<h2>Users</h2>
+	<form wicket:id="search">
+		<div><input type="text" wicket:id="q"/></div>
+		<div><input class="formbutton" type="submit" value="Find" wicket:id="submit"/></div>
+	</form>
 	<div wicket:id="container">
 		<table>
 			<tr>
