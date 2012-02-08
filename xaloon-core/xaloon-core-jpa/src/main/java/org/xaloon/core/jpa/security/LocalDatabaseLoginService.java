@@ -191,7 +191,7 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	@Override
 	public UserDetails loadUserDetails(String username) {
-		QueryBuilder queryBuilder = new QueryBuilder("select ud from " + JpaUserDetails.class.getSimpleName() + " ud ");
+		QueryBuilder queryBuilder = new QueryBuilder("select distinct ud from " + JpaUserDetails.class.getSimpleName() + " ud ");
 		queryBuilder.addJoin(QueryBuilder.OUTER_JOIN, "ud.aliases a");
 		queryBuilder.addParameter("ud.username", "_USERNAME", username);
 		queryBuilder.addParameter("a.value", "_VALUE", username, Condition.OR, false, false);
