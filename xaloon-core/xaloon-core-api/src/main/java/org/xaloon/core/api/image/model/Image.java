@@ -28,6 +28,14 @@ import org.xaloon.core.api.user.model.User;
  * @author vytautas r.
  */
 public interface Image extends FileDescriptor {
+
+	/**
+	 * Returns true if image should be selected as first image
+	 * 
+	 * @return true if image should be selected as first image, false - otherwise
+	 */
+	boolean isSticky();
+
 	/**
 	 * Gets thumbnail.
 	 * 

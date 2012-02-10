@@ -37,6 +37,17 @@ public class ByteArrayAsInputStreamContainer extends AbstractInputStreamContaine
 	 * @param input
 	 */
 	public ByteArrayAsInputStreamContainer(byte[] input) {
+		this(input, new InputStreamContainerOptions());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param input
+	 * @param options
+	 */
+	public ByteArrayAsInputStreamContainer(byte[] input, InputStreamContainerOptions options) {
+		super(options);
 		this.input = input;
 	}
 

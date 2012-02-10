@@ -28,9 +28,9 @@ public class InputStreamContainerOptions implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private int width;
+	private int width = 200;
 
-	private int height;
+	private int height = 100;
 
 	private boolean resize;
 

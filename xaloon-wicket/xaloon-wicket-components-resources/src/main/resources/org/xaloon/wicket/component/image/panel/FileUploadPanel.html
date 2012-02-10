@@ -17,26 +17,25 @@
 -->
 <html xmlns:wicket>
 <body>
-<wicket:panel>
-	<h2>Image information</h2>
-	<form wicket:id="image-form">
-		<div wicket:id="feedback"></div>
-		<div class="row width_shorter">
-				<label>Sticky image
-					<span class="small">Image should be first in order</span>
+	<wicket:panel>
+		<form wicket:id="file-upload-form">
+		<div>
+				<label>External file
+					<span class="small">Add external image to gallery</span>
 				</label>
-				<input type="checkbox" name="sticky" id="sticky" class="input" wicket:id="sticky"/>
+				<input type="text" name="image_remote" id="image_remote"  class="width_long input" wicket:id="external-file-path"/>
 			</div>
-		<div>
-			<input type="text" wicket:id="title"/>
-		</div>
-		<div>
-			<TEXTAREA cols="20" rows="5" class="entry_content" wicket:id="description"></TEXTAREA>
-		</div>
-		<div>
-			<input type="button" value="Save" wicket:id="submit"/>
-		</div>
+			<div>
+				<label>Or upload file
+					<span class="small">Add local image to gallery</span>
+				</label>
+				<input type="file" name="image_local" id="image_local"  class="width_long" wicket:id="file-upload-field"/>
+			</div>
+			<div>
+				<button type="submit" class="button2 active-button" wicket:id="submit">Upload file</button>
+				<div class="spacer"></div>
+			</div>
 	</form>
-</wicket:panel>
+	</wicket:panel>
 </body>
 </html>

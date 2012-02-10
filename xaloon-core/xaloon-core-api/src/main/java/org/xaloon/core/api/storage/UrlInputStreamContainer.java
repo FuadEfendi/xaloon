@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author vytautas r.
  */
@@ -31,7 +33,7 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private URL url;
+	private String url;
 
 	/**
 	 * Construct.
@@ -39,25 +41,27 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 * @param url
 	 */
 	public UrlInputStreamContainer(String url) {
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("Could not create url", e);
-		}
+		this(url, new InputStreamContainerOptions());
 	}
 
 	/**
 	 * Construct.
 	 * 
 	 * @param url
+	 * @param options
 	 */
-	public UrlInputStreamContainer(URL url) {
+	public UrlInputStreamContainer(String url, InputStreamContainerOptions options) {
+		super(options);
 		this.url = url;
 	}
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return url.openStream();
+		try {
+			return new URL(url).openStream();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("Could not create url", e);
+		}
 	}
 
 	@Override
@@ -66,6 +70,6 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 
 	@Override
 	public boolean isEmpty() {
-		return url == null;
+		return StringUtils.isEmpty(url);
 	}
 }

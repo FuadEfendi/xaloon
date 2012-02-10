@@ -36,6 +36,15 @@ public abstract class AbstractInputStreamContainer implements InputStreamContain
 
 	private InputStreamContainerOptions options;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param options
+	 */
+	public AbstractInputStreamContainer(InputStreamContainerOptions options) {
+		this.options = options;
+	}
+
 	public InputStreamContainerOptions getOptions() {
 		return options;
 	}

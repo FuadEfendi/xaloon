@@ -30,6 +30,7 @@ import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.external.AuthenticationFacade;
+import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
@@ -52,6 +53,8 @@ public class MockedApplication extends AuthenticatedWebApplication {
 
 	private UserFacade userFacade = mock(UserFacade.class);
 
+	private FileDescriptorDao fileDescriptorDao = mock(FileDescriptorDao.class);
+
 	/**
 	 * Construct.
 	 */
@@ -68,6 +71,8 @@ public class MockedApplication extends AuthenticatedWebApplication {
 		mockedServices.put(PluginRegistry.class.getName(), pluginRegistry);
 
 		mockedServices.put(SecurityFacade.class.getName(), securityFacade);
+
+		mockedServices.put(FileDescriptorDao.class.getName(), fileDescriptorDao);
 
 		mockedServices.put("userFacade", userFacade);
 
@@ -142,4 +147,15 @@ public class MockedApplication extends AuthenticatedWebApplication {
 	public UserFacade getUserFacade() {
 		return userFacade;
 	}
+
+	/**
+	 * Gets fileDescriptorDao.
+	 * 
+	 * @return fileDescriptorDao
+	 */
+	public FileDescriptorDao getFileDescriptorDao() {
+		return fileDescriptorDao;
+	}
+
+
 }

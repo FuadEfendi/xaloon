@@ -176,7 +176,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 				.setResize(temporaryImage.isResize());
 
 		if (temporaryImage.isExternal()) {
-			inputStreamContainer = new UrlInputStreamContainer(temporaryImage.getExternalImage());
+			inputStreamContainer = new UrlInputStreamContainer(temporaryImage.getPath());
 		} else {
 			inputStreamContainer = temporaryImage.getImageInputStreamContainer();
 		}

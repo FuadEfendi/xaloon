@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.model.IModel;
 
 /**
  * @author vytautas r.
@@ -44,6 +45,16 @@ public abstract class ConfirmationAjaxLink<T> extends AjaxLink<T> {
 	 */
 	public ConfirmationAjaxLink(String id) {
 		super(id);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 */
+	public ConfirmationAjaxLink(final String id, final IModel<T> model) {
+		super(id, model);
 	}
 
 	@Override

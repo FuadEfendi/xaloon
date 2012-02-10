@@ -35,6 +35,7 @@ public class DefaultInputStreamContainer extends AbstractInputStreamContainer {
 	 * Construct.
 	 */
 	public DefaultInputStreamContainer() {
+		this(null);
 	}
 
 	/**
@@ -43,6 +44,17 @@ public class DefaultInputStreamContainer extends AbstractInputStreamContainer {
 	 * @param is
 	 */
 	public DefaultInputStreamContainer(InputStream is) {
+		this(is, new InputStreamContainerOptions());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param is
+	 * @param options
+	 */
+	public DefaultInputStreamContainer(InputStream is, InputStreamContainerOptions options) {
+		super(options);
 		this.is = is;
 	}
 

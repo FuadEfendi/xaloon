@@ -53,6 +53,9 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	@JoinColumn(name = "THUMBNAIL_ID", referencedColumnName = "ID")
 	private JpaFileDescriptor thumbnail;
 
+	@Column(name = "IS_STICKY")
+	private boolean sticky;
+	
 	@Column(name = "TITLE")
 	private String title;
 
@@ -290,5 +293,19 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	 */
 	public void setPathPrefix(String pathPrefix) {
 		this.pathPrefix = pathPrefix;
+	}
+
+	/**
+	 * @return the sticky
+	 */
+	public boolean isSticky() {
+		return sticky;
+	}
+
+	/**
+	 * @param sticky the sticky to set
+	 */
+	public void setSticky(boolean sticky) {
+		this.sticky = sticky;
 	}
 }

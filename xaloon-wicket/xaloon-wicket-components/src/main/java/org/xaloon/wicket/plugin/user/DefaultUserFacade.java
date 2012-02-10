@@ -37,6 +37,8 @@ import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.model.Authority;
 import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.api.security.model.UserDetails;
+import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.UserSearchResult;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -68,6 +70,9 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Inject
 	private EmailFacade emailFacade;
+
+	@Inject
+	private FileRepositoryFacade fileRepositoryFacade;
 
 	@Inject
 	private StringResourceLoader stringResourceLoader;
@@ -106,8 +111,13 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public <T extends User> void save(T user) {
-		userDao.save(user);
+	public <T extends User> T save(T user) {
+		FileDescriptor thumbnail = user.getPhotoThumbnail();
+		boolean storeThumbnail = thumbnail != null && thumbnail.getId() == null;
+		if (storeThumbnail) {
+			fileRepositoryFacade.storeFile(thumbnail, thumbnail.getImageInputStreamContainer());
+		}
+		return userDao.save(user);
 	}
 
 	@SuppressWarnings("unchecked")

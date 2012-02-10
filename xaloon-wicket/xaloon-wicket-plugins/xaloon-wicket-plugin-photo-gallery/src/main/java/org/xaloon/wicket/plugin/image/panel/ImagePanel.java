@@ -39,7 +39,6 @@ import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
 import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
 import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
-import org.xaloon.wicket.plugin.user.admin.panel.GroupsPanel;
 
 /**
  * @author vytautas r.

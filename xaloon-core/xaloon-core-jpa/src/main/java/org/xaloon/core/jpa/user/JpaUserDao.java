@@ -56,12 +56,12 @@ public class JpaUserDao implements UserDao {
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public <T extends User> void save(T user) {
+	public <T extends User> T save(T user) {
 		boolean merge = user.getId() != null || (user.getPhotoThumbnail() != null && user.getPhotoThumbnail().getId() != null);
 		if (merge) {
-			persistenceServices.edit(user);
+			return persistenceServices.edit(user);
 		} else {
-			persistenceServices.create(user);
+			return persistenceServices.create(user);
 		}
 	}
 

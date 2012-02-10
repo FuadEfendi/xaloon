@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
@@ -183,18 +184,21 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 		@Override
 		public Iterator<UserSearchResult> iterator(int first, int count) {
+			return userFacade.findCombinedUsers(getQueryFilter(), first, count).iterator();
+		}
+
+		private Map<String, String> getQueryFilter() {
 			String userSearchProperty = properties.getString(QUERY_PARAM);
 			Map<String, String> filter = new HashMap<String, String>();
-			filter.put(QUERY_PARAM, userSearchProperty);
-			return userFacade.findCombinedUsers(filter, first, count).iterator();
+			if (!StringUtils.isEmpty(userSearchProperty)) {
+				filter.put(QUERY_PARAM, userSearchProperty);
+			}
+			return filter;
 		}
 
 		@Override
 		public int size() {
-			String userSearchProperty = properties.getString(QUERY_PARAM);
-			Map<String, String> filter = new HashMap<String, String>();
-			filter.put(QUERY_PARAM, userSearchProperty);
-			return userFacade.count(filter);
+			return userFacade.count(getQueryFilter());
 		}
 
 		@Override

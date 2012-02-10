@@ -16,9 +16,6 @@
  */
 package org.xaloon.core.jpa.storage.model;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -166,12 +163,5 @@ public class JpaFileDescriptor extends BookmarkableEntity implements FileDescrip
 	@Override
 	public boolean isExternal() {
 		return !StringUtils.isEmpty(getPath()) && getPath().startsWith(HtmlElementEnum.PROTOCOL_HTTP.value());
-	}
-
-	public URL getExternalImage() throws MalformedURLException {
-		if (isExternal()) {
-			return new URL(getPath());
-		}
-		return null;
 	}
 }

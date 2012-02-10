@@ -40,10 +40,13 @@ import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.external.AuthenticationFacade;
+import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.InputStreamContainerOptions;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.api.util.KeyFactory;
 import org.xaloon.wicket.component.html.TimezoneDropDownChoice;
+import org.xaloon.wicket.component.image.panel.ThumbnailManagementPanel;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.plugin.user.page.UserRegistrationPage;
 import org.xaloon.wicket.plugin.user.validator.AgreementValidator;
@@ -114,6 +117,7 @@ public class UserProfilePanel<T extends User> extends Panel {
 				onFormSubmit(getModelObject());
 			}
 		};
+		profileForm.setMultiPart(true);
 		add(profileForm);
 
 		/** add form feedback panel */
@@ -129,7 +133,15 @@ public class UserProfilePanel<T extends User> extends Panel {
 		profileForm.add(createAgreementMessagePanel());
 		profileForm.add(createExternalAuthenticationPanel(profileForm.getModel()));
 
+		createUserProfileImagePanel(profileForm, user);
 		onFormInitialize(profileForm);
+	}
+
+	private void createUserProfileImagePanel(Form<T> profileForm, T user) {
+		InputStreamContainerOptions options = new InputStreamContainerOptions().setHeight(80).setWidth(80).setResize(!user.isExternal());
+		IModel<FileDescriptor> fModel = new PropertyModel<FileDescriptor>(user, "photoThumbnail");
+		ThumbnailManagementPanel thumbnailManagementPanel = new ThumbnailManagementPanel("user-photo-thumbnail", fModel, options);
+		profileForm.add(thumbnailManagementPanel);
 	}
 
 	private Component createExternalAuthenticationPanel(IModel<T> iModel) {

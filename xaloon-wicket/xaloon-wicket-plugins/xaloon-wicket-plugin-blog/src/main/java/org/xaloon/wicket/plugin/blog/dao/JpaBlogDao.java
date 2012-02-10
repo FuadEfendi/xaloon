@@ -94,7 +94,7 @@ public class JpaBlogDao implements BlogDao {
 	}
 
 	private QueryBuilder createQueryBuilder(String selectString, BlogEntrySearchRequest blogEntrySearchRequest) {
-		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be ");
+		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be join be.images i");
 		if (!StringUtils.isEmpty(blogEntrySearchRequest.getUsername())) {
 			queryBuilder.addParameter("be.owner.username", "USERNAME", blogEntrySearchRequest.getUsername());
 		}

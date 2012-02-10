@@ -28,8 +28,9 @@ import org.xaloon.core.api.user.model.User;
 public interface UserDao extends Serializable {
 	/**
 	 * @param user
+	 * @return persisted instance
 	 */
-	<T extends User> void save(T user);
+	<T extends User> T save(T user);
 
 	/**
 	 * @param username
