@@ -306,6 +306,15 @@ public class QueryBuilder {
 	/**
 	 * @param expression
 	 *            HQL expression to use in HQL statement
+	 * @param condition
+	 */
+	public void addExpression(String expression, Condition condition) {
+		registerExpression(expression, condition);
+	}
+
+	/**
+	 * @param expression
+	 *            HQL expression to use in HQL statement
 	 * @param parameterName
 	 *            parameter name
 	 * @param condition

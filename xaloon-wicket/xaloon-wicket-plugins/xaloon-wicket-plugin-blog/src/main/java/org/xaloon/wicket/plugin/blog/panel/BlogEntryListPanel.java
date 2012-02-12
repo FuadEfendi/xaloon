@@ -5,15 +5,10 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -92,7 +87,7 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 
 			@Override
 			protected void populateItem(Item<BlogEntry> item) {
-				BlogEntry blogEntry = item.getModelObject();
+				final BlogEntry blogEntry = item.getModelObject();
 
 				// Add blog entry link
 				// PageParameters pageParameters = new PageParameters();
@@ -169,32 +164,16 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 				item.add(link_edit);
 
 				// Add delete link
-				WebMarkupContainer link_delete = new AjaxLink<BlogEntry>("link-delete", item.getModel()) {
-
-					/**
-					 * 
-					 */
+				StatelessLink<BlogEntry> link_delete = new StatelessLink<BlogEntry>("link-delete") {
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					protected IAjaxCallDecorator getAjaxCallDecorator() {
-						return new AjaxCallDecorator() {
-							private static final long serialVersionUID = 1L;
-
-							@Override
-							public CharSequence decorateScript(Component c, CharSequence script) {
-								return "if(!confirm('" + BlogEntryListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;" + script;
-							}
-						};
-					}
-
-					@Override
-					public void onClick(AjaxRequestTarget target) {
-						BlogEntry blogEntry = getModelObject();
+					public void onClick() {
 						getBlogFacade().deleteBlogEntryByPath(blogEntry.getOwner().getUsername(), blogEntry.getPath());
 						setResponsePage(getBlogEntryListPageClass());
 					}
 				};
+				link_delete.add(AttributeModifier.replace("onClick", "if(!confirm('" + BlogEntryListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;"));
 				boolean isDeleteLinkVisible = (getSecurityFacade().isAdministrator() || getSecurityFacade().isOwnerOfObject(
 					blogEntry.getOwner().getUsername()));
 
