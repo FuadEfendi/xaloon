@@ -53,7 +53,9 @@ public class JpaCommentDao implements CommentDao {
 
 	@Override
 	public void save(Comment comment) {
-		counterDao.increment(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
+		if (comment.isEnabled()) {
+			counterDao.increment(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
+		}
 		boolean merge = comment.getFromUser() != null && comment.getFromUser().getId() != null;
 		if (merge) {
 			persistenceServices.edit(comment);
@@ -109,11 +111,13 @@ public class JpaCommentDao implements CommentDao {
 
 	@Override
 	public void delete(Comment comment) {
+		counterDao.decrement(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
 		persistenceServices.remove(JpaComment.class, comment.getId());
 	}
 
 	@Override
 	public void enable(Comment comment, boolean enabled) {
+		counterDao.increment(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
 		comment.setEnabled(enabled);
 		persistenceServices.edit(comment);
 	}
@@ -134,6 +138,11 @@ public class JpaCommentDao implements CommentDao {
 	public void markAsInappropriate(Comment comment, boolean flag) {
 		comment.setInappropriate(flag);
 		persistenceServices.edit(comment);
+		if (comment.isInappropriate()) {
+			counterDao.decrement(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
+		} else {
+			counterDao.increment(COMMENT_COUNT, comment.getCategoryId(), comment.getEntityId());
+		}
 	}
 
 	@Override

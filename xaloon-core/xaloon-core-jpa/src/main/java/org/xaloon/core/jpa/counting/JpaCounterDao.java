@@ -70,4 +70,14 @@ public class JpaCounterDao implements CounterDao {
 		JpaCounterEntity counterEntity = find(counterGroup, categoryId, entityId);
 		return (counterEntity != null) ? counterEntity.getCount() : 0L;
 	}
+
+	@Override
+	public void decrement(String counterGroup, Long categoryId, Long entityId) {
+		JpaCounterEntity entity = find(counterGroup, categoryId, entityId);
+		if (entity == null || entity.getCount() < 1) {
+			return;
+		}
+		entity.setCount(entity.getCount() - 1);
+		persistenceServices.edit(entity);
+	}
 }
