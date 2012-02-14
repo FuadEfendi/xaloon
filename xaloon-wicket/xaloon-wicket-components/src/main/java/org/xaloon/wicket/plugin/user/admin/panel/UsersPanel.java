@@ -172,7 +172,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(UsersPage.class, getPageRequestParameters());
+		return new Link(UsersPage.class, getPage().getPageParameters());
 	}
 
 	class JpaUserDetailsDataProvider implements IDataProvider<UserSearchResult> {

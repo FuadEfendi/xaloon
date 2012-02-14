@@ -61,7 +61,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onInitialize(BlogPlugin plugin, BlogPluginBean pluginBean) {
-		if (getPageRequestParameters().isEmpty()) {
+		if (getPage().getPageParameters().isEmpty()) {
 			LOGGER.warn("Page request parameters were not provided!");
 			setVisible(false);
 			setResponsePage(getBlogEntryListPageClass());
@@ -69,7 +69,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		}
 		BlogEntryParameters parameters = parseBlogEntryParameters();
 		if (parameters == null) {
-			LOGGER.warn("Page request parameters were not correct type: " + getPageRequestParameters());
+			LOGGER.warn("Page request parameters were not correct type: " + getPage().getPageParameters());
 			setVisible(false);
 			setResponsePage(getBlogEntryListPageClass());
 			return;
@@ -129,7 +129,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		add(new AddThisPanel("add-this-panel"));
 
 		// Add comment plugin
-		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters())
+		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPage().getPageParameters())
 				.setCommentPageClass(getBlogFacade().getBlogEntrylink(blogEntry).getKey()));
 
 		// Add tag cloud panel

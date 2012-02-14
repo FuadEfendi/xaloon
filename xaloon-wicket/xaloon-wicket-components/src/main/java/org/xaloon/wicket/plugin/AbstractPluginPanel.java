@@ -88,11 +88,6 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	private Class<?> pluginClass;
 
 	/**
-	 * passed page parameters
-	 */
-	private PageParameters pageRequestParameters;
-
-	/**
 	 * Construct.
 	 * 
 	 * @param id
@@ -112,7 +107,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, PageParameters pageRequestParameters) {
 		super(id);
-		this.pageRequestParameters = pageRequestParameters;
+		cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -126,7 +121,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, IModel<?> model, PageParameters pageRequestParameters) {
 		super(id, model);
-		this.pageRequestParameters = pageRequestParameters;
+		cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -164,6 +159,21 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 *            plugin properties instance
 	 */
 	protected void onInitialize(T plugin, K pluginBean) {
+	}
+
+	/**
+	 * Each panel is responsible to clean up page request parameters before passing them further.
+	 * <p>
+	 * Use case: Some components may contain stateless forms. These parameters are added to {@link PageParameters} when submitting the form. Later
+	 * absolute url may be incorrectly generated with these provided parameters.
+	 * <p>
+	 * Usually clean up should be made by the parent component, before passing page parameters to child panel.
+	 * 
+	 * @param pageRequestParameters
+	 *            page request parameters to clean up
+	 */
+	protected void cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+
 	}
 
 	/**
@@ -239,15 +249,6 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	protected SecurityFacade getSecurityFacade() {
 		return securityFacade;
-	}
-
-	/**
-	 * Returns existings page parameters
-	 * 
-	 * @return page parameters passed from page instance
-	 */
-	protected PageParameters getPageRequestParameters() {
-		return pageRequestParameters;
 	}
 
 	protected Class<? extends IRequestablePage> getParentPageClass() {

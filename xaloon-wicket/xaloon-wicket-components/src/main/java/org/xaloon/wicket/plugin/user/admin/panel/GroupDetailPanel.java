@@ -63,7 +63,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 	public GroupDetailPanel(String id, PageParameters parameters) {
 		super(id, parameters);
 		setOutputMarkupId(true);
-		if (getPageRequestParameters().get(Bookmarkable.PARAM_PATH).isEmpty()) {
+		if (parameters.get(Bookmarkable.PARAM_PATH).isEmpty()) {
 			throw new RestartResponseException(GroupsPage.class);
 		}
 	}
@@ -73,7 +73,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 		super.onBeforeRender();
 		removeAll();
 
-		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
+		String path = getPage().getPageParameters().get(Bookmarkable.PARAM_PATH).toString();
 
 		final SecurityGroup group = groupService.getAuthorityByPath(path);
 

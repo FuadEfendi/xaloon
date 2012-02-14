@@ -201,7 +201,7 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(getBlogEntryListPageClass(), getPageRequestParameters());
+		return new Link(getBlogEntryListPageClass(), getPage().getPageParameters());
 	}
 
 	private class JpaBlogEntryDataProvider implements IDataProvider<BlogEntry> {

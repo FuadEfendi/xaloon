@@ -54,10 +54,10 @@ public class CommentContainerPanel extends AbstractPluginPanel<CommentPluginBean
 		add(new SignInToCommentPanel("sign-in-external"));
 
 		// Add new comment panel
-		add(new NewCommentPanel("new-comment-panel", (IModel<Commentable>)getDefaultModel(), getPageRequestParameters()));
+		add(new NewCommentPanel("new-comment-panel", (IModel<Commentable>)getDefaultModel(), getPage().getPageParameters()));
 
 		// Add list existing comments panel
-		add(new CommentListPanel("comment-list-panel", (IModel<Commentable>)getDefaultModel(), getPageRequestParameters()) {
+		add(new CommentListPanel("comment-list-panel", (IModel<Commentable>)getDefaultModel(), getPage().getPageParameters()) {
 			private static final long serialVersionUID = 1L;
 
 			@Override

@@ -87,10 +87,10 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 	 */
 	public UserSecurityPanel(String id, PageParameters parameters) {
 		super(id, parameters);
-		if (getPageRequestParameters().isEmpty() || getPageRequestParameters().get(UsersPage.PARAM_USER_ID).isEmpty()) {
+		if (parameters.isEmpty() || parameters.get(UsersPage.PARAM_USER_ID).isEmpty()) {
 			throw new RestartResponseException(UsersPage.class);
 		}
-		username = getPageRequestParameters().get(UsersPage.PARAM_USER_ID).toString();
+		username = parameters.get(UsersPage.PARAM_USER_ID).toString();
 		setOutputMarkupId(true);
 	}
 
@@ -123,7 +123,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 
 	private void addUserDetails(UserDetails userDetails, User userInfo) {
-		add(new UserProfilePanel<User>("user-details", getPageRequestParameters()));
+		add(new UserProfilePanel<User>("user-details", getPage().getPageParameters()));
 	}
 
 	private void addGroups(final WebMarkupContainer roleMarkupContainer, final WebMarkupContainer authorityMarkupContainer) {

@@ -98,8 +98,10 @@ public class NewCommentPanel extends AbstractPluginPanel<CommentPluginBean, Comm
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void onSubmit() {
+			final PageParameters pageParameters = getPage().getPageParameters();
+
 			Comment comment = getModelObject();
-			String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), getPageRequestParameters());
+			String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), pageParameters);
 			comment.setPath(absolutePath);
 			if (!getPluginBean().isApplyByAdministrator() || securityFacade.isOwnerOfObject(authorUsername)) {
 				comment.setEnabled(true);
@@ -115,7 +117,7 @@ public class NewCommentPanel extends AbstractPluginPanel<CommentPluginBean, Comm
 					comment.getMessage());
 				emailFacade.sendMailToSystem(commentMessage.getSource(), comment.getFromUser().getEmail(), comment.getFromUser().getDisplayName());
 			}
-			setResponsePage(getParentPageClass(), getPageRequestParameters());
+			setResponsePage(getParentPageClass(), pageParameters);
 		}
 
 		/**

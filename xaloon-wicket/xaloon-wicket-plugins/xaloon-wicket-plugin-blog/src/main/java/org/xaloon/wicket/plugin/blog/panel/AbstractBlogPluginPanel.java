@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.plugin.blog.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -55,7 +58,16 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 
 	protected static final String KEY_VALUE_BLOG_TAG = "BLOG_ENTRY_TAG";
 
+	private final static List<String> AVAILABLE_PARAMETERS = new ArrayList<String>();
 
+	static {
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_USERNAME);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_YEAR);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_MONTH);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_DAY);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_PATH);
+	}
+	
 	@Inject
 	protected BlogFacade blogFacade;
 
@@ -118,7 +130,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 	 * @return parsed parameters
 	 */
 	protected BlogEntryParameters parseBlogEntryParameters() {
-		PageParameters requestParameters = getPageRequestParameters();
+		PageParameters requestParameters = getPage().getPageParameters();
 
 		BlogEntryParameters result = new BlogEntryParameters();
 		if (!requestParameters.get(BlogPageConstants.BLOG_USERNAME).isEmpty()) {
@@ -140,6 +152,18 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 			return null;
 		}
 		return result;
+	}
+	
+	@Override
+	protected void cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+		PageParameters result = new PageParameters();
+		
+		for (String key : AVAILABLE_PARAMETERS) {
+			if (!pageRequestParameters.get(key).isEmpty()) {
+				result.add(key, pageRequestParameters.get(key));
+			}
+		}
+		pageRequestParameters.overwriteWith(result);
 	}
 
 	protected BookmarkablePageLink<Void> createBlogCategoryLink(final BlogEntry blogEntry) {

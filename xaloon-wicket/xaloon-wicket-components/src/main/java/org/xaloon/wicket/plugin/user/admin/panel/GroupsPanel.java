@@ -138,7 +138,7 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(GroupsPage.class, getPageRequestParameters());
+		return new Link(GroupsPage.class, getPage().getPageParameters());
 	}
 
 	class JpaSecurityGroupDataProvider implements IDataProvider<SecurityGroup> {

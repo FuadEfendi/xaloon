@@ -85,6 +85,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 	@Override
 	protected void onInitialize(CommentPlugin plugin, CommentPluginBean pluginBean) {
+		final PageParameters pageParameters = getPage().getPageParameters();
 		Commentable commentable = (Commentable)getDefaultModelObject();
 		final DecoratedPagingNavigatorContainer<Comment> dataContainer = new DecoratedPagingNavigatorContainer<Comment>("container",
 			getCurrentRedirectLink());
@@ -117,7 +118,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 					@Override
 					public void onClick() {
 						commentDao.delete(comment);
-						throw new RestartResponseException(getPage().getClass(), getPageRequestParameters());
+						throw new RestartResponseException(getPage().getClass(), pageParameters);
 					}
 				};
 				deleteLink.setVisible(getSecurityFacade().isAdministrator());
@@ -138,7 +139,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 						// Then send email if possible
 						if (getPluginBean().isSendEmail()) {
-							String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), getPageRequestParameters());
+							String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), pageParameters);
 							InappropriateFlagEmailTemplatePage commentMessage = new InappropriateFlagEmailTemplatePage(absolutePath,
 								comment.getFromUser().getDisplayName(), comment.getMessage());
 							emailFacade.sendMailToSystem(commentMessage.getSource(), comment.getFromUser().getEmail(), comment.getFromUser()
@@ -146,7 +147,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 						}
 
 						// And redirect
-						throw new RestartResponseException(getPage().getClass(), getPageRequestParameters());
+						throw new RestartResponseException(getPage().getClass(), pageParameters);
 					}
 				};
 				inappropriateFlag.setVisible(securityFacade.isLoggedIn() && !comment.isInappropriate());
@@ -159,7 +160,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 	protected abstract Class<? extends IRequestablePage> getCommentPageClass();
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(getCommentPageClass(), getPageRequestParameters());
+		return new Link(getCommentPageClass(), getPage().getPageParameters());
 	}
 
 	private class CommentListDataProvider implements IDataProvider<Comment> {
