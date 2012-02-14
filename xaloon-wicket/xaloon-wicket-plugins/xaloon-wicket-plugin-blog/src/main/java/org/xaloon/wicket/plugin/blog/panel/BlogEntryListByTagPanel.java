@@ -51,17 +51,17 @@ public class BlogEntryListByTagPanel extends BlogEntryListPanel {
 
 	@Override
 	protected Link getCurrentRedirectLink() {
-		return new Link(getBlogEntryListByTagPageClass(), getPage().getPageParameters());
+		return new Link(getBlogEntryListByTagPageClass(), getPageRequestParameters());
 	}
 
 	@Override
 	protected IDataProvider<BlogEntry> getBlogEntryDataProvider() {
-		if (getPage().getPageParameters().isEmpty()) {
+		if (getPageRequestParameters().isEmpty()) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String tagPath = getPage().getPageParameters().get(TagCloudPanel.QUERY_BY_TAG).toString();
+		String tagPath = getPageRequestParameters().get(TagCloudPanel.QUERY_BY_TAG).toString();
 		if (StringUtils.isEmpty(tagPath)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);

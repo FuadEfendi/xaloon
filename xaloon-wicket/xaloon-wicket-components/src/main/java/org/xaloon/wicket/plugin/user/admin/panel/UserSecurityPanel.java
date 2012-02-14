@@ -123,7 +123,7 @@ public class UserSecurityPanel extends AbstractAdministrationPanel {
 
 
 	private void addUserDetails(UserDetails userDetails, User userInfo) {
-		add(new UserProfilePanel<User>("user-details", getPage().getPageParameters()));
+		add(new UserProfilePanel<User>("user-details", getPageRequestParameters()));
 	}
 
 	private void addGroups(final WebMarkupContainer roleMarkupContainer, final WebMarkupContainer authorityMarkupContainer) {

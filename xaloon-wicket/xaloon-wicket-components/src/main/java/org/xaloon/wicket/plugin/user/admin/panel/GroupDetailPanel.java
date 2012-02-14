@@ -73,7 +73,7 @@ public class GroupDetailPanel extends AbstractAdministrationPanel {
 		super.onBeforeRender();
 		removeAll();
 
-		String path = getPage().getPageParameters().get(Bookmarkable.PARAM_PATH).toString();
+		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 
 		final SecurityGroup group = groupService.getAuthorityByPath(path);
 

@@ -120,7 +120,7 @@ public class ClassifiersPanel extends AbstractClassifiersPanel {
 				components.add(dataContainer);
 			};
 		};
-		addNewClassifierModalWindow.setContent(new NewClassifierPanel<Classifier>(addNewClassifierModalWindow, getPage().getPageParameters()));
+		addNewClassifierModalWindow.setContent(new NewClassifierPanel<Classifier>(addNewClassifierModalWindow, getPageRequestParameters()));
 		add(addNewClassifierModalWindow);
 
 		// add create new classifier link
@@ -135,7 +135,7 @@ public class ClassifiersPanel extends AbstractClassifiersPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(ClassifiersPage.class, getPage().getPageParameters());
+		return new Link(ClassifiersPage.class, getPageRequestParameters());
 	}
 
 	private class ClassifierDataProvider implements IDataProvider<Classifier> {

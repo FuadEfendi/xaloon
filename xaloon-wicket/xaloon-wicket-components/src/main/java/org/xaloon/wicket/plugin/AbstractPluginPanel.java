@@ -88,6 +88,11 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	private Class<?> pluginClass;
 
 	/**
+	 * passed page parameters
+	 */
+	private PageParameters pageRequestParameters;
+
+	/**
 	 * Construct.
 	 * 
 	 * @param id
@@ -107,7 +112,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, PageParameters pageRequestParameters) {
 		super(id);
-		cleanupPageRequestParameters(pageRequestParameters);
+		this.pageRequestParameters = cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -121,7 +126,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, IModel<?> model, PageParameters pageRequestParameters) {
 		super(id, model);
-		cleanupPageRequestParameters(pageRequestParameters);
+		this.pageRequestParameters = cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -171,9 +176,10 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 * 
 	 * @param pageRequestParameters
 	 *            page request parameters to clean up
+	 * @return {@link PageParameters} instance with removed parameters
 	 */
-	protected void cleanupPageRequestParameters(PageParameters pageRequestParameters) {
-
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+		return pageRequestParameters;
 	}
 
 	/**
@@ -254,5 +260,17 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	protected Class<? extends IRequestablePage> getParentPageClass() {
 		Page parentPage = getParent().getPage();
 		return parentPage.getClass();
+	}
+
+	/**
+	 * Gets pageRequestParameters.
+	 * 
+	 * @return pageRequestParameters
+	 */
+	public PageParameters getPageRequestParameters() {
+		if (pageRequestParameters == null) {
+			return getPage().getPageParameters();
+		}
+		return pageRequestParameters;
 	}
 }

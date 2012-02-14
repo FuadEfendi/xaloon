@@ -84,7 +84,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 	@Override
 	protected void onInitialize(EmptyPlugin plugin, AbstractPluginBean pluginBean) {
-		PageParameters params = getPage().getPageParameters();
+		PageParameters params = getPageRequestParameters();
 		if (params.isEmpty()) {
 			setVisible(false);
 			setResponsePage(ClassifiersPage.class);
@@ -153,7 +153,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(ClassifiersItemPage.class, getPage().getPageParameters());
+		return new Link(ClassifiersItemPage.class, getPageRequestParameters());
 	}
 
 	private class ClassifierDataProvider implements IDataProvider<ClassifierItem> {

@@ -85,7 +85,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 	@Override
 	protected void onInitialize(CommentPlugin plugin, CommentPluginBean pluginBean) {
-		final PageParameters pageParameters = getPage().getPageParameters();
+		final PageParameters pageParameters = getPageRequestParameters();
 		Commentable commentable = (Commentable)getDefaultModelObject();
 		final DecoratedPagingNavigatorContainer<Comment> dataContainer = new DecoratedPagingNavigatorContainer<Comment>("container",
 			getCurrentRedirectLink());
@@ -160,7 +160,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 	protected abstract Class<? extends IRequestablePage> getCommentPageClass();
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(getCommentPageClass(), getPage().getPageParameters());
+		return new Link(getCommentPageClass(), getPageRequestParameters());
 	}
 
 	private class CommentListDataProvider implements IDataProvider<Comment> {

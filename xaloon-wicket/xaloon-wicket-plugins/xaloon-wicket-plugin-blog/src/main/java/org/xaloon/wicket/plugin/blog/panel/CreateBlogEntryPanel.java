@@ -52,7 +52,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 	@Override
 	protected void onInitialize(BlogPlugin plugin, BlogPluginBean pluginBean) {
 		BlogEntry jpaBlogEntry = null;
-		if (!getPage().getPageParameters().isEmpty()) {
+		if (!getPageRequestParameters().isEmpty()) {
 			BlogEntryParameters parameters = parseBlogEntryParameters();
 			if (parameters != null) {
 				jpaBlogEntry = getBlogFacade().findEntryByPath(parameters.getUsername(), parameters.getPath());

@@ -139,7 +139,7 @@ public class RolesPanel extends AbstractAdministrationPanel {
 	}
 
 	protected Link getCurrentRedirectLink() {
-		return new Link(RolesPage.class, getPage().getPageParameters());
+		return new Link(RolesPage.class, getPageRequestParameters());
 	}
 
 	class JpaSecurityRoleDataProvider implements IDataProvider<SecurityRole> {

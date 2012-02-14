@@ -76,7 +76,7 @@ public class RoleDetailPanel extends AbstractAdministrationPanel {
 		super.onBeforeRender();
 		removeAll();
 
-		String path = getPage().getPageParameters().get(Bookmarkable.PARAM_PATH).toString();
+		String path = getPageRequestParameters().get(Bookmarkable.PARAM_PATH).toString();
 
 		final SecurityRole role = roleService.getAuthorityByPath(path);
 

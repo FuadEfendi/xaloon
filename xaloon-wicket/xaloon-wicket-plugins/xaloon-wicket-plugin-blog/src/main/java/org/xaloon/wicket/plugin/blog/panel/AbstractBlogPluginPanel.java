@@ -130,7 +130,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 	 * @return parsed parameters
 	 */
 	protected BlogEntryParameters parseBlogEntryParameters() {
-		PageParameters requestParameters = getPage().getPageParameters();
+		PageParameters requestParameters = getPageRequestParameters();
 
 		BlogEntryParameters result = new BlogEntryParameters();
 		if (!requestParameters.get(BlogPageConstants.BLOG_USERNAME).isEmpty()) {
@@ -155,7 +155,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 	}
 	
 	@Override
-	protected void cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters) {
 		PageParameters result = new PageParameters();
 		
 		for (String key : AVAILABLE_PARAMETERS) {
@@ -163,7 +163,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 				result.add(key, pageRequestParameters.get(key));
 			}
 		}
-		pageRequestParameters.overwriteWith(result);
+		return pageRequestParameters.overwriteWith(result);
 	}
 
 	protected BookmarkablePageLink<Void> createBlogCategoryLink(final BlogEntry blogEntry) {

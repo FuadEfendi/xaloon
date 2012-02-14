@@ -79,7 +79,7 @@ public class MessagePanel extends AbstractPluginPanel<EmailPluginBean, EmailPlug
 				setResponsePage(Application.get().getHomePage());
 			} else {
 				getSession().error("Message cannot be sent due to system configuration restrictions!");
-				throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getPage().getClass(), getPage().getPageParameters()).toString());
+				throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getPage().getClass(), getPageRequestParameters()).toString());
 			}
 		}
 
@@ -102,7 +102,7 @@ public class MessagePanel extends AbstractPluginPanel<EmailPluginBean, EmailPlug
 	}
 
 	@Override
-	protected void cleanupPageRequestParameters(PageParameters pageRequestParameters2) {
-		pageRequestParameters2.overwriteWith(new PageParameters());
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters2) {
+		return new PageParameters();
 	}
 }

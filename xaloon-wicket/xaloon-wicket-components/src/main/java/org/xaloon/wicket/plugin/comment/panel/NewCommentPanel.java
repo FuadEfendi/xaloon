@@ -98,7 +98,7 @@ public class NewCommentPanel extends AbstractPluginPanel<CommentPluginBean, Comm
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void onSubmit() {
-			final PageParameters pageParameters = getPage().getPageParameters();
+			final PageParameters pageParameters = getPageRequestParameters();
 
 			Comment comment = getModelObject();
 			String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), pageParameters);

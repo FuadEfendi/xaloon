@@ -53,17 +53,17 @@ public class BlogEntryListByCategoryPanel extends BlogEntryListPanel {
 
 	@Override
 	protected Link getCurrentRedirectLink() {
-		return new Link(getBlogCategoryPageClass(), getPage().getPageParameters());
+		return new Link(getBlogCategoryPageClass(), getPageRequestParameters());
 	}
 
 	@Override
 	protected IDataProvider<BlogEntry> getBlogEntryDataProvider() {
-		if (getPage().getPageParameters().isEmpty()) {
+		if (getPageRequestParameters().isEmpty()) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String categoryValue = getPage().getPageParameters().get(CATEGORY_CODE).toString();
+		String categoryValue = getPageRequestParameters().get(CATEGORY_CODE).toString();
 		if (StringUtils.isEmpty(categoryValue)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);

@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.BaseWicketTester.StartComponentInPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
@@ -81,7 +82,6 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		} catch (RestartResponseException e) {
 			Assert.assertTrue(true);
 		}
-
 	}
 
 	/**
@@ -92,6 +92,8 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		PageParameters params = new PageParameters();
 		params.add(Bookmarkable.PARAM_PATH, path);
 		tester.startComponentInPage(new RoleDetailPanel("id", params));
+		tester.assertRenderedPage(StartComponentInPage.class);
+
 		Assert.assertNotNull(tester.getTagByWicketId("name"));
 		Assert.assertNotNull(tester.getTagByWicketId("authority-admin"));
 		Assert.assertEquals(2, tester.getTagsByWicketId("name").size());
@@ -135,6 +137,8 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		PageParameters params = new PageParameters();
 		params.add(Bookmarkable.PARAM_PATH, path);
 		tester.startComponentInPage(new RoleDetailPanel("id", params));
+		tester.assertRenderedPage(StartComponentInPage.class);
+
 		Assert.assertNotNull(tester.getTagByWicketId("name"));
 		Assert.assertNotNull(tester.getTagByWicketId("authority-admin"));
 		Assert.assertEquals(2, tester.getTagsByWicketId("name").size());
@@ -165,6 +169,8 @@ public class RoleDetailPanelTest extends AbstractUserAdminTestCase {
 		PageParameters params = new PageParameters();
 		params.add(Bookmarkable.PARAM_PATH, path);
 		tester.startComponentInPage(new RoleDetailPanel("id", params));
+		tester.assertRenderedPage(StartComponentInPage.class);
+
 		Assert.assertNotNull(tester.getTagByWicketId("name"));
 		Assert.assertNotNull(tester.getTagByWicketId("authority-admin"));
 		Assert.assertEquals(2, tester.getTagsByWicketId("name").size());

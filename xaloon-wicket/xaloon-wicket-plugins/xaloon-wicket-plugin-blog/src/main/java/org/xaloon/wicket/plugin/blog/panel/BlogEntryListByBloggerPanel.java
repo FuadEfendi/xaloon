@@ -53,17 +53,17 @@ public class BlogEntryListByBloggerPanel extends BlogEntryListPanel {
 
 	@Override
 	protected Link getCurrentRedirectLink() {
-		return new Link(getBlogBloggerPageClass(), getPage().getPageParameters());
+		return new Link(getBlogBloggerPageClass(), getPageRequestParameters());
 	}
 
 	@Override
 	protected IDataProvider<BlogEntry> getBlogEntryDataProvider() {
-		if (getPage().getPageParameters().isEmpty()) {
+		if (getPageRequestParameters().isEmpty()) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String username = getPage().getPageParameters().get(BLOGGER_USERNAME).toString();
+		String username = getPageRequestParameters().get(BLOGGER_USERNAME).toString();
 		if (StringUtils.isEmpty(username)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);
