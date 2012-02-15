@@ -17,6 +17,7 @@
 package org.xaloon.core.api.asynchronous;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,10 @@ public abstract class RetryAction<T, Z> implements Serializable {
 
 	private int millisecondsToSleep = 10000;
 
+	private int retryCount = 3;
+
+	private boolean randomTimeUsed;
+
 	/**
 	 * Construct.
 	 * 
@@ -51,10 +56,14 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	 * 
 	 * @param sleepFirst
 	 * @param millisecondsToSleep
+	 * @param retryCount
+	 * @param randomTimeUsed
 	 */
-	public RetryAction(boolean sleepFirst, int millisecondsToSleep) {
+	public RetryAction(boolean sleepFirst, int millisecondsToSleep, int retryCount, boolean randomTimeUsed) {
 		this.sleepFirst = sleepFirst;
 		this.millisecondsToSleep = millisecondsToSleep;
+		this.retryCount = retryCount;
+		this.randomTimeUsed = randomTimeUsed;
 	}
 
 	/**
@@ -65,17 +74,21 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	public T perform(Z parameters) throws InterruptedException {
 		int i = 0;
 		T result = null;
-		while (result == null && i++ < 3) {
+		int timeToSleep = millisecondsToSleep;
+		if (randomTimeUsed) {
+			timeToSleep = new Random().nextInt(timeToSleep);
+		}
+		while (result == null && i++ < retryCount) {
 			if (sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %d ms(%s)", Thread.currentThread().getName(), i, timeToSleep, parameters));
 				}
-				Thread.sleep(millisecondsToSleep);
+				Thread.sleep(timeToSleep);
 			}
 			result = onPerform(parameters);
 			if (result == null && !sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %d ms(%s)", Thread.currentThread().getName(), i, timeToSleep, parameters));
 				}
 				Thread.sleep(millisecondsToSleep);
 			}
