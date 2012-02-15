@@ -19,6 +19,7 @@ package org.xaloon.core.api.asynchronous;
 import java.io.Serializable;
 import java.util.Random;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,14 +82,16 @@ public abstract class RetryAction<T, Z> implements Serializable {
 		while (result == null && i++ < retryCount) {
 			if (sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %d ms(%s)", Thread.currentThread().getName(), i, timeToSleep, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %s s(%s)", Thread.currentThread().getName(), i,
+						DateFormatUtils.format(timeToSleep, "ss:SSS"), parameters));
 				}
 				Thread.sleep(timeToSleep);
 			}
 			result = onPerform(parameters);
 			if (result == null && !sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %d ms(%s)", Thread.currentThread().getName(), i, timeToSleep, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %s s(%s)", Thread.currentThread().getName(), i,
+						DateFormatUtils.format(timeToSleep, "ss:SSS"), parameters));
 				}
 				Thread.sleep(millisecondsToSleep);
 			}
