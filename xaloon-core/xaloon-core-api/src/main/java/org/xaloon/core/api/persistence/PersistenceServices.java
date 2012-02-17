@@ -136,4 +136,9 @@ public interface PersistenceServices extends Serializable {
 	 * @return concrete single object
 	 */
 	<T> T executeNativeQuerySingle(String query);
+
+	/**
+	 * Synchronize the persistence context to the underlying database.
+	 */
+	void flush();
 }
