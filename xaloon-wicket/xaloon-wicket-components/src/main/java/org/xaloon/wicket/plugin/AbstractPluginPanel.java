@@ -149,8 +149,8 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	protected void onConfigure() {
 		boolean isPluginEnabled = isPluginEnabled();
 		setVisible(isVisible() && isPluginEnabled && isPluginValid());
-		if (!isPluginEnabled && logger.isWarnEnabled()) {
-			logger.warn("[" + getClass().getName() + "] " + getString(PLUGIN_NOT_ENABLED));
+		if (!isPluginEnabled && logger.isDebugEnabled()) {
+			logger.debug("[" + getClass().getName() + "] " + getString(PLUGIN_NOT_ENABLED));
 		}
 		super.onConfigure();
 	}

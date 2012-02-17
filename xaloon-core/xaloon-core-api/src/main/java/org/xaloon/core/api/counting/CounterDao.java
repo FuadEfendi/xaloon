@@ -18,6 +18,9 @@ package org.xaloon.core.api.counting;
 
 import java.io.Serializable;
 
+/**
+ * @author vytautas r.
+ */
 public interface CounterDao extends Serializable {
 
 	/**
@@ -27,8 +30,9 @@ public interface CounterDao extends Serializable {
 	 *            refers to the table, such as blog entry, classifier/other
 	 * @param entityId
 	 *            refers to the concrete row to update
+	 * @return true if action was performed successfully
 	 */
-	void increment(String counterGroup, Long categoryId, Long entityId);
+	boolean increment(String counterGroup, Long categoryId, Long entityId);
 
 	/**
 	 * @param counterGroup
@@ -37,6 +41,7 @@ public interface CounterDao extends Serializable {
 	 *            refers to the table, such as blog entry, classifier/other
 	 * @param entityId
 	 *            refers to the concrete row to update
+	 * @return counter value for selected entry
 	 */
 	Long count(String counterGroup, Long categoryId, Long entityId);
 
@@ -47,7 +52,8 @@ public interface CounterDao extends Serializable {
 	 *            refers to the table, such as blog entry, classifier/other
 	 * @param entityId
 	 *            refers to the concrete row to update
+	 * @return true if action was performed successfully
 	 */
-	void decrement(String counterGroup, Long categoryId, Long entityId);
+	boolean decrement(String counterGroup, Long categoryId, Long entityId);
 
 }

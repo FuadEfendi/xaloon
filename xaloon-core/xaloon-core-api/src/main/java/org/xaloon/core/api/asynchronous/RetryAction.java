@@ -43,6 +43,8 @@ public abstract class RetryAction<T, Z> implements Serializable {
 
 	private boolean randomTimeUsed;
 
+	private boolean exceptionErrorLevel = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -50,21 +52,6 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	 */
 	public RetryAction(boolean sleepFirst) {
 		this.sleepFirst = sleepFirst;
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param sleepFirst
-	 * @param millisecondsToSleep
-	 * @param retryCount
-	 * @param randomTimeUsed
-	 */
-	public RetryAction(boolean sleepFirst, int millisecondsToSleep, int retryCount, boolean randomTimeUsed) {
-		this.sleepFirst = sleepFirst;
-		this.millisecondsToSleep = millisecondsToSleep;
-		this.retryCount = retryCount;
-		this.randomTimeUsed = randomTimeUsed;
 	}
 
 	/**
@@ -87,7 +74,15 @@ public abstract class RetryAction<T, Z> implements Serializable {
 				}
 				Thread.sleep(timeToSleep);
 			}
-			result = onPerform(parameters);
+			try {
+				result = onPerform(parameters);
+			} catch (Exception e) {
+				if (exceptionErrorLevel) {
+					LOGGER.error("Action thrown an exception!", e);
+				} else {
+					LOGGER.debug("Action thrown an exception!", e);
+				}
+			}
 			if (result == null && !sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
 					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %s s(%s)", Thread.currentThread().getName(), i,
@@ -100,4 +95,64 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	}
 
 	protected abstract T onPerform(Z parameters);
+
+	/**
+	 * Sets sleepFirst.
+	 * 
+	 * @param sleepFirst
+	 *            sleepFirst
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setSleepFirst(boolean sleepFirst) {
+		this.sleepFirst = sleepFirst;
+		return this;
+	}
+
+	/**
+	 * Sets millisecondsToSleep.
+	 * 
+	 * @param millisecondsToSleep
+	 *            millisecondsToSleep
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setMillisecondsToSleep(int millisecondsToSleep) {
+		this.millisecondsToSleep = millisecondsToSleep;
+		return this;
+	}
+
+	/**
+	 * Sets retryCount.
+	 * 
+	 * @param retryCount
+	 *            retryCount
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+		return this;
+	}
+
+	/**
+	 * Sets randomTimeUsed.
+	 * 
+	 * @param randomTimeUsed
+	 *            randomTimeUsed
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setRandomTimeUsed(boolean randomTimeUsed) {
+		this.randomTimeUsed = randomTimeUsed;
+		return this;
+	}
+
+	/**
+	 * Sets exceptionErrorLevel.
+	 * 
+	 * @param exceptionErrorLevel
+	 *            exceptionErrorLevel
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setExceptionErrorLevel(boolean exceptionErrorLevel) {
+		this.exceptionErrorLevel = exceptionErrorLevel;
+		return this;
+	}
 }

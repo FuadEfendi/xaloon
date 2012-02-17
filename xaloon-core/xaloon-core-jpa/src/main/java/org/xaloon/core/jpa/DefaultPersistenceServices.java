@@ -35,7 +35,7 @@ public class DefaultPersistenceServices extends AbstractPersistenceServices {
 	 * @param em
 	 *            instance used to interact with the persistence context.
 	 */
-	@PersistenceContext(unitName = "default-persistence-unit")
+	@PersistenceContext(unitName = DEFAULT_UNIT_NAME)
 	public void setEm(EntityManager em) {
 		this.em = em;
 	}

@@ -26,7 +26,7 @@ public interface CommentDao extends Serializable {
 	/**
 	 * Property for counter to identify that comment count should be incremented
 	 */
-	String COMMENT_COUNT = "comment_count";
+	String ENTRY_COUNT_COMMENT = "ENTRY_COUNT_COMMENT";
 
 	/**
 	 * Save comment to storage
@@ -84,9 +84,8 @@ public interface CommentDao extends Serializable {
 	 * Modify comment and save
 	 * 
 	 * @param comment
-	 * @param enabled
 	 */
-	void enable(Comment comment, boolean enabled);
+	void enable(Comment comment);
 
 	/**
 	 * Delete all comments, which are still waiting for approval. Should be a spam.

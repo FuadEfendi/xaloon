@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
@@ -13,7 +14,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xaloon.core.api.counting.CounterDao;
+import org.xaloon.core.api.counting.CounterFacade;
 import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.wicket.application.page.LayoutWebPage;
@@ -46,7 +47,8 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BlogEntryPanel.class);
 
 	@Inject
-	private CounterDao counterDao;
+	@Named("counterFacade")
+	private CounterFacade counterFacade;
 
 	/**
 	 * Construct.
@@ -83,7 +85,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		}
 
 		// Increment view count of blog entry
-		counterDao.increment("BLOG_ENTRY_VIEW_COUNT", blogEntry.getTrackingCategoryId(), blogEntry.getId());
+		counterFacade.increment(BlogPlugin.VIEW_COUNT_BLOG_ENTRY, blogEntry.getTrackingCategoryId(), blogEntry.getId());
 
 		setDefaultModel(new Model<BlogEntry>(blogEntry));
 		

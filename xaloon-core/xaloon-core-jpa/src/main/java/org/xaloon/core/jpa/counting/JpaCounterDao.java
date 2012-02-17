@@ -23,61 +23,81 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.counting.CounterDao;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.jpa.counting.model.JpaCounterEntity;
+import org.xaloon.core.jpa.counting.model.JpaCounterId;
 
-@Named
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+/**
+ * @author vytautas r.
+ */
+@Named("counterDao")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class JpaCounterDao implements CounterDao {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaCounterDao.class);
 
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public void increment(String counterGroup, Long categoryId, Long entityId) {
-		JpaCounterEntity entity = find(counterGroup, categoryId, entityId);
-		if (entity == null) {
-			create(counterGroup, categoryId, entityId);
-			return;
+	public boolean increment(String counterGroup, Long categoryId, Long entityId) {
+		JpaCounterId id = createPrimaryKey(counterGroup, categoryId, entityId);
+		if (incrementValue(id) == false) {
+			return createNewSequence(id, 1L) != null;
 		}
-		entity.setCount(entity.getCount() + 1);
-		persistenceServices.edit(entity);
+		return true;
 	}
 
-	private void create(String counterGroup, Long categoryId, Long entityId) {
+	private JpaCounterEntity createNewSequence(JpaCounterId id, long l) {
 		JpaCounterEntity newEntity = new JpaCounterEntity();
-		newEntity.setCounterGroup(counterGroup);
-		newEntity.setCategoryId(categoryId);
-		newEntity.setEntityId(entityId);
+		newEntity.setCounterId(id);
 		newEntity.setCount(1L);
-		persistenceServices.create(newEntity);
+		return persistenceServices.create(newEntity);
 	}
 
-	private JpaCounterEntity find(String counterGroup, Long categoryId, Long entityId) {
-		QueryBuilder queryBuilder = new QueryBuilder("select ce from " + JpaCounterEntity.class.getSimpleName() + " ce");
-		queryBuilder.addParameter("ce.counterGroup", "GROUP_TO_UPDATE", counterGroup);
-		queryBuilder.addParameter("ce.categoryId", "CATEGORY_ID", categoryId);
-		queryBuilder.addParameter("ce.entityId", "ENTTY_ID", entityId);
-		return persistenceServices.executeQuerySingle(queryBuilder);
+	private boolean incrementValue(JpaCounterId id) {
+		QueryBuilder queryBuilder = new QueryBuilder("UPDATE JpaCounterEntity as s set s.count = s.count + 1");
+		queryBuilder.addParameter("s.counterId", "_ID", id);
+		int rows = persistenceServices.executeUpdate(queryBuilder);
+		return (rows == 1);
+	}
+
+	private JpaCounterEntity find(JpaCounterId primaryKey) {
+		return persistenceServices.find(JpaCounterEntity.class, primaryKey);
+	}
+
+	private JpaCounterId createPrimaryKey(String counterGroup, Long categoryId, Long entityId) {
+		JpaCounterId id = new JpaCounterId();
+		id.setCounterGroup(counterGroup);
+		id.setCategoryId(categoryId);
+		id.setEntityId(entityId);
+		return id;
 	}
 
 	@Override
 	public Long count(String counterGroup, Long categoryId, Long entityId) {
-		JpaCounterEntity counterEntity = find(counterGroup, categoryId, entityId);
+		JpaCounterEntity counterEntity = find(createPrimaryKey(counterGroup, categoryId, entityId));
 		return (counterEntity != null) ? counterEntity.getCount() : 0L;
 	}
 
 	@Override
-	public void decrement(String counterGroup, Long categoryId, Long entityId) {
-		JpaCounterEntity entity = find(counterGroup, categoryId, entityId);
-		if (entity == null || entity.getCount() < 1) {
-			return;
-		}
-		entity.setCount(entity.getCount() - 1);
-		persistenceServices.edit(entity);
+	public boolean decrement(String counterGroup, Long categoryId, Long entityId) {
+		JpaCounterId id = createPrimaryKey(counterGroup, categoryId, entityId);
+
+		QueryBuilder queryBuilder = new QueryBuilder("UPDATE JpaCounterEntity as s set s.count = s.count - 1");
+		queryBuilder.addParameter("s.counterId", "_ID", id);
+		int rows = persistenceServices.executeUpdate(queryBuilder);
+		return (rows == 1);
 	}
 }

@@ -16,24 +16,14 @@
  */
 package org.xaloon.core.api.counting;
 
-import java.io.Serializable;
-
-
 /**
+ * Counter facade wraps {@link CounterDao} methods.
+ * <p>
+ * Default implementation will create asynchronous jobs for increment/decrement methods and just reuse {@link CounterDao#count(String, Countable)}
+ * method
+ * 
  * @author vytautas r.
  */
-public interface Countable extends Serializable {
-	/**
-	 * Trackable object may have the same id if there are many implementations. Category + id should ensure uniqueness
-	 * 
-	 * @return unique identifier for the same group of trackable objects
-	 */
-	Long getTrackingCategoryId();
+public interface CounterFacade extends CounterDao {
 
-	/**
-	 * Refers to the concrete row to update
-	 * 
-	 * @return unique identifier
-	 */
-	Long getId();
 }

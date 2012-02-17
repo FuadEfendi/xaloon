@@ -30,6 +30,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.date.DateService;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
 import org.xaloon.core.api.plugin.comment.CommentDao;
+import org.xaloon.wicket.component.navigation.BookmarkablePagingNavigator;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
 import org.xaloon.wicket.plugin.blog.BlogFacade;
@@ -66,6 +67,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_MONTH);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_DAY);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_PATH);
+		AVAILABLE_PARAMETERS.add(BookmarkablePagingNavigator.PAGE_QUERY_ID);
 	}
 	
 	@Inject

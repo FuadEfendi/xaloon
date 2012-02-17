@@ -68,9 +68,9 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 
 	/**
 	 * 
-	 * @see org.xaloon.core.api.persistence.PersistenceServices#find(java.lang.Class, java.lang.Long)
+	 * @see org.xaloon.core.api.persistence.PersistenceServices#find(Class, Object)
 	 */
-	public <T> T find(Class<T> clazz, Long id) {
+	public <T> T find(Class<T> clazz, Object id) {
 		return getEm().find(clazz, id);
 	}
 
@@ -174,11 +174,6 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	@Override
 	public <T> T executeNativeQuerySingle(String query) {
 		return (T)getEm().createNativeQuery(query).getSingleResult();
-	}
-
-	@Override
-	public void flush() {
-		getEm().flush();
 	}
 
 	@Override

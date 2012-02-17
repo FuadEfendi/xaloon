@@ -16,64 +16,95 @@
  */
 package org.xaloon.core.jpa.counting.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import org.xaloon.core.api.counting.CounterEntity;
-import org.xaloon.core.jpa.model.AbstractEntity;
-
+/**
+ * @author vytautas r.
+ */
 @Entity
 @Table(name = "XAL_COUNTER")
-public class JpaCounterEntity extends AbstractEntity implements CounterEntity {
+public class JpaCounterEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "COUNTER_GROUP_ID", nullable = false)
-	private String counterGroup;
+	@EmbeddedId
+	private JpaCounterId counterId;
 
-	@Column(name = "ENTITY_ID", nullable = false)
-	private Long entityId;
-
-	@Column(name = "CATEGORY_ID", nullable = false)
-	private Long categoryId;
+	@Version
+	private Long version;
 
 	@Column(name = "VALUE_COUNT", nullable = false)
 	private Long count;
 
 
+	/**
+	 * Gets version.
+	 * 
+	 * @return version
+	 */
+	public Long getVersion() {
+		return version;
+	}
+
+
+	/**
+	 * Sets version.
+	 * 
+	 * @param version
+	 *            version
+	 */
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+
+	/**
+	 * Gets count.
+	 * 
+	 * @return count
+	 */
 	public Long getCount() {
 		return count;
 	}
 
+
+	/**
+	 * Sets count.
+	 * 
+	 * @param count
+	 *            count
+	 */
 	public void setCount(Long count) {
 		this.count = count;
 	}
 
-	public Long getEntityId() {
-		return entityId;
+
+	/**
+	 * Gets counterId.
+	 * 
+	 * @return counterId
+	 */
+	public JpaCounterId getCounterId() {
+		return counterId;
 	}
 
-	public void setEntityId(Long entityId) {
-		this.entityId = entityId;
-	}
 
-	public Long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public String getCounterGroup() {
-		return counterGroup;
-	}
-
-	public void setCounterGroup(String counterGroup) {
-		this.counterGroup = counterGroup;
+	/**
+	 * Sets counterId.
+	 * 
+	 * @param counterId
+	 *            counterId
+	 */
+	public void setCounterId(JpaCounterId counterId) {
+		this.counterId = counterId;
 	}
 }
