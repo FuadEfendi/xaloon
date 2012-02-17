@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.plugin.email.EmailFacade;
+import org.xaloon.core.api.plugin.email.EmailService;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.model.Authority;
@@ -199,7 +200,7 @@ public class DefaultUserFacade implements UserFacade {
 				if (emailFacade.sendMailFromSystem(contentTemplate.getSource(), subject, user.getEmail(), user.getDisplayName())) {
 					return null;
 				} else {
-					return EmailFacade.EMAIL_PROPERTIES_NOT_CONFIGURED;
+					return EmailService.EMAIL_PROPERTIES_NOT_CONFIGURED;
 				}
 			}
 		}

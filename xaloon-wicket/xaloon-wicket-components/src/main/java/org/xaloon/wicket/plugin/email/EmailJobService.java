@@ -14,43 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.user.panel;
+package org.xaloon.wicket.plugin.email;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.ValidationError;
-import org.apache.wicket.validation.validator.AbstractValidator;
-import org.xaloon.core.api.plugin.email.EmailFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.asynchronous.ScheduledJobService;
 import org.xaloon.core.api.plugin.email.EmailService;
 
 /**
  * @author vytautas r.
  */
-public class EmailPluginEnabledValidator extends AbstractValidator<Void> {
+@Named("emailJobService")
+public class EmailJobService implements ScheduledJobService<EmailJobParameters> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailJobService.class);
 
 	@Inject
-	private EmailFacade emailFacade;
-
-	/**
-	 * Construct.
-	 */
-	public EmailPluginEnabledValidator() {
-		Injector.get().inject(this);
-	}
+	@Named("emailService")
+	private EmailService emailService;
 
 	@Override
-	protected void onValidate(IValidatable<Void> validatable) {
-		if (!emailFacade.isEnabled()) {
-			ValidationError error = new ValidationError();
-			error.addMessageKey(EmailService.EMAIL_PROPERTIES_NOT_CONFIGURED);
-			validatable.error(error);
+	public <V> V execute(EmailJobParameters jobParameters, boolean isScheduled) {
+		if (jobParameters.isSendEmailToSystem()) {
+			emailService.sendMailToSystem(jobParameters.getEmailContent(), jobParameters.getFromEmail(), jobParameters.getFromName());
+		} else {
+			emailService.sendMailFromSystem(jobParameters.getEmailContent(), jobParameters.getSubject(), jobParameters.getToEmail(),
+				jobParameters.getToName());
 		}
+		return null;
 	}
 }

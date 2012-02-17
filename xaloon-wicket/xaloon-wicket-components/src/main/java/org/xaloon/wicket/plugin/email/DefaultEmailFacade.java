@@ -19,88 +19,68 @@ package org.xaloon.wicket.plugin.email;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.mail.SimpleEmail;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xaloon.core.api.plugin.PluginRegistry;
+import org.xaloon.core.api.asynchronous.ScheduledJobService;
+import org.xaloon.core.api.asynchronous.SchedulerServices;
+import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.plugin.email.EmailFacade;
-import org.xaloon.core.api.plugin.email.EmailPluginBean;
+import org.xaloon.core.api.plugin.email.EmailService;
 
 /**
  * @author vytautas r.
  */
-@Named
+@Named("emailFacade")
 public class DefaultEmailFacade implements EmailFacade {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEmailFacade.class);
+	@Inject
+	@Named("emailService")
+	private EmailService emailService;
 
 	@Inject
-	private PluginRegistry pluginRegistry;
+	@Named("emailJobService")
+	private ScheduledJobService<EmailJobParameters> scheduledJobService;
+
+	/**
+	 * Manually injected service. This allows to check if exists {@link SchedulerServices} implementation.
+	 */
+	private SchedulerServices schedulerServices;
+
+	private SchedulerServices getSchedulerServices() {
+		if (schedulerServices == null) {
+			schedulerServices = ServiceLocator.get().getInstance(SchedulerServices.class);
+		}
+		return schedulerServices;
+	}
 
 	@Override
 	public boolean sendMailToSystem(String emailContent, String fromEmail, String fromName) {
-		if (!isEnabled()) {
-			return false;
-		}
-		EmailPluginBean emailPluginBean = getPluginBean();
-		String subject = emailPluginBean.getFromSubject();
-		String toEmail = emailPluginBean.getToEmail();
-		String toName = emailPluginBean.getToTitle();
-		return sendEmailInternal(emailContent, subject, fromEmail, fromName, toEmail, toName);
-	}
+		// Schedule and start asynchronous job to send email to system
+		EmailJobParameters params = new EmailJobParameters();
+		params.setSendEmailToSystem(true);
+		params.setEmailContent(emailContent);
+		params.setFromEmail(fromEmail);
+		params.setFromName(fromName);
 
-	private boolean sendEmailInternal(String emailContent, String subject, String fromEmail, String fromName, String toEmail, String toName) {
-		EmailPluginBean emailPluginBean = getPluginBean();
-
-		SimpleEmail email = new SimpleEmail();
-		email.setDebug(emailPluginBean.isDebug());
-		email.setHostName(emailPluginBean.getHost());
-		email.setSmtpPort(emailPluginBean.getPort());
-		if (emailPluginBean.isRequiresAuthentication()) {
-			email.setAuthentication(emailPluginBean.getUsername(), emailPluginBean.getPassword());
-		}
-		email.setCharset(emailPluginBean.getCharset());
-		try {
-			email.setTLS(emailPluginBean.isStartTLS());
-			email.addTo(toEmail, toName);
-			email.setFrom(fromEmail, fromName);
-			email.setSubject(subject);
-			email.setContent(emailContent, "text/html; charset=" + emailPluginBean.getCharset());
-			email.send();
-		} catch (Exception e) {
-			LOGGER.error("Message could not be sent!", e);
-			return false;
-		}
+		getSchedulerServices().runAsynchronous(scheduledJobService, params);
 		return true;
 	}
 
 	@Override
 	public boolean sendMailFromSystem(String emailContent, String subject, String toEmail, String toName) {
-		if (!isEnabled()) {
-			return false;
-		}
+		// Schedule and start asynchronous job to send email to system
+		EmailJobParameters params = new EmailJobParameters();
+		params.setEmailContent(emailContent);
+		params.setSubject(subject);
+		params.setToEmail(toEmail);
+		params.setToName(toName);
 
-		EmailPluginBean emailPluginBean = getPluginBean();
-		if (StringUtils.isEmpty(subject)) {
-			subject = emailPluginBean.getToSubject();
-		}
-		String fromEmail = emailPluginBean.getFromEmail();
-		String fromName = emailPluginBean.getFromTitle();
-		return sendEmailInternal(emailContent, subject, fromEmail, fromName, toEmail, toName);
+		getSchedulerServices().runAsynchronous(scheduledJobService, params);
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return pluginRegistry.isEnabled(EmailPlugin.class) && !getPluginBean().isEmpty();
+		return emailService.isEnabled();
 	}
 
-	private EmailPluginBean getPluginBean() {
-		return pluginRegistry.getPluginBean(EmailPlugin.class);
-	}
 }
