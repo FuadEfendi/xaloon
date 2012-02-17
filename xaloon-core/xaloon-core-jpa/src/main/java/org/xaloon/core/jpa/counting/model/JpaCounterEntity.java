@@ -22,11 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
-/**
- * @author vytautas r.
- */
 @Entity
 @Table(name = "XAL_COUNTER")
 public class JpaCounterEntity implements Serializable {
@@ -39,33 +35,8 @@ public class JpaCounterEntity implements Serializable {
 	@EmbeddedId
 	private JpaCounterId counterId;
 
-	@Version
-	private Long version;
-
 	@Column(name = "VALUE_COUNT", nullable = false)
 	private Long count;
-
-
-	/**
-	 * Gets version.
-	 * 
-	 * @return version
-	 */
-	public Long getVersion() {
-		return version;
-	}
-
-
-	/**
-	 * Sets version.
-	 * 
-	 * @param version
-	 *            version
-	 */
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-
 
 	/**
 	 * Gets count.
