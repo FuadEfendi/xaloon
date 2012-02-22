@@ -17,8 +17,10 @@
 package org.xaloon.wicket.component.navigation;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigation;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.repeater.AbstractPageableView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -53,7 +55,28 @@ public class DecoratedPagingNavigatorContainer<T> extends WebMarkupContainer {
 		// Ajax paginator should be added before render
 		if (currentLink == null) {
 			AbstractPageableView<T> dataView = (AbstractPageableView<T>)getDefaultModelObject();
-			AjaxPagingNavigator pagingNavigator = new AjaxPagingNavigator("navigator", dataView);
+			AjaxPagingNavigator pagingNavigator = new AjaxPagingNavigator("navigator", dataView) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected org.apache.wicket.markup.html.navigation.paging.PagingNavigation newNavigation(String id,
+					org.apache.wicket.markup.html.navigation.paging.IPageable pageable,
+					org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider labelProvider) {
+					return new AjaxPagingNavigation(id, pageable, labelProvider) {
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						protected void populateItem(LoopItem loopItem) {
+							super.populateItem(loopItem);
+							new LinkDecorator().withLoopItem(loopItem)
+								.withCurrentPage(pageable.getCurrentPage())
+								.withStartIndex(getStartIndex())
+								.decorate();
+						}
+					};
+				};
+
+			};
 			addOrReplace(pagingNavigator);
 		}
 	}

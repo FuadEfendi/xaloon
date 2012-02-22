@@ -19,7 +19,6 @@ package org.xaloon.wicket.component.navigation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -91,6 +90,21 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 		selectedItemsPerPage = dataView.getItemsPerPage();
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param dataView
+	 *            The pageable component the page links are referring to.
+	 * @param labelProvider
+	 *            The label provider for the link text.
+	 */
+	public DecoratedPagingNavigator(final String id, final AbstractPageableView<?> dataView, final IPagingLabelProvider labelProvider) {
+		super(id, dataView, labelProvider);
+		selectedItemsPerPage = dataView.getItemsPerPage();
+	}
+
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
@@ -108,7 +122,7 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 			@Override
 			protected void populateItem(LoopItem loopItem) {
 				super.populateItem(loopItem);
-				decorateCurrentPageLink(loopItem, pageable.getCurrentPage(), getStartIndex());
+				new LinkDecorator().withLoopItem(loopItem).withCurrentPage(pageable.getCurrentPage()).withStartIndex(getStartIndex()).decorate();
 			}
 		};
 	}
@@ -208,15 +222,6 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 				previousPage.setVisible(true);
 				firstPage.setVisible(true);
 			}
-		}
-	}
-
-	protected void decorateCurrentPageLink(LoopItem loopItem, int currentPage, int startIndex) {
-		final int pageIndex = startIndex + loopItem.getIndex();
-
-		Component component = loopItem.get("pageLink");
-		if ((component != null) && (pageIndex == currentPage)) {
-			component.add(AttributeModifier.replace("class", "nav_current_page"));
 		}
 	}
 }
