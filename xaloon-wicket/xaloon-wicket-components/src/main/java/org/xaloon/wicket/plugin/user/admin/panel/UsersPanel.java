@@ -41,6 +41,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.UserSearchResult;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.plugin.user.admin.page.UserSecurityPage;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
@@ -103,6 +104,18 @@ public class UsersPanel extends AbstractAdministrationPanel {
 
 				// Add username
 				userDetailsLink.add(new Label("username", new Model<String>(userFacade.getFullNameForUser(user.getUsername()))));
+
+
+				// Add delete user link
+				item.add(new ConfirmationAjaxLink<Void>("deleteUser") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						userFacade.deleteUser(user.getUsername());
+						target.add(dataContainer);
+					}
+				});
 
 				// Add checkbox if account enabled
 				item.add(new AjaxCheckBox("accountEnabled", new Model<Boolean>(user.isEnabled())) {

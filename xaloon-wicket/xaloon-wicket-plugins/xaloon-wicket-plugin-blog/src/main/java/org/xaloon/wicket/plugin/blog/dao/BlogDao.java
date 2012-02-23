@@ -98,4 +98,6 @@ public interface BlogDao extends Serializable {
 	 * @return list of blog entries
 	 */
 	List<BlogEntry> findAvailableBlogEntryList(int first, int count);
+
+	void deleteBlogsByUsername(String username);
 }

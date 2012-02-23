@@ -315,4 +315,11 @@ public class LocalDatabaseLoginService implements LoginService {
 		user.setEnabled(newPropertyValue);
 		return persistenceServices.edit(user);
 	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		QueryBuilder update = new QueryBuilder("delete from " + JpaUserDetails.class.getSimpleName() + " u");
+		update.addParameter("u.username", "_USERNAME", username);
+		return persistenceServices.executeUpdate(update) > 0;
+	}
 }

@@ -96,4 +96,12 @@ public interface UserDao extends Serializable {
 	 * @return integer value for total existing users in system
 	 */
 	int count(Map<String, String> filter);
+
+	/**
+	 * Removes user from the system
+	 * 
+	 * @param username
+	 * @return true if user was successfully removed from {@link User} table
+	 */
+	boolean deleteUser(String username);
 }

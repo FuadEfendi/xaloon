@@ -143,4 +143,12 @@ public interface LoginService extends Serializable {
 	UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue);
 
 	UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue);
+
+	/**
+	 * Removes user from the system
+	 * 
+	 * @param username
+	 * @return true if user was successfully removed from security service
+	 */
+	boolean deleteUser(String username);
 }

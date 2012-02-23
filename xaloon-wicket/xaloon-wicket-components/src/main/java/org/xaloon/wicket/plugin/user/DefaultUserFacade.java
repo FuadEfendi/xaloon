@@ -30,6 +30,7 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.plugin.email.EmailFacade;
 import org.xaloon.core.api.plugin.email.EmailService;
@@ -300,5 +301,14 @@ public class DefaultUserFacade implements UserFacade {
 	@Override
 	public List<User> findUsers(Map<String, String> filter, int first, int count) {
 		return userDao.findUsers(filter, first, count);
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		Configuration.get().getUserListenerCollection().onBeforeDelete(username);
+		if (userDao.deleteUser(username)) {
+			return loginService.deleteUser(username);
+		}
+		return false;
 	}
 }

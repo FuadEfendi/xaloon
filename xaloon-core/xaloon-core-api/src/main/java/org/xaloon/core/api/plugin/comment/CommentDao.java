@@ -116,4 +116,11 @@ public interface CommentDao extends Serializable {
 	 * Delete all comments, which are inappropriate. Should be a spam.
 	 */
 	void deleteInappropriateCommentsForApproval();
+
+	/**
+	 * Delete all comments for specified user
+	 * 
+	 * @param username
+	 */
+	void deleteCommentsByUsername(String username);
 }

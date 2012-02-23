@@ -43,6 +43,7 @@ import org.xaloon.wicket.component.mount.DefaultPageMountScannerListener;
 import org.xaloon.wicket.component.mount.impl.SpringMountScanner;
 import org.xaloon.wicket.component.resource.FileResource;
 import org.xaloon.wicket.component.resource.ImageLink;
+import org.xaloon.wicket.plugin.comment.CommentUserListener;
 import org.xaloon.wicket.plugin.menu.DynamicMenuMountScannerListener;
 
 import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
@@ -99,6 +100,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication {
 
 	private void initConfiguration() {
 		Configuration config = Configuration.get();
+		config.getUserListenerCollection().add(new CommentUserListener());
 		config.getPluginRegistryListenerCollection().add(categoryNodeObserver);
 		config.getPluginRegistryListenerCollection().add(categoryGroupPluginRegistryListener);
 		config.setPersistedUserClass(getPersistedUserImplementation());

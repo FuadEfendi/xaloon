@@ -27,6 +27,7 @@ import org.xaloon.core.api.plugin.resource.ResourceRepositoryListenerCollection;
 import org.xaloon.core.api.security.external.OauthSecurityTokenProvider;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.user.UserListenerCollection;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.impl.plugin.DefaultPluginBeanSerializer;
 
@@ -42,6 +43,8 @@ public class Configuration {
 	private final ResourceRepositoryListenerCollection resourceRepositoryListeners = new ResourceRepositoryListenerCollection();
 
 	private final PluginRegistryListenerCollection pluginRegistryListenerCollection = new PluginRegistryListenerCollection();
+
+	private final UserListenerCollection userListenerCollection = new UserListenerCollection();
 
 	private PluginBeanSerializer pluginBeanSerializer = new DefaultPluginBeanSerializer();
 
@@ -183,5 +186,12 @@ public class Configuration {
 		this.oauthSecurityTokenProvider = oauthSecurityTokenProvider;
 	}
 
-
+	/**
+	 * Gets userListenerCollection.
+	 * 
+	 * @return userListenerCollection
+	 */
+	public UserListenerCollection getUserListenerCollection() {
+		return userListenerCollection;
+	}
 }

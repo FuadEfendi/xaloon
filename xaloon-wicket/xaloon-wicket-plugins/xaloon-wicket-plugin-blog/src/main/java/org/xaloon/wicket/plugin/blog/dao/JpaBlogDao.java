@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
@@ -118,5 +119,12 @@ public class JpaBlogDao implements BlogDao {
 	@Override
 	public List<BlogEntry> findAvailableBlogEntryList(int first, int count) {
 		return findAvailableBlogEntryList(new BlogEntrySearchRequest(), first, count);
+	}
+
+	@Override
+	public void deleteBlogsByUsername(String username) {
+		QueryBuilder update = new QueryBuilder("delete from " + JpaBlogEntry.class.getSimpleName() + " b");
+		update.addParameter("b.owner.username", "_USERNAME", username);
+		persistenceServices.executeUpdate(update);
 	}
 }

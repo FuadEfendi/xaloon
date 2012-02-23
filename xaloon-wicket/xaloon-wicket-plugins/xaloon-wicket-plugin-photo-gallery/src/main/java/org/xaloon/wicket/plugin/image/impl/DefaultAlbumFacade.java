@@ -39,6 +39,7 @@ import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.persistence.PersistenceServices;
+import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.storage.DefaultInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
@@ -265,5 +266,19 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	@Override
 	public void save(Image image) {
 		persistenceServices.edit(image);
+	}
+
+	@Override
+	public void deleteImagesByUsername(String username) {
+		QueryBuilder update = new QueryBuilder("delete from " + JpaImage.class.getSimpleName() + " i");
+		update.addParameter("i.owner.username", "_USERNAME", username);
+		persistenceServices.executeUpdate(update);
+	}
+
+	@Override
+	public void deleteAlbumsByUsername(String username) {
+		QueryBuilder update = new QueryBuilder("delete from " + JpaAlbum.class.getSimpleName() + " a");
+		update.addParameter("a.owner.username", "_USERNAME", username);
+		persistenceServices.executeUpdate(update);
 	}
 }

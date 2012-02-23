@@ -25,12 +25,13 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.xaloon.core.api.counting.CounterFacade;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.Commentable;
+import org.xaloon.core.api.user.dao.UserDao;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.jpa.plugin.comment.model.JpaComment;
 import org.xaloon.core.jpa.user.model.JpaAnonymousUser;
 
@@ -48,16 +49,12 @@ public class JpaCommentDao implements CommentDao {
 	private PersistenceServices persistenceServices;
 
 	@Inject
-	@Named("counterFacade")
-	private CounterFacade counterFacade;
+	@Named("userDao")
+	private UserDao userDao;
 
 
 	@Override
 	public void save(Comment comment) {
-		if (comment.isEnabled()) {
-			// Increment counter only if comment is enabled.
-			counterFacade.increment(ENTRY_COUNT_COMMENT, comment.getCategoryId(), comment.getEntityId());
-		}
 		boolean merge = comment.getFromUser() != null && comment.getFromUser().getId() != null;
 		if (merge) {
 			persistenceServices.edit(comment);
@@ -90,7 +87,12 @@ public class JpaCommentDao implements CommentDao {
 
 	@Override
 	public Long count(Commentable commentable) {
-		return counterFacade.count(ENTRY_COUNT_COMMENT, commentable.getTrackingCategoryId(), commentable.getId());
+		QueryBuilder queryBuilder = new QueryBuilder("select count(c) from " + JpaComment.class.getSimpleName() + " c");
+		queryBuilder.addParameter("c.categoryId", "COMPONENT_ID", commentable.getTrackingCategoryId());
+		queryBuilder.addParameter("c.entityId", "ID", commentable.getId());
+		queryBuilder.addParameter("c.enabled", "_ENABLED", true);
+		queryBuilder.addParameter("c.inappropriate", "_inappropriate", false);
+		return persistenceServices.executeQuerySingle(queryBuilder);
 	}
 
 	@Override
@@ -114,17 +116,11 @@ public class JpaCommentDao implements CommentDao {
 
 	@Override
 	public void delete(Comment comment) {
-		// Decrement counter since we are deleting entry
-		if (!comment.isInappropriate()) {
-			counterFacade.decrement(ENTRY_COUNT_COMMENT, comment.getCategoryId(), comment.getEntityId());
-		}
 		persistenceServices.remove(JpaComment.class, comment.getId());
 	}
 
 	@Override
 	public void enable(Comment comment) {
-		// Increment counter, since comment is enabled
-		counterFacade.increment(ENTRY_COUNT_COMMENT, comment.getCategoryId(), comment.getEntityId());
 		comment.setEnabled(true);
 		persistenceServices.edit(comment);
 	}
@@ -145,11 +141,6 @@ public class JpaCommentDao implements CommentDao {
 	public void markAsInappropriate(Comment comment, boolean flag) {
 		comment.setInappropriate(flag);
 		persistenceServices.edit(comment);
-		if (comment.isInappropriate()) {
-			counterFacade.decrement(ENTRY_COUNT_COMMENT, comment.getCategoryId(), comment.getEntityId());
-		} else {
-			counterFacade.increment(ENTRY_COUNT_COMMENT, comment.getCategoryId(), comment.getEntityId());
-		}
 	}
 
 	@Override
@@ -157,5 +148,13 @@ public class JpaCommentDao implements CommentDao {
 		QueryBuilder queryBuilder = new QueryBuilder("delete from " + JpaComment.class.getSimpleName() + " c");
 		queryBuilder.addParameter("c.inappropriate", "_inappropriate", true);
 		persistenceServices.executeUpdate(queryBuilder);
+	}
+
+	@Override
+	public void deleteCommentsByUsername(String username) {
+		User user = userDao.getUserByUsername(username);
+		QueryBuilder update = new QueryBuilder("delete from " + JpaComment.class.getSimpleName() + " c");
+		update.addParameter("c.fromUser.id", "_ISER_ID", user.getId());
+		persistenceServices.executeUpdate(update);
 	}
 }

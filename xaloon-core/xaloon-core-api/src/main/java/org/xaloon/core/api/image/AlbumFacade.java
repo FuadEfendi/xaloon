@@ -117,4 +117,18 @@ public interface AlbumFacade extends Serializable {
 	 *            image to update
 	 */
 	void save(org.xaloon.core.api.image.model.Image image);
+
+	/**
+	 * Delete all images by provided username
+	 * 
+	 * @param username
+	 */
+	void deleteImagesByUsername(String username);
+
+	/**
+	 * Delete all albums by provided username
+	 * 
+	 * @param username
+	 */
+	void deleteAlbumsByUsername(String username);
 }
