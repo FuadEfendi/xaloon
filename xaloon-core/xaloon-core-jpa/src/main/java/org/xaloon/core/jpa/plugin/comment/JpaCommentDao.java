@@ -30,7 +30,6 @@ import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.Commentable;
-import org.xaloon.core.api.user.dao.UserDao;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.jpa.plugin.comment.model.JpaComment;
 import org.xaloon.core.jpa.user.model.JpaAnonymousUser;
@@ -47,11 +46,6 @@ public class JpaCommentDao implements CommentDao {
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
-
-	@Inject
-	@Named("userDao")
-	private UserDao userDao;
-
 
 	@Override
 	public void save(Comment comment) {
@@ -151,10 +145,9 @@ public class JpaCommentDao implements CommentDao {
 	}
 
 	@Override
-	public void deleteCommentsByUsername(String username) {
-		User user = userDao.getUserByUsername(username);
+	public void deleteCommentsByUsername(User userToBeDeleted) {
 		QueryBuilder update = new QueryBuilder("delete from " + JpaComment.class.getSimpleName() + " c");
-		update.addParameter("c.fromUser.id", "_ISER_ID", user.getId());
+		update.addParameter("c.fromUser", "_USER", userToBeDeleted);
 		persistenceServices.executeUpdate(update);
 	}
 }

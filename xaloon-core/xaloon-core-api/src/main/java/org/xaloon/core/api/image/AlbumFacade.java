@@ -121,14 +121,14 @@ public interface AlbumFacade extends Serializable {
 	/**
 	 * Delete all images by provided username
 	 * 
-	 * @param username
+	 * @param userToBeDeleted
 	 */
-	void deleteImagesByUsername(String username);
+	void deleteImagesByUsername(User userToBeDeleted);
 
 	/**
 	 * Delete all albums by provided username
 	 * 
-	 * @param username
+	 * @param userToBeDeleted
 	 */
-	void deleteAlbumsByUsername(String username);
+	void deleteAlbumsByUsername(User userToBeDeleted);
 }

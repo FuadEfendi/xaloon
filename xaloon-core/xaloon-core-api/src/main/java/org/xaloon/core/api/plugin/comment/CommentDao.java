@@ -19,6 +19,8 @@ package org.xaloon.core.api.plugin.comment;
 import java.io.Serializable;
 import java.util.List;
 
+import org.xaloon.core.api.user.model.User;
+
 /**
  * @author vytautas r.
  */
@@ -120,7 +122,7 @@ public interface CommentDao extends Serializable {
 	/**
 	 * Delete all comments for specified user
 	 * 
-	 * @param username
+	 * @param userToBeDeleted
 	 */
-	void deleteCommentsByUsername(String username);
+	void deleteCommentsByUsername(User userToBeDeleted);
 }

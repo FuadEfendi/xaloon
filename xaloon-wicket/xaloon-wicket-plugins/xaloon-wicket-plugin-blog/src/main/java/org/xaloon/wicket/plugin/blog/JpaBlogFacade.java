@@ -29,8 +29,6 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
@@ -39,7 +37,6 @@ import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.path.DelimiterEnum;
-import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
@@ -63,11 +60,6 @@ public class JpaBlogFacade implements BlogFacade {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaBlogFacade.class);
-
-	@Inject
-	private PersistenceServices persistenceServices;
 
 	@Inject
 	private BlogDao blogDao;

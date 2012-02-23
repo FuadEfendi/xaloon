@@ -18,6 +18,8 @@ package org.xaloon.core.api.user;
 
 import java.io.Serializable;
 
+import org.xaloon.core.api.user.model.User;
+
 /**
  * Default actions should be execute related to user acticity
  * 
@@ -28,7 +30,7 @@ public interface UserListener extends Serializable {
 	 * This method is invoked before user is removed from the system. One should register it's own listenere if there are some actions to be taken
 	 * before final user removal, for example, clean up user comments, blogs, etc.
 	 * 
-	 * @param username
+	 * @param userToBeDeleted
 	 */
-	void onBeforeDelete(String username);
+	void onBeforeDelete(User userToBeDeleted);
 }

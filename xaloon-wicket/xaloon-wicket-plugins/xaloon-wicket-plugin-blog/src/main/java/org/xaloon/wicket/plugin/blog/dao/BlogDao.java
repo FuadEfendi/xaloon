@@ -19,6 +19,7 @@ package org.xaloon.wicket.plugin.blog.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 
@@ -99,5 +100,10 @@ public interface BlogDao extends Serializable {
 	 */
 	List<BlogEntry> findAvailableBlogEntryList(int first, int count);
 
-	void deleteBlogsByUsername(String username);
+	/**
+	 * Deletes all blogs created by this user
+	 * 
+	 * @param userToBeDeleted
+	 */
+	void deleteBlogsByUsername(User userToBeDeleted);
 }

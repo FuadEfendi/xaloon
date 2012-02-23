@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import org.apache.wicket.injection.Injector;
 import org.xaloon.core.api.user.UserListener;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.blog.dao.BlogDao;
 
 /**
@@ -36,8 +37,8 @@ public class BlogUserListener implements UserListener {
 	private BlogDao blogDao;
 
 	@Override
-	public void onBeforeDelete(String username) {
+	public void onBeforeDelete(User userToBeDeleted) {
 		Injector.get().inject(this);
-		blogDao.deleteBlogsByUsername(username);
+		blogDao.deleteBlogsByUsername(userToBeDeleted);
 	}
 }

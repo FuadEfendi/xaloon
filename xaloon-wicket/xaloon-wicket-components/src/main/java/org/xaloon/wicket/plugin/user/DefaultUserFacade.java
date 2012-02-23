@@ -305,7 +305,8 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Override
 	public boolean deleteUser(String username) {
-		Configuration.get().getUserListenerCollection().onBeforeDelete(username);
+		User userToBeDeleted = userDao.getUserByUsername(username);
+		Configuration.get().getUserListenerCollection().onBeforeDelete(userToBeDeleted);
 		if (userDao.deleteUser(username)) {
 			return loginService.deleteUser(username);
 		}

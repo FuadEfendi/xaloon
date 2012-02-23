@@ -269,16 +269,16 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void deleteImagesByUsername(String username) {
+	public void deleteImagesByUsername(User userToBeDeleted) {
 		QueryBuilder update = new QueryBuilder("delete from " + JpaImage.class.getSimpleName() + " i");
-		update.addParameter("i.owner.username", "_USERNAME", username);
+		update.addParameter("i.owner", "_USER", userToBeDeleted);
 		persistenceServices.executeUpdate(update);
 	}
 
 	@Override
-	public void deleteAlbumsByUsername(String username) {
+	public void deleteAlbumsByUsername(User userToBeDeleted) {
 		QueryBuilder update = new QueryBuilder("delete from " + JpaAlbum.class.getSimpleName() + " a");
-		update.addParameter("a.owner.username", "_USERNAME", username);
+		update.addParameter("a.owner", "_USER", userToBeDeleted);
 		persistenceServices.executeUpdate(update);
 	}
 }

@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import org.apache.wicket.injection.Injector;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.user.UserListener;
+import org.xaloon.core.api.user.model.User;
 
 /**
  * @author vytautas r.
@@ -36,8 +37,8 @@ public class CommentUserListener implements UserListener {
 	private CommentDao commentDao;
 
 	@Override
-	public void onBeforeDelete(String username) {
+	public void onBeforeDelete(User userToBeDeleted) {
 		Injector.get().inject(this);
-		commentDao.deleteCommentsByUsername(username);
+		commentDao.deleteCommentsByUsername(userToBeDeleted);
 	}
 }

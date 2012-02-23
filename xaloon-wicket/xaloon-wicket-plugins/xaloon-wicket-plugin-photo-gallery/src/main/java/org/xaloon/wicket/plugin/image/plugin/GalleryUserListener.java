@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import org.apache.wicket.injection.Injector;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.user.UserListener;
+import org.xaloon.core.api.user.model.User;
 
 /**
  * @author vytautas r.
@@ -36,9 +37,9 @@ public class GalleryUserListener implements UserListener {
 	private AlbumFacade albumFacade;
 
 	@Override
-	public void onBeforeDelete(String username) {
+	public void onBeforeDelete(User userToBeDeleted) {
 		Injector.get().inject(this);
-		albumFacade.deleteImagesByUsername(username);
-		albumFacade.deleteAlbumsByUsername(username);
+		albumFacade.deleteImagesByUsername(userToBeDeleted);
+		albumFacade.deleteAlbumsByUsername(userToBeDeleted);
 	}
 }

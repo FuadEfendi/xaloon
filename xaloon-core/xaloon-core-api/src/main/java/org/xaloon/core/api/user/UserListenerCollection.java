@@ -17,6 +17,7 @@
 package org.xaloon.core.api.user;
 
 import org.xaloon.core.api.config.ListenerCollection;
+import org.xaloon.core.api.user.model.User;
 
 /**
  * @author vytautas r.
@@ -29,10 +30,10 @@ public class UserListenerCollection extends ListenerCollection<UserListener> imp
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void onBeforeDelete(final String username) {
+	public void onBeforeDelete(final User userToBeDeleted) {
 		notify(new Notifier<UserListener>() {
 			public void notify(UserListener listener) {
-				listener.onBeforeDelete(username);
+				listener.onBeforeDelete(userToBeDeleted);
 			}
 		});
 	}
