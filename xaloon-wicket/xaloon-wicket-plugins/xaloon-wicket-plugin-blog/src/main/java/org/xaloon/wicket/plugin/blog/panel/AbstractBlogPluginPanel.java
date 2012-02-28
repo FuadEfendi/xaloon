@@ -31,6 +31,7 @@ import org.xaloon.core.api.date.DateService;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.wicket.component.navigation.BookmarkablePagingNavigator;
+import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
 import org.xaloon.wicket.plugin.blog.BlogFacade;
@@ -67,6 +68,8 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_MONTH);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_DAY);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_PATH);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.CATEGORY_CODE);
+		AVAILABLE_PARAMETERS.add(TagCloudPanel.QUERY_BY_TAG);
 		AVAILABLE_PARAMETERS.add(BookmarkablePagingNavigator.PAGE_QUERY_ID);
 	}
 	
@@ -172,7 +175,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		PageParameters categoryPageParameters = new PageParameters();
 		BookmarkablePageLink<Void> categoryLink = new BookmarkablePageLink<Void>("link-category", getBlogCategoryPageClass(), categoryPageParameters);
 		if (blogEntry.getCategory() != null) {
-			categoryPageParameters.set(BlogEntryListByCategoryPanel.CATEGORY_CODE, blogEntry.getCategory().getCode());
+			categoryPageParameters.set(BlogPageConstants.CATEGORY_CODE, blogEntry.getCategory().getCode());
 			categoryLink.add(new Label("label-category", new Model<String>(blogEntry.getCategory().getName())));
 		} else {
 			categoryLink.setVisible(false);
@@ -184,7 +187,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		PageParameters authorPageParameters = new PageParameters();
 		BookmarkablePageLink<Void> authorLink = new BookmarkablePageLink<Void>("link-author", getBlogBloggerPageClass(), authorPageParameters);
 		if (blogEntry.getOwner() != null) {
-			authorPageParameters.set(BlogEntryListByBloggerPanel.BLOGGER_USERNAME, blogEntry.getOwner().getUsername());
+			authorPageParameters.set(BlogPageConstants.BLOG_USERNAME, blogEntry.getOwner().getUsername());
 			authorLink.add(new Label("author", new Model<String>(blogEntry.getOwner().getDisplayName())));
 		} else {
 			authorLink.setVisible(false);

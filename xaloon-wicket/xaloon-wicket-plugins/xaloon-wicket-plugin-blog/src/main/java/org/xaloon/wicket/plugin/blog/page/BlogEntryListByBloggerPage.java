@@ -20,12 +20,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.panel.BlogEntryListByBloggerPanel;
 
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/blogs/blogger/${" + BlogEntryListByBloggerPanel.BLOGGER_USERNAME + "}", visible = false, order = 100)
+@MountPage(value = "/blogs/blogger/${" + BlogPageConstants.BLOG_USERNAME + "}", visible = false, order = 100)
 public class BlogEntryListByBloggerPage extends LayoutWebPage {
 
 	/**

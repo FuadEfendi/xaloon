@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.ldm.BlogEntryDetachableModel;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
@@ -37,9 +38,6 @@ public class BlogEntryListByBloggerPanel extends BlogEntryListPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/** the username of blogger as a parameter */
-	public static final String BLOGGER_USERNAME = "BLOGGER_USERNAME";
 
 	/**
 	 * Construct.
@@ -63,7 +61,7 @@ public class BlogEntryListByBloggerPanel extends BlogEntryListPanel {
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String username = getPageRequestParameters().get(BLOGGER_USERNAME).toString();
+		String username = getPageRequestParameters().get(BlogPageConstants.BLOG_USERNAME).toString();
 		if (StringUtils.isEmpty(username)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);
