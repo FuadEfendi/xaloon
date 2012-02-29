@@ -44,7 +44,6 @@ public class BlogPluginAdministrationPanel extends AbstractPluginAdministrationP
 
 	@Override
 	protected void onInitialize(BlogPlugin plugin, BlogPluginBean pluginBean) {
-		add(new RequiredTextField<String>("dateFormat"));
 		add(new RequiredTextField<Integer>("blogImageWidth"));
 		add(new RequiredTextField<Integer>("blogImageHeight"));
 		add(new RequiredTextField<Integer>("blogDescriptionLengthInSentences"));

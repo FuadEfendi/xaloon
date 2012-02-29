@@ -24,14 +24,21 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.wicket.model.Model;
+import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.security.SecurityFacade;
+import org.xaloon.core.api.storage.ByteArrayAsInputStreamContainer;
+import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.util.HtmlElementEnum;
-import org.xaloon.wicket.component.resource.ImageLink;
+import org.xaloon.wicket.component.classifier.panel.CustomModalWindow;
+import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
 
 /**
  * @author vytautas r.
@@ -43,8 +50,6 @@ public class ImagePanel extends Panel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImagePanel.class);
-
 	private int imageWidth = 200;
 
 	private int imageHeight = 100;
@@ -52,6 +57,12 @@ public class ImagePanel extends Panel {
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
 
+	@Inject
+	private AlbumFacade albumFacade;
+	
+	@Inject
+	private SecurityFacade securityFacade;
+	
 	/**
 	 * Construct.
 	 * 
@@ -67,18 +78,23 @@ public class ImagePanel extends Panel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image)getDefaultModelObject();
-
-
-		// Add show existing image
-		ImageLink imageLink = new ImageLink("display-image", (image.getPath() != null) ? image.getPath() : null);
-		imageLink.setWidth(imageWidth);
-		imageLink.setHeight(imageHeight);
-		add(imageLink);
+		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image) getDefaultModelObject();
 
 		// Add show temporary image
-		TemporaryResource temporaryResource = new TemporaryResource((image.getThumbnail() != null) ? image.getThumbnail() : image);
-		Image temporaryImage = new Image("temporary-image", temporaryResource);
+		FileDescriptor temporaryFiledeDescriptor = image.getThumbnail();
+		if (temporaryFiledeDescriptor == null) {
+			temporaryFiledeDescriptor = image;
+		}
+		if (temporaryFiledeDescriptor != null && temporaryFiledeDescriptor.getImageInputStreamContainer() == null) {
+			if (temporaryFiledeDescriptor.isExternal()) {
+				temporaryFiledeDescriptor.setImageInputStreamContainer(new UrlInputStreamContainer(temporaryFiledeDescriptor.getPath()));
+			} else {
+				temporaryFiledeDescriptor.setImageInputStreamContainer(new ByteArrayAsInputStreamContainer(fileRepositoryFacade
+						.getFileByPath(temporaryFiledeDescriptor.getPath())));
+			}
+		}
+		TemporaryResource temporaryResource = new TemporaryResource(temporaryFiledeDescriptor);
+		Image temporaryImage = new NonCachingImage("temporary-image", temporaryResource);
 		temporaryImage.add(AttributeModifier.replace(HtmlElementEnum.WIDTH.value(), String.valueOf(imageWidth)));
 		temporaryImage.add(AttributeModifier.replace(HtmlElementEnum.HEIGHT.value(), String.valueOf(imageHeight)));
 		temporaryImage.setVisible(!temporaryResource.isEmpty());
@@ -108,13 +124,45 @@ public class ImagePanel extends Panel {
 					target.add(componentToRefresh);
 				}
 			}
+		}.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_DELETE)));
+
+		// Add the modal window to edit image information
+		final ModalWindow imageInformationModalWindow = new CustomModalWindow("modal-image-information", "Image information") {
+			private static final long serialVersionUID = 1L;
+			@Override
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(ImagePanel.this);
+			};
+		};
+		imageInformationModalWindow.setContent(new ImageDescriptionPanel(imageInformationModalWindow.getContentId(), new Model<org.xaloon.core.api.image.model.Image>(image)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onImageUpdate(AjaxRequestTarget target, org.xaloon.core.api.image.model.Image entity) {
+				//Usually parent of this panel should be responsible to save new entity, so we just update existing one here
+				if (entity.getId() != null) {
+					albumFacade.save(entity);				
+				}
+				imageInformationModalWindow.close(target);
+			}
+			
 		});
+		add(imageInformationModalWindow);
+
+		// Add edit image metadata modal window
+		add(new AjaxLink<Void>("edit-information") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				imageInformationModalWindow.show(target);
+			}
+		}.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT)));
 	}
 
 	protected Component getOnCloseRefreshComponent() {
 		return ImagePanel.this;
 	}
-
 
 	/**
 	 * Delete file descriptor and file

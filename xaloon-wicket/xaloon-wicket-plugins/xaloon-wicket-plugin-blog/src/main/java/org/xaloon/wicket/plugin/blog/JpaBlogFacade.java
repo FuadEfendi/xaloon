@@ -29,8 +29,6 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
@@ -39,7 +37,6 @@ import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.path.DelimiterEnum;
-import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
@@ -64,11 +61,6 @@ public class JpaBlogFacade implements BlogFacade {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaBlogFacade.class);
-
-	@Inject
-	private PersistenceServices persistenceServices;
-
 	@Inject
 	private BlogDao blogDao;
 
@@ -88,7 +80,7 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#storeBlogEntry(BlogEntry, BlogPluginBean, List, List)
 	 */
 	@Override
-	public void storeBlogEntry(BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
+	public void storeBlogEntry(final BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
 		List<Image> imagesToAdd) throws IOException {
 
 		// Delete images if any
@@ -122,18 +114,11 @@ public class JpaBlogFacade implements BlogFacade {
 		blogDao.save(entry);
 	}
 
-	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, BlogEntry entry, List<Image> imagesToAdd) {
+	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, final BlogEntry entry, final List<Image> imagesToAdd) {
 		if (entry == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			return;
 		}
 		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, UrlUtil.encode(entry.getTitle()), BLOG_THUMBNAILS);
-	}
-
-	private boolean isNew(FileDescriptor newFileDescriptor, FileDescriptor originalFileDescriptor) {
-		if (originalFileDescriptor == null) {
-			return true;
-		}
-		return !originalFileDescriptor.getId().equals(newFileDescriptor.getId());
 	}
 
 	private String createDescription(BlogEntry entry, BlogPluginBean pluginBean) {

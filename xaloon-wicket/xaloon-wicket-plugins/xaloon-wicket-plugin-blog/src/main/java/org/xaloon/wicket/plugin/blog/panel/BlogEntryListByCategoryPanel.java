@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.ldm.BlogEntryDetachableModel;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
@@ -37,9 +38,6 @@ public class BlogEntryListByCategoryPanel extends BlogEntryListPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/** the category code as a parameter */
-	public static final String CATEGORY_CODE = "CATEGORY_CODE";
 
 	/**
 	 * Construct.
@@ -63,7 +61,7 @@ public class BlogEntryListByCategoryPanel extends BlogEntryListPanel {
 			setResponsePage(BlogEntryListPage.class);
 			return null;
 		}
-		String categoryValue = getPageRequestParameters().get(CATEGORY_CODE).toString();
+		String categoryValue = getPageRequestParameters().get(BlogPageConstants.CATEGORY_CODE).toString();
 		if (StringUtils.isEmpty(categoryValue)) {
 			setVisible(false);
 			setResponsePage(BlogEntryListPage.class);

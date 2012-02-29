@@ -24,28 +24,28 @@ import org.xaloon.core.api.message.model.Message;
  */
 public interface Comment extends Message, Bookmarkable {
 	/**
-	 * This is object id which comment was written on
+	 * This is entity id which comment was written on
 	 * 
-	 * @return object id
+	 * @return entity id
 	 */
-	Long getObjectId();
+	Long getEntityId();
 
 	/**
-	 * @param objectId
+	 * @param entityId
 	 */
-	void setObjectId(Long objectId);
+	void setEntityId(Long entityId);
 
 	/**
 	 * Several systems may have the same object id's. This is to identify unique system
 	 * 
 	 * @return component enumeration
 	 */
-	Long getComponentId();
+	Long getCategoryId();
 
 	/**
-	 * @param componentId
+	 * @param categoryId
 	 */
-	void setComponentId(Long componentId);
+	void setCategoryId(Long categoryId);
 
 
 	/**
@@ -59,4 +59,19 @@ public interface Comment extends Message, Bookmarkable {
 	 * @param enabled
 	 */
 	void setEnabled(boolean enabled);
+
+	/**
+	 * Gets inappropriate.
+	 * 
+	 * @return inappropriate
+	 */
+	boolean isInappropriate();
+
+	/**
+	 * Sets inappropriate.
+	 * 
+	 * @param inappropriate
+	 *            inappropriate
+	 */
+	void setInappropriate(boolean inappropriate);
 }

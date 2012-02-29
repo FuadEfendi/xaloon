@@ -16,7 +16,12 @@
  */
 package org.xaloon.core.api.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 
 
 /**
@@ -182,6 +187,16 @@ public abstract class AbstractPlugin<T extends AbstractPluginBean> implements Pl
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public List<SecurityRole> getSupportedRoles() {
+		return new ArrayList<SecurityRole>();
+	}
+
+	@Override
+	public List<Authority> getSupportedAuthorities() {
+		return new ArrayList<Authority>();
 	}
 
 	@Override

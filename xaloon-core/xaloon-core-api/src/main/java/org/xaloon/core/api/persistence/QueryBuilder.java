@@ -79,6 +79,8 @@ public class QueryBuilder {
 
 	private StringBuilder orderBy = new StringBuilder();
 
+	private StringBuilder groupBy = new StringBuilder();
+
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 
 	/**
@@ -222,6 +224,11 @@ public class QueryBuilder {
 			fullQuery.append(" WHERE ");
 			fullQuery.append(filter.toString());
 		}
+		if (groupBy.length() != 0) {
+			fullQuery.append(' ');
+			fullQuery.append(groupBy);
+			fullQuery.append(' ');
+		}
 		if (orderBy.length() != 0) {
 			fullQuery.append(' ');
 			fullQuery.append(orderBy);
@@ -299,6 +306,15 @@ public class QueryBuilder {
 	/**
 	 * @param expression
 	 *            HQL expression to use in HQL statement
+	 * @param condition
+	 */
+	public void addExpression(String expression, Condition condition) {
+		registerExpression(expression, condition);
+	}
+
+	/**
+	 * @param expression
+	 *            HQL expression to use in HQL statement
 	 * @param parameterName
 	 *            parameter name
 	 * @param condition
@@ -330,7 +346,7 @@ public class QueryBuilder {
 	 * @return true if no parameters are set to query
 	 */
 	public boolean isEmpty() {
-		return parameters.isEmpty();
+		return filter.length() < 1 && parameters.isEmpty();
 	}
 
 	/**
@@ -399,5 +415,10 @@ public class QueryBuilder {
 	 */
 	public void setCacheable(boolean cacheable) {
 		this.cacheable = cacheable;
+	}
+
+	public void addGroup(String parameters) {
+		orderBy.append(" GROUP BY ");
+		orderBy.append(parameters);
 	}
 }

@@ -16,11 +16,20 @@
  */
 package org.xaloon.wicket.plugin.system;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
 import org.xaloon.core.api.plugin.PluginType;
+import org.xaloon.core.api.security.SecurityAuthorities;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
+import org.xaloon.core.impl.security.DefaultSecurityEntity;
+import org.xaloon.core.impl.security.DefaultSecurityRole;
 import org.xaloon.wicket.plugin.system.panel.SystemAdministrationPanel;
 
 /**
@@ -29,6 +38,16 @@ import org.xaloon.wicket.plugin.system.panel.SystemAdministrationPanel;
 @Named
 public class SystemPlugin extends AbstractPlugin<SystemPluginBean> {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Default security authority for authenticated users
+	 */
+	public static final Authority AUTHENTICATED_USER = new DefaultSecurityEntity(SecurityAuthorities.AUTHENTICATED_USER);
+
+	private static final Authority SYSTEM_ADMINISTRATOR = new DefaultSecurityEntity(SecurityAuthorities.SYSTEM_ADMINISTRATOR);
+
+	private static final Authority[] CLASSIFIER_ADMINISTRATOR = new Authority[] { new DefaultSecurityEntity(SecurityAuthorities.CLASSIFIER_EDIT),
+			new DefaultSecurityEntity(SecurityAuthorities.CLASSIFIER_DELETE) };
 
 	/**
 	 * Plugin type is set to visible by default.
@@ -41,5 +60,28 @@ public class SystemPlugin extends AbstractPlugin<SystemPluginBean> {
 	@Override
 	public Class<?> getAdministratorFormClass() {
 		return SystemAdministrationPanel.class;
+	}
+
+	@Override
+	public List<SecurityRole> getSupportedRoles() {
+		SecurityRole authenticatedUser = new DefaultSecurityRole(SecurityAuthorities.ROLE_REGISTERED_USER);
+		authenticatedUser.getAuthorities().add(AUTHENTICATED_USER);
+
+		SecurityRole systemAdministrator = new DefaultSecurityRole(SecurityAuthorities.ROLE_SYSTEM_ADMINISTRATOR);
+		systemAdministrator.getAuthorities().add(SYSTEM_ADMINISTRATOR);
+
+		SecurityRole classifierAdministrator = new DefaultSecurityRole(SecurityAuthorities.ROLE_CLASSIFIER_ADMINISTRATOR);
+		classifierAdministrator.getAuthorities().addAll(Arrays.asList(CLASSIFIER_ADMINISTRATOR));
+
+		return Arrays.asList(systemAdministrator, classifierAdministrator, authenticatedUser);
+	}
+
+	@Override
+	public List<Authority> getSupportedAuthorities() {
+		List<Authority> result = new ArrayList<Authority>();
+		result.add(AUTHENTICATED_USER);
+		result.add(SYSTEM_ADMINISTRATOR);
+		result.addAll(Arrays.asList(CLASSIFIER_ADMINISTRATOR));
+		return result;
 	}
 }

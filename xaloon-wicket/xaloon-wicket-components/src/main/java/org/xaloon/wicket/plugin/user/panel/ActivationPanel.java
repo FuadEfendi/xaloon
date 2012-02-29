@@ -19,10 +19,15 @@ package org.xaloon.wicket.plugin.user.panel;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
@@ -46,6 +51,8 @@ public class ActivationPanel extends Panel {
 
 	private static final String MESSAGE_ERROR_KEY_NOT_VALID = "message.error.key.not.valid";
 
+	private static final String PARAM_PASSWORD = "password";
+
 	@Inject
 	@Named("userFacade")
 	private UserFacade userFacade;
@@ -57,47 +64,55 @@ public class ActivationPanel extends Panel {
 	 * @param params
 	 */
 	public ActivationPanel(String id, PageParameters params) {
-		super(id);
+		super(id, new Model<PageParameters>(params));
 	}
 
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
 		add(new FeedbackPanel("feedback-panel"));
-		add(new ActivationForm("activation-form"));
+		addActivationForm();
 	}
 
-	class ActivationForm extends StatelessForm<Void> {
-		private static final long serialVersionUID = 1L;
+	private void addActivationForm() {
+		final ValueMap properties = new ValueMap();
 
-		private final ValueMap properties = new ValueMap();
-
-		public ActivationForm(String id) {
-			super(id);
+		PageParameters pageParameters = (PageParameters)getDefaultModelObject();
+		String activationKey = pageParameters.get(ACTIVATION_KEY).toOptionalString();
+		if (!StringUtils.isEmpty(activationKey)) {
+			properties.put(ACTIVATION_KEY, activationKey);
 		}
+		Form<Void> activationForm = new StatelessForm<Void>("activation-form");
+		add(activationForm);
+		// Add activation key field
+		final RequiredTextField<String> activationKeyField = new RequiredTextField<String>(ACTIVATION_KEY, new PropertyModel<String>(properties,
+			ACTIVATION_KEY));
+		activationForm.add(activationKeyField);
 
-		@Override
-		protected void onInitialize() {
-			super.onInitialize();
+		// Add password fiels
+		final PasswordTextField passwordTextField = new PasswordTextField(PARAM_PASSWORD, new PropertyModel<String>(properties, PARAM_PASSWORD));
+		activationForm.add(passwordTextField);
 
-			// Add activation key field
-			RequiredTextField<String> activationField = new RequiredTextField<String>(ACTIVATION_KEY, new PropertyModel<String>(properties,
-				ACTIVATION_KEY));
-			add(activationField);
-		}
+		activationForm.add(new Button("submit") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-		public String getActivationKey() {
-			return properties.getString(ACTIVATION_KEY);
-		}
+			@Override
+			public void onSubmit() {
+				String activationKey = properties.getString(ACTIVATION_KEY);
+				String userPassword = properties.getString(PARAM_PASSWORD);
 
-		@Override
-		protected void onSubmit() {
-			if (userFacade.activate(getActivationKey())) {
-				getSession().info(getString(MESSAGE_INFO_ACTIVATED));
-			} else {
-				getSession().warn(getString(MESSAGE_ERROR_ACTIVATION));
+				if (userFacade.activate(activationKey, userPassword)) {
+					getSession().info(getString(MESSAGE_INFO_ACTIVATED));
+				} else {
+					getSession().warn(getString(MESSAGE_ERROR_ACTIVATION));
+				}
+				activationKeyField.setModelObject(null);
+				passwordTextField.setModelObject(null);
+				setResponsePage(getPage());
 			}
-			setResponsePage(getPage());
-		}
+		});
 	}
 }

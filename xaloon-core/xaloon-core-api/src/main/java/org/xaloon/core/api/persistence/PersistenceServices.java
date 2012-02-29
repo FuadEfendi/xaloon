@@ -34,6 +34,11 @@ import javax.ejb.Local;
 @Local
 public interface PersistenceServices extends Serializable {
 	/**
+	 * Default persistence unit name
+	 */
+	String DEFAULT_UNIT_NAME = "default-persistence-unit";
+
+	/**
 	 * @param <T>
 	 * @param o
 	 */
@@ -52,7 +57,7 @@ public interface PersistenceServices extends Serializable {
 	 * @param id
 	 * @return the found entity instance or null if the entity does not exist
 	 */
-	<T> T find(Class<T> clazz, Long id);
+	<T> T find(Class<T> clazz, Object id);
 
 	/**
 	 * @param <T>
@@ -132,5 +137,8 @@ public interface PersistenceServices extends Serializable {
 	 */
 	<T> T executeNativeQuerySingle(String query);
 
+	/**
+	 * Synchronize the persistence context to the underlying database.
+	 */
 	void flush();
 }

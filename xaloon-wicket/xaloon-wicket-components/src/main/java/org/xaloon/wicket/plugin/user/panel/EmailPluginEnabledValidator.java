@@ -23,6 +23,7 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.xaloon.core.api.plugin.email.EmailFacade;
+import org.xaloon.core.api.plugin.email.EmailService;
 
 /**
  * @author vytautas r.
@@ -48,7 +49,7 @@ public class EmailPluginEnabledValidator extends AbstractValidator<Void> {
 	protected void onValidate(IValidatable<Void> validatable) {
 		if (!emailFacade.isEnabled()) {
 			ValidationError error = new ValidationError();
-			error.addMessageKey(EmailFacade.EMAIL_PROPERTIES_NOT_CONFIGURED);
+			error.addMessageKey(EmailService.EMAIL_PROPERTIES_NOT_CONFIGURED);
 			validatable.error(error);
 		}
 	}

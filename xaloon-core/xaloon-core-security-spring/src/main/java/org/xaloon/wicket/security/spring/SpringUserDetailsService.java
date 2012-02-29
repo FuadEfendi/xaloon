@@ -22,12 +22,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.xaloon.core.api.security.Authority;
 import org.xaloon.core.api.security.LoginService;
+import org.xaloon.core.api.security.SecurityFacade;
+import org.xaloon.core.api.security.model.Authority;
 
 /**
  * @author vytautas r.
@@ -41,14 +46,27 @@ public class SpringUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException, DataAccessException {
-		org.xaloon.core.api.security.UserDetails userDetails = loginService.loadUserDetails(arg0);
+		org.xaloon.core.api.security.model.UserDetails userDetails = loginService.loadUserDetails(arg0);
 		if (userDetails != null) {
 			return createAdaptor(userDetails);
 		}
 		throw new UsernameNotFoundException("User not found.");
 	}
 
-	private UserDetails createAdaptor(org.xaloon.core.api.security.UserDetails userDetails) {
+	private UserDetails createAdaptor(org.xaloon.core.api.security.model.UserDetails userDetails) {
+		if (!userDetails.isEnabled()) {
+			throw new DisabledException(SecurityFacade.ACCOUNT_DISABLED);
+		}
+		if (!userDetails.isAccountNonExpired()) {
+			throw new AccountExpiredException(SecurityFacade.ACCOUNT_EXPIRED);
+		}
+		if (!userDetails.isAccountNonLocked()) {
+			throw new LockedException(SecurityFacade.ACCOUNT_LOCKED);
+		}
+		if (!userDetails.isCredentialsNonExpired()) {
+			throw new CredentialsExpiredException(SecurityFacade.CREDENTIALS_EXPIRED);
+		}
+		
 		DefaultUserDetails details = new DefaultUserDetails();
 		details.setAccountNonExpired(userDetails.isAccountNonExpired());
 		details.setAccountNonLocked(userDetails.isAccountNonLocked());
@@ -56,8 +74,10 @@ public class SpringUserDetailsService implements UserDetailsService {
 		details.setEnabled(userDetails.isEnabled());
 		details.setPassword(userDetails.getPassword());
 		details.setUsername(userDetails.getUsername());
-		if (!userDetails.getAuthorities().isEmpty()) {
-			createAdaptorForAuthorities(details, userDetails.getAuthorities());
+		
+		List<Authority> authorities = loginService.getIndirectAuthoritiesForUsername(userDetails.getUsername());
+		if (!authorities.isEmpty()) {
+			createAdaptorForAuthorities(details, authorities);
 		}
 		if (!userDetails.getAliases().isEmpty()) {
 			details.getAliases().addAll(userDetails.getAliases());
@@ -65,9 +85,9 @@ public class SpringUserDetailsService implements UserDetailsService {
 		return details;
 	}
 
-	private void createAdaptorForAuthorities(DefaultUserDetails details, List<? extends Authority> authorities) {
+	private void createAdaptorForAuthorities(DefaultUserDetails details, List<Authority> authorities) {
 		for (Authority authority : authorities) {
-			details.getAuthorities().add(new SimpleGrantedAuthority(authority.getAuthority()));
+			details.getAuthorities().add(new SimpleGrantedAuthority(authority.getName()));
 		}
 	}
 }

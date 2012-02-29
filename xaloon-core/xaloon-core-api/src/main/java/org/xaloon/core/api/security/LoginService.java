@@ -17,8 +17,12 @@
 package org.xaloon.core.api.security;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
+import org.xaloon.core.api.security.model.UserDetails;
 
 /**
  * @author vytautas r.
@@ -43,9 +47,10 @@ public interface LoginService extends Serializable {
 	 * activate user into system
 	 * 
 	 * @param activationKey
+	 * @param userPassword
 	 * @return true if activation was fine
 	 */
-	boolean activate(String activationKey);
+	boolean activate(String activationKey, String userPassword);
 
 	/**
 	 * check if username exists in system
@@ -94,14 +99,6 @@ public interface LoginService extends Serializable {
 	String registerNewLogin(String username, String password, boolean active, KeyValue<String, String> alias);
 
 	/**
-	 * Assign role to selected username
-	 * 
-	 * @param username
-	 * @param role
-	 */
-	void assignRole(String username, String role);
-
-	/**
 	 * Add alias to selected username
 	 * 
 	 * @param username
@@ -122,4 +119,36 @@ public interface LoginService extends Serializable {
 	 * @return user details object
 	 */
 	UserDetails loadUserDetails(String username);
+
+	/**
+	 * Returns direct and indirect permissions for selected username
+	 * 
+	 * @param username
+	 * @return list of direct and indirect {@link Authority}
+	 */
+	List<Authority> getIndirectAuthoritiesForUsername(String username);
+
+	/**
+	 * Returns direct and indirect roles for selected username
+	 * 
+	 * @param username
+	 * @return list of direct and indirect {@link SecurityRole}
+	 */
+	List<SecurityRole> getIndirectRolesForUsername(String username);
+
+	UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue);
+
+	UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue);
+
+	UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue);
+
+	UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue);
+
+	/**
+	 * Removes user from the system
+	 * 
+	 * @param username
+	 * @return true if user was successfully removed from security service
+	 */
+	boolean deleteUser(String username);
 }

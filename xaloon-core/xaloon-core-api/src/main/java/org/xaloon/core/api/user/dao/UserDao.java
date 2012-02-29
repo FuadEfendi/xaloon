@@ -17,6 +17,8 @@
 package org.xaloon.core.api.user.dao;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.xaloon.core.api.user.model.User;
 
@@ -26,15 +28,16 @@ import org.xaloon.core.api.user.model.User;
 public interface UserDao extends Serializable {
 	/**
 	 * @param user
+	 * @return persisted instance
 	 */
-	<T extends User> void save(T user);
+	<T extends User> T save(T user);
 
 	/**
 	 * @param username
 	 * @return user instance found in database
 	 */
 	<T extends User> T getUserByUsername(String username);
-	
+
 	/**
 	 * @param email
 	 * @return user instance found in database
@@ -60,4 +63,45 @@ public interface UserDao extends Serializable {
 	 * @return new instance of anonymous user
 	 */
 	<T extends User> T newAnonymousUser(T currentUser);
+
+	/**
+	 * Concatenates first and last name into single string and returns it as a full user name
+	 * 
+	 * @param username
+	 *            username to lookup for a full name
+	 * @return concatenated first and last name for provided username
+	 */
+	String getFullNameForUser(String username);
+
+	String formatFullName(String firstName, String lastName);
+
+	/**
+	 * Returns sublist of system users
+	 * 
+	 * @param filter
+	 *            filter properties to search
+	 * @param first
+	 *            starting position
+	 * @param count
+	 *            how many users to fetch
+	 * @return sublist of users starting first and max count
+	 */
+	List<User> findUsers(Map<String, String> filter, int first, int count);
+
+	/**
+	 * Returns total count of users in the system if no additional filter added
+	 * 
+	 * @param filter
+	 *            additional properties to search
+	 * @return integer value for total existing users in system
+	 */
+	int count(Map<String, String> filter);
+
+	/**
+	 * Removes user from the system
+	 * 
+	 * @param username
+	 * @return true if user was successfully removed from {@link User} table
+	 */
+	boolean deleteUser(String username);
 }

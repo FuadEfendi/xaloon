@@ -27,9 +27,9 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.xaloon.core.api.security.SecurityRoles;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.external.AuthenticationAttribute;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.api.user.model.User;
 
 /**
@@ -54,7 +54,7 @@ public class ExternalAuthenticationRealm extends AbstractRealm {
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		Object o = p.iterator().next();
 		String username = null;
-		org.xaloon.core.api.security.UserDetails userDetails = null;
+		org.xaloon.core.api.security.model.UserDetails userDetails = null;
 		if (o instanceof org.xaloon.core.api.security.external.AuthenticationToken) {
 			org.xaloon.core.api.security.external.AuthenticationToken token = (org.xaloon.core.api.security.external.AuthenticationToken)o;
 			username = token.getName();
@@ -73,7 +73,7 @@ public class ExternalAuthenticationRealm extends AbstractRealm {
 	}
 
 	protected void addExternalUserRoles(SimpleAuthorizationInfo info) {
-		info.addRole(SecurityRoles.AUTHENTICATED_USER);
+		info.addRole(SecurityAuthorities.AUTHENTICATED_USER);
 	}
 
 	@Override

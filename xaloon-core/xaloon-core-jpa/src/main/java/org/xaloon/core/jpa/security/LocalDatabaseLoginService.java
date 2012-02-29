@@ -16,7 +16,11 @@
  */
 package org.xaloon.core.jpa.security;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -33,9 +37,14 @@ import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.persistence.QueryBuilder.Condition;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.security.PasswordEncoder;
-import org.xaloon.core.api.security.SecurityRoles;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.RoleService;
+import org.xaloon.core.api.security.SecurityAuthorities;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.jpa.security.model.JpaAuthority;
+import org.xaloon.core.jpa.security.model.JpaGroup;
+import org.xaloon.core.jpa.security.model.JpaRole;
 import org.xaloon.core.jpa.security.model.JpaUserAlias;
 import org.xaloon.core.jpa.security.model.JpaUserDetails;
 
@@ -51,6 +60,9 @@ public class LocalDatabaseLoginService implements LoginService {
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
+
+	@Inject
+	private RoleService roleService;
 
 	@Override
 	public boolean performLogin(String username, String password) {
@@ -79,10 +91,7 @@ public class LocalDatabaseLoginService implements LoginService {
 		JpaUserDetails jpaUserDetails = new JpaUserDetails();
 		jpaUserDetails.setUsername(username);
 		jpaUserDetails.setPassword(encode(username, password));
-		JpaAuthority authority = findRole(SecurityRoles.AUTHENTICATED_USER);
-		if (authority != null) {
-			jpaUserDetails.getAuthorities().add(authority);
-		}
+
 		String activationKey = org.xaloon.core.api.util.KeyFactory.generateKey();
 		jpaUserDetails.setActivationKey(activationKey);
 		jpaUserDetails.setAccountNonLocked(true);
@@ -93,18 +102,21 @@ public class LocalDatabaseLoginService implements LoginService {
 			createAlias(alias, jpaUserDetails);
 		}
 		persistenceServices.create(jpaUserDetails);
+		List<String> selections = new ArrayList<String>();
+		selections.add(SecurityAuthorities.ROLE_REGISTERED_USER);
+		roleService.assignAuthoritiesByName(jpaUserDetails, selections);
 		return activationKey;
 	}
 
 	@Override
-	public boolean activate(String activationKey) {
+	public boolean activate(String activationKey, String userPassword) {
 		boolean result = false;
 
 		QueryBuilder queryBuilder = new QueryBuilder("select ud from " + JpaUserDetails.class.getSimpleName() + " ud");
 		queryBuilder.addParameter("ud.activationKey", "_activationKey", activationKey);
 		queryBuilder.addParameter("ud.enabled", "_enabled", Boolean.FALSE);
 		JpaUserDetails userDetails = persistenceServices.executeQuerySingle(queryBuilder);
-		if (userDetails != null) {
+		if (userDetails != null && userDetails.getPassword().equals(encode(userDetails.getUsername(), userPassword))) {
 			userDetails.setEnabled(true);
 			persistenceServices.edit(userDetails);
 			result = true;
@@ -149,19 +161,6 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public void assignRole(String username, String role) {
-		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
-		if (userDetails != null) {
-			JpaAuthority authority = findOrCreateAuthority(role);
-			if (authority != null && !userDetails.getAuthorities().contains(authority)) {
-				userDetails.getAuthorities().add(authority);
-				persistenceServices.edit(userDetails);
-			}
-		}
-	}
-
-
-	@Override
 	public void addAlias(String username, KeyValue<String, String> alias) {
 		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
 		if (userDetails != null) {
@@ -192,7 +191,7 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	@Override
 	public UserDetails loadUserDetails(String username) {
-		QueryBuilder queryBuilder = new QueryBuilder("select ud from " + JpaUserDetails.class.getSimpleName() + " ud ");
+		QueryBuilder queryBuilder = new QueryBuilder("select distinct ud from " + JpaUserDetails.class.getSimpleName() + " ud ");
 		queryBuilder.addJoin(QueryBuilder.OUTER_JOIN, "ud.aliases a");
 		queryBuilder.addParameter("ud.username", "_USERNAME", username);
 		queryBuilder.addParameter("a.value", "_VALUE", username, Condition.OR, false, false);
@@ -201,22 +200,6 @@ public class LocalDatabaseLoginService implements LoginService {
 
 	private String encode(String username, String password) {
 		return PasswordEncoder.get().encode(username, password);
-	}
-
-	private JpaAuthority findRole(String roleName) {
-		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
-		queryBuilder.addParameter("a.authority", "_ROLE_NAME", roleName);
-		return persistenceServices.executeQuerySingle(queryBuilder);
-	}
-
-	private JpaAuthority findOrCreateAuthority(String role) {
-		JpaAuthority authority = findRole(role);
-		if (authority == null) {
-			authority = new JpaAuthority();
-			authority.setAuthority(role);
-			persistenceServices.create(authority);
-		}
-		return authority;
 	}
 
 	private boolean createAlias(KeyValue<String, String> alias, JpaUserDetails jpaUserDetails) {
@@ -240,5 +223,103 @@ public class LocalDatabaseLoginService implements LoginService {
 		queryBuilder.addParameter("ua.key", "KEY", loginType);
 		queryBuilder.addParameter("ua.value", "VALUE", aliasValue);
 		return persistenceServices.executeQuerySingle(queryBuilder);
+	}
+
+	@Override
+	public List<Authority> getIndirectAuthoritiesForUsername(String username) {
+		List<Authority> result = new ArrayList<Authority>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
+		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<Authority> items = new HashSet<Authority>();
+		addByAuthorityMemberInternal(userDetails.getAuthorities(), items);
+		addByRoleMemberInternal(userDetails.getRoles(), items);
+		addByGroupMemberInternal(userDetails.getGroups(), items);
+		return new ArrayList<Authority>(items);
+	}
+
+	private void addByGroupMemberInternal(List<JpaGroup> groups, Set<Authority> items) {
+		for (JpaGroup group : groups) {
+			addByRoleMemberInternal(group.getRoles(), items);
+		}
+	}
+
+	private void addByRoleMemberInternal(List<JpaRole> roles, Set<Authority> items) {
+		for (JpaRole role : roles) {
+			addByAuthorityMemberInternal(role.getAuthorities(), items);
+		}
+	}
+
+	private void addByAuthorityMemberInternal(List<JpaAuthority> authorities, Set<Authority> items) {
+		for (JpaAuthority authority : authorities) {
+			items.add(authority);
+		}
+	}
+
+	@Override
+	public List<SecurityRole> getIndirectRolesForUsername(String username) {
+		List<SecurityRole> result = new ArrayList<SecurityRole>();
+		if (StringUtils.isEmpty(username)) {
+			return result;
+		}
+		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
+		if (userDetails == null) {
+			return result;
+		}
+		Set<SecurityRole> items = new HashSet<SecurityRole>();
+		addRolesByRoleMember(userDetails.getRoles(), items);
+		addRolesByGroupMember(userDetails.getGroups(), items);
+		return new ArrayList<SecurityRole>(items);
+	}
+
+	private void addRolesByGroupMember(List<JpaGroup> groups, Set<SecurityRole> items) {
+		for (JpaGroup group : groups) {
+			addRolesByRoleMember(group.getRoles(), items);
+		}
+	}
+
+	private void addRolesByRoleMember(List<JpaRole> roles, Set<SecurityRole> items) {
+		if (!roles.isEmpty()) {
+			items.addAll(roles);
+		}
+	}
+
+	@Override
+	public UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
+		user.setCredentialsNonExpired(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
+		user.setAccountNonLocked(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
+		user.setAccountNonExpired(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue) {
+		UserDetails user = loadUserDetails(username);
+		user.setEnabled(newPropertyValue);
+		return persistenceServices.edit(user);
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		UserDetails ud = loadUserDetails(username);
+		persistenceServices.remove(ud);
+		return true;
 	}
 }

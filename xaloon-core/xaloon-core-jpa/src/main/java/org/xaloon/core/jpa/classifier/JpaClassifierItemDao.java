@@ -130,4 +130,13 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 
 		return (T)persistenceServices.executeQuerySingle(queryBuilder);
 	}
+
+	@Override
+	public <T extends ClassifierItem> List<T> findLowerLevelItems(String classifierType) {
+		QueryBuilder queryBuilder = new QueryBuilder("select cli from " + JpaClassifierItem.class.getSimpleName() +
+			" cli inner join cli.classifier cl ");
+		queryBuilder.addParameter("cl.type", "_TYPE", classifierType);
+		queryBuilder.addExpression(" cli.parent != null ");
+		return persistenceServices.executeQuery(queryBuilder);
+	}
 }

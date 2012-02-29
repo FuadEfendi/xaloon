@@ -20,12 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.xaloon.core.api.storage.InputStreamContainer;
+import org.xaloon.core.api.storage.AbstractInputStreamContainer;
+import org.xaloon.core.api.storage.InputStreamContainerOptions;
 
 /**
  * @author vytautas r.
  */
-public class WicketInputStreamContainer implements InputStreamContainer {
+public class WicketInputStreamContainer extends AbstractInputStreamContainer {
 
 	/**
 	 * 
@@ -40,6 +41,17 @@ public class WicketInputStreamContainer implements InputStreamContainer {
 	 * @param fileUpload
 	 */
 	public WicketInputStreamContainer(FileUpload fileUpload) {
+		this(fileUpload, new InputStreamContainerOptions());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param fileUpload
+	 * @param options
+	 */
+	public WicketInputStreamContainer(FileUpload fileUpload, InputStreamContainerOptions options) {
+		super(options);
 		this.fileUpload = fileUpload;
 	}
 

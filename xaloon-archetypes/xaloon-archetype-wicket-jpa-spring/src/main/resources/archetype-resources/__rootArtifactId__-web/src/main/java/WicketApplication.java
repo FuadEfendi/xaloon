@@ -40,9 +40,13 @@ import org.xaloon.wicket.component.inject.spring.CdiComponentInjector;
 import org.xaloon.wicket.component.inject.spring.SpringAnnotationResolver;
 import org.xaloon.wicket.component.inject.spring.SpringBeanAnnotationResolver;
 import org.xaloon.wicket.component.inject.spring.SpringBeanLocatorAdapter;
+import org.xaloon.wicket.component.mount.impl.SpringMountScanner;
+import org.xaloon.wicket.component.mount.impl.TrailingSlashPageMountingListener;
 import org.xaloon.wicket.component.security.AuthenticatedWebApplication;
 import org.xaloon.wicket.component.sitemap.SiteMap;
+import org.xaloon.wicket.plugin.blog.BlogUserListener;
 import org.xaloon.wicket.plugin.blog.rss.BlogRssFeed;
+import org.xaloon.wicket.plugin.image.plugin.GalleryUserListener;
 
 
 import ${package}.page.IndexPage;
@@ -70,7 +74,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	@Override
 	protected void onLoadConfiguration(Configuration config) {
 		//Add action before saving resource
-		Configuration.get().getResourceRepositoryListeners().add(new ResourceRepositoryListener() {
+		config.getResourceRepositoryListeners().add(new ResourceRepositoryListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void onBeforeSaveProperty(Plugin plugin, String propertyKey, Object value) {
@@ -81,7 +85,9 @@ public class WicketApplication extends AuthenticatedWebApplication {
 
 			public void onAfterSaveProperty(Plugin plugin, String propertyKey) {}
 		});
-		Configuration.get().setBeanLocatorAdapter(new SpringBeanLocatorAdapter());
+		config.setBeanLocatorAdapter(new SpringBeanLocatorAdapter());
+		config.getUserListenerCollection().add(new BlogUserListener());
+		config.getUserListenerCollection().add(new GalleryUserListener());
 	}
 	
 	@Override
@@ -103,5 +109,10 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	@Override
 	protected Class<? extends User> getPersistedUserImplementation() {
 		return JpaUser.class;
+	}
+	
+	@Override
+	protected void onAddMountScannerListener(SpringMountScanner scanner) {
+		scanner.addMountScannerListener(new TrailingSlashPageMountingListener());
 	}
 }

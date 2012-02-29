@@ -1,8 +1,11 @@
 package org.xaloon.wicket.plugin.blog.panel;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
@@ -11,8 +14,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.counting.CounterFacade;
+import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.wicket.application.page.LayoutWebPage;
+import org.xaloon.wicket.component.html.MetaTagWebContainer;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.addthis.panel.AddThisPanel;
@@ -28,7 +34,8 @@ import org.xaloon.wicket.plugin.image.galleria.panel.GalleriaImagesPanel;
 /**
  * Required PagePamaters:
  * 
- * BlogEntryPanel.BLOG_AUTHOR - username of author BlogEntryPanel.BLOG_PATH - url of encoded title. this would be BlogEntry.getPath();
+ * BlogEntryPanel.BLOG_AUTHOR - username of author BlogEntryPanel.BLOG_PATH -
+ * url of encoded title. this would be BlogEntry.getPath();
  * 
  * 
  */
@@ -38,6 +45,10 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BlogEntryPanel.class);
+
+	@Inject
+	@Named("counterFacade")
+	private CounterFacade counterFacade;
 
 	/**
 	 * Construct.
@@ -73,14 +84,20 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 			return;
 		}
 
-		setDefaultModel(new Model<BlogEntry>(blogEntry));
-		DateFormat dateFormat = new SimpleDateFormat(getPluginBean().getDateFormat());
+		// Increment view count of blog entry
+		counterFacade.increment(BlogPlugin.VIEW_COUNT_BLOG_ENTRY, blogEntry.getTrackingCategoryId(), blogEntry.getId());
 
+		setDefaultModel(new Model<BlogEntry>(blogEntry));
+		
 		// Add blog entry title
 		add(new Label("title", new Model<String>(blogEntry.getTitle())));
 
+		// Comment count
+		Long commentCount = commentDao.count(blogEntry);
+		add(new Label("comment-count", new Model<Long>(commentCount)));
+
 		// Add blog entry create date
-		add(new Label("createDate", new Model<String>(dateFormat.format(blogEntry.getCreateDate()))));
+		add(new Label("createDate", new Model<String>(dateService.formatWithLongDate(blogEntry.getCreateDate()))));
 
 		// Add image
 		String imageLinkPath = (blogEntry.getThumbnail() != null) ? blogEntry.getThumbnail().getPath() : null;
@@ -114,9 +131,8 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		add(new AddThisPanel("add-this-panel"));
 
 		// Add comment plugin
-		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters()).setCommentPageClass(getBlogFacade().getBlogEntrylink(
-			blogEntry)
-			.getKey()));
+		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters())
+				.setCommentPageClass(getBlogFacade().getBlogEntrylink(blogEntry).getKey()));
 
 		// Add tag cloud panel
 		TagCloudPanel<JpaBlogEntryTag> tagCloudPanel = new TagCloudPanel<JpaBlogEntryTag>("tag-cloud-panel", KEY_VALUE_BLOG_TAG) {
@@ -129,7 +145,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 
 		};
 		add(tagCloudPanel);
-		List<JpaBlogEntryTag> tags = (List<JpaBlogEntryTag>)blogEntry.getTags();
+		List<JpaBlogEntryTag> tags = (List<JpaBlogEntryTag>) blogEntry.getTags();
 		tagCloudPanel.setHighlightTagCloudList(tags);
 		tagCloudPanel.setPageClass(BlogEntryListByTagPage.class);
 
@@ -142,12 +158,45 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		if (getParent() instanceof LayoutWebPage) {
-			BlogEntry blogEntry = (BlogEntry)getDefaultModelObject();
+			BlogEntry blogEntry = (BlogEntry) getDefaultModelObject();
 			getParent().addOrReplace(new Label(LayoutWebPage.PAGE_TITLE, new Model<String>(blogEntry.getTitle())));
-			getParent().addOrReplace(new Label(LayoutWebPage.PAGE_DESCRIPTION, new Model<String>(blogEntry.getDescriptionClean())));
+			getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_DESCRIPTION, blogEntry.getDescription()));
+			addOrReplaceKeywords(blogEntry);
+
 			if (!blogEntry.getTags().isEmpty()) {
-				String keysAsString = StringUtils.join(blogEntry.getTags(), SEPARATOR);
-				getParent().addOrReplace(new Label(LayoutWebPage.PAGE_KEYWORDS, new Model<String>(keysAsString)));
+				Collection<String> keywords = new ArrayList<String>();
+				keywords.add(StringUtils.join(blogEntry.getTags(), SEPARATOR));
+
+			}
+		}
+
+	}
+
+	private void addOrReplaceKeywords(BlogEntry blogEntry) {
+		Collection<Object> keywords = new ArrayList<Object>();
+
+		// Add title
+
+		splitAndFilterTitle(keywords, blogEntry.getTitle());
+		// Add category if exists
+		if (blogEntry.getCategory() != null) {
+			keywords.add(blogEntry.getCategory().getName());
+		}
+
+		// Add tags if exist
+		if (!blogEntry.getTags().isEmpty()) {
+			keywords.addAll(blogEntry.getTags());
+		}
+
+		// Add all as single string
+		String keysAsString = StringUtils.join(keywords, SEPARATOR);
+		getParent().addOrReplace(new MetaTagWebContainer(LayoutWebPage.PAGE_KEYWORDS, keysAsString));
+	}
+
+	private void splitAndFilterTitle(Collection<Object> keywords, String title) {
+		for (String item : title.split(DelimiterEnum.SPACE.value())) {
+			if (item.length() > 3) {
+				keywords.add(item);
 			}
 		}
 	}

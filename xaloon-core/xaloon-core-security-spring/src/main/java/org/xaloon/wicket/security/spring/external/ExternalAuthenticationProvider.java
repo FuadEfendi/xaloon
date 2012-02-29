@@ -35,7 +35,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.SecurityAuthorities;
 import org.xaloon.core.api.security.external.AuthenticationToken;
 import org.xaloon.core.api.security.external.ExternalParameterResolver;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -104,7 +104,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
 		externalParameterResolver.resolve(initialToken, user);
 
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(SecurityRoles.AUTHENTICATED_USER));
+		authorities.add(new SimpleGrantedAuthority(SecurityAuthorities.AUTHENTICATED_USER));
 
 		UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
 			authentication.getCredentials(), authorities);

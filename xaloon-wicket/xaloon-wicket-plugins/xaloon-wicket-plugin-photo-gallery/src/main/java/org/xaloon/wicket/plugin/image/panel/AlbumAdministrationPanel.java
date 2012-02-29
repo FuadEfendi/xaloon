@@ -71,6 +71,7 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
+		removeAll();
 		final List<Image> images = (List<Image>)AlbumAdministrationPanel.this.getDefaultModelObject();
 		ListView<Image> view = new ListView<Image>("images", new ArrayList<Image>(images)) {
 			private static final long serialVersionUID = 1L;
@@ -102,9 +103,9 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 				imagePanel.setImageHeight(imageThumbnailHeight);
 				item.add(imagePanel);
 			}
-		};
+		}.setReuseItems(true);
 
-		addOrReplace(view);
+		add(view);
 
 		boolean visibleAddNewImageButtons = maxImagesAllowed < 1 || (maxImagesAllowed > 0 && images.size() < maxImagesAllowed);
 		// Add link to upload new image

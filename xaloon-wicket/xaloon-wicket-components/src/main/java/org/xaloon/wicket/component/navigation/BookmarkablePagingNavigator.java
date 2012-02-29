@@ -96,7 +96,7 @@ public class BookmarkablePagingNavigator extends DecoratedPagingNavigator {
 			@Override
 			protected void populateItem(LoopItem loopItem) {
 				super.populateItem(loopItem);
-				decorateCurrentPageLink(loopItem, pageable.getCurrentPage(), getStartIndex());
+				new LinkDecorator().withLoopItem(loopItem).withCurrentPage(pageable.getCurrentPage()).withStartIndex(getStartIndex()).decorate();
 			}
 		};
 	}

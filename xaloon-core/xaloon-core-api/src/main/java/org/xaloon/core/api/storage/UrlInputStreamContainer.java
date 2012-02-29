@@ -18,15 +18,15 @@ package org.xaloon.core.api.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
-import org.xaloon.core.api.util.HtmlElementEnum;
 
 /**
  * @author vytautas r.
  */
-public class UrlInputStreamContainer implements InputStreamContainer {
+public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 
 	/**
 	 * 
@@ -41,12 +41,27 @@ public class UrlInputStreamContainer implements InputStreamContainer {
 	 * @param url
 	 */
 	public UrlInputStreamContainer(String url) {
+		this(url, new InputStreamContainerOptions());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param url
+	 * @param options
+	 */
+	public UrlInputStreamContainer(String url, InputStreamContainerOptions options) {
+		super(options);
 		this.url = url;
 	}
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return new URL(url).openStream();
+		try {
+			return new URL(url).openStream();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("Could not create url", e);
+		}
 	}
 
 	@Override
@@ -55,6 +70,6 @@ public class UrlInputStreamContainer implements InputStreamContainer {
 
 	@Override
 	public boolean isEmpty() {
-		return StringUtils.isEmpty(url) || !url.toLowerCase().startsWith(HtmlElementEnum.PROTOCOL_HTTP.value());
+		return StringUtils.isEmpty(url);
 	}
 }

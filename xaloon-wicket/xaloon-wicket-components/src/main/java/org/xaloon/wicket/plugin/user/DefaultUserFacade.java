@@ -16,6 +16,10 @@
  */
 package org.xaloon.wicket.plugin.user;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
@@ -26,12 +30,19 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.plugin.email.EmailFacade;
+import org.xaloon.core.api.plugin.email.EmailService;
 import org.xaloon.core.api.resource.StringResourceLoader;
 import org.xaloon.core.api.security.LoginService;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
+import org.xaloon.core.api.security.model.UserDetails;
+import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.UserFacade;
+import org.xaloon.core.api.user.UserSearchResult;
 import org.xaloon.core.api.user.dao.UserDao;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.email.template.EmailContentTemplatePage;
@@ -61,6 +72,9 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Inject
 	private EmailFacade emailFacade;
+
+	@Inject
+	private FileRepositoryFacade fileRepositoryFacade;
 
 	@Inject
 	private StringResourceLoader stringResourceLoader;
@@ -99,8 +113,13 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public <T extends User> void save(T user) {
-		userDao.save(user);
+	public <T extends User> T save(T user) {
+		FileDescriptor thumbnail = user.getPhotoThumbnail();
+		boolean storeThumbnail = thumbnail != null && thumbnail.getId() == null;
+		if (storeThumbnail) {
+			fileRepositoryFacade.storeFile(thumbnail, thumbnail.getImageInputStreamContainer());
+		}
+		return userDao.save(user);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,8 +145,8 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public boolean activate(String activationKey) {
-		return loginService.activate(activationKey);
+	public boolean activate(String activationKey, String userPassword) {
+		return loginService.activate(activationKey, userPassword);
 	}
 
 	@Override
@@ -156,11 +175,6 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public void assignRole(String username, String role) {
-		loginService.assignRole(username, role);
-	}
-
-	@Override
 	public void addAlias(String username, KeyValue<String, String> alias) {
 		loginService.addAlias(username, alias);
 	}
@@ -172,7 +186,7 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Override
 	public UserDetails loadUserDetails(String username) {
-		return null;
+		return loginService.loadUserDetails(username);
 	}
 
 	@Override
@@ -187,7 +201,7 @@ public class DefaultUserFacade implements UserFacade {
 				if (emailFacade.sendMailFromSystem(contentTemplate.getSource(), subject, user.getEmail(), user.getDisplayName())) {
 					return null;
 				} else {
-					return EmailFacade.EMAIL_PROPERTIES_NOT_CONFIGURED;
+					return EmailService.EMAIL_PROPERTIES_NOT_CONFIGURED;
 				}
 			}
 		}
@@ -209,5 +223,93 @@ public class DefaultUserFacade implements UserFacade {
 	@Override
 	public <T extends User> T newAnonymousUser(T currentUser) {
 		return userDao.newAnonymousUser(currentUser);
+	}
+
+	@Override
+	public int count(Map<String, String> filter) {
+		return userDao.count(filter);
+	}
+
+	@Override
+	public List<UserSearchResult> findCombinedUsers(Map<String, String> filter, int first, int count) {
+		List<User> users = userDao.findUsers(filter, first, count);
+		return transform(users);
+	}
+
+	private List<UserSearchResult> transform(List<User> users) {
+		List<UserSearchResult> result = new ArrayList<UserSearchResult>();
+		for (User user : users) {
+			UserDetails details = loginService.loadUserDetails(user.getUsername());
+			result.add(format(user, details));
+		}
+		return result;
+	}
+
+	private UserSearchResult format(User user, UserDetails details) {
+		UserSearchResult entry = new UserSearchResult();
+		entry.setAccountNonExpired(details.isAccountNonExpired());
+		entry.setAccountNonLocked(details.isAccountNonLocked());
+		entry.setCredentialsNonExpired(details.isCredentialsNonExpired());
+		entry.setEnabled(details.isEnabled());
+		entry.setFirstName(user.getFirstName());
+		entry.setLastName(user.getLastName());
+		entry.setUsername(user.getUsername());
+		entry.setFullName(userDao.formatFullName(entry.getFirstName(), entry.getLastName()));
+		return entry;
+	}
+
+	@Override
+	public String getFullNameForUser(String username) {
+		return userDao.getFullNameForUser(username);
+	}
+
+	@Override
+	public List<Authority> getIndirectAuthoritiesForUsername(String username) {
+		return loginService.getIndirectAuthoritiesForUsername(username);
+	}
+
+	@Override
+	public List<SecurityRole> getIndirectRolesForUsername(String username) {
+		return loginService.getIndirectRolesForUsername(username);
+	}
+
+	@Override
+	public UserDetails modifyCredentialsNonExpired(String username, Boolean newPropertyValue) {
+		return loginService.modifyCredentialsNonExpired(username, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonLocked(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonLocked(username, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountNonExpired(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountNonExpired(username, newPropertyValue);
+	}
+
+	@Override
+	public UserDetails modifyAccountEnabled(String username, Boolean newPropertyValue) {
+		return loginService.modifyAccountEnabled(username, newPropertyValue);
+	}
+
+	@Override
+	public String formatFullName(String firstName, String lastName) {
+		return userDao.formatFullName(firstName, lastName);
+	}
+
+	@Override
+	public List<User> findUsers(Map<String, String> filter, int first, int count) {
+		return userDao.findUsers(filter, first, count);
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		User userToBeDeleted = userDao.getUserByUsername(username);
+		Configuration.get().getUserListenerCollection().onBeforeDelete(userToBeDeleted);
+		if (userDao.deleteUser(username)) {
+			return loginService.deleteUser(username);
+		}
+		return false;
 	}
 }

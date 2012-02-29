@@ -16,7 +16,6 @@
  */
 package org.xaloon.core.api.storage;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -62,12 +61,12 @@ public interface FileStorageService extends Serializable {
 		Map<String, Object> additionalProperties);
 
 	/**
-	 * Returns file from storage as input stream
+	 * Returns file from storage as byte array
 	 * 
 	 * @param identifier
-	 * @return actual input stream of file
+	 * @return actual byte array of file
 	 */
-	InputStream getInputStreamByIdentifier(String identifier);
+	byte[] getByteArrayByIdentifier(String identifier);
 
 	/**
 	 * Deletes from storage by unique identifier

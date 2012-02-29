@@ -92,7 +92,7 @@ public class WaitingCommentsForApprovalPanel extends AbstractPluginPanel<Comment
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						Comment comment = getModelObject();
-						commentDao.enable(comment, true);
+						commentDao.enable(comment);
 						target.add(WaitingCommentsForApprovalPanel.this);
 					}
 

@@ -26,9 +26,7 @@ import org.xaloon.core.api.plugin.AbstractPluginBean;
 public class BlogPluginBean extends AbstractPluginBean {
 
 	private static final long serialVersionUID = 1L;
-	/** date format which will be used to show blog entry creation time **/
-	private String dateFormat = "yyyy-MM-dd";
-
+	
 	/** blog header image width to use **/
 	private int blogImageWidth = 158;
 
@@ -55,22 +53,6 @@ public class BlogPluginBean extends AbstractPluginBean {
 	 */
 	public void setBlogDescriptionLengthInSentences(int blogDescriptionLengthInSentences) {
 		this.blogDescriptionLengthInSentences = blogDescriptionLengthInSentences;
-	}
-
-	/**
-	 * 
-	 * @return default date format if there is no provided any
-	 */
-	public String getDateFormat() {
-		return dateFormat;
-	}
-
-	/**
-	 * 
-	 * @param dateFormat
-	 */
-	public void setDateFormat(String dateFormat) {
-		this.dateFormat = dateFormat;
 	}
 
 	/**

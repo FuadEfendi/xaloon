@@ -18,7 +18,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xaloon.version>1.5.0</xaloon.version>
+		<xaloon.version>1.5.1</xaloon.version>
 		<jetty.version>7.5.0.v20110901</jetty.version>
 	</properties>
 

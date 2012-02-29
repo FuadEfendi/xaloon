@@ -70,7 +70,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	private PluginRegistry registry;
 
 	@Inject
-	private SecurityFacade securityFacade;
+	protected SecurityFacade securityFacade;
 
 	/**
 	 * plugin instance
@@ -112,7 +112,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, PageParameters pageRequestParameters) {
 		super(id);
-		this.pageRequestParameters = pageRequestParameters;
+		this.pageRequestParameters = cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 */
 	public AbstractPluginPanel(String id, IModel<?> model, PageParameters pageRequestParameters) {
 		super(id, model);
-		this.pageRequestParameters = pageRequestParameters;
+		this.pageRequestParameters = cleanupPageRequestParameters(pageRequestParameters);
 	}
 
 	/**
@@ -149,8 +149,8 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	protected void onConfigure() {
 		boolean isPluginEnabled = isPluginEnabled();
 		setVisible(isVisible() && isPluginEnabled && isPluginValid());
-		if (!isPluginEnabled && logger.isWarnEnabled()) {
-			logger.warn("[" + getClass().getName() + "] " + getString(PLUGIN_NOT_ENABLED));
+		if (!isPluginEnabled && logger.isDebugEnabled()) {
+			logger.debug("[" + getClass().getName() + "] " + getString(PLUGIN_NOT_ENABLED));
 		}
 		super.onConfigure();
 	}
@@ -164,6 +164,22 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 	 *            plugin properties instance
 	 */
 	protected void onInitialize(T plugin, K pluginBean) {
+	}
+
+	/**
+	 * Each panel is responsible to clean up page request parameters before passing them further.
+	 * <p>
+	 * Use case: Some components may contain stateless forms. These parameters are added to {@link PageParameters} when submitting the form. Later
+	 * absolute url may be incorrectly generated with these provided parameters.
+	 * <p>
+	 * Usually clean up should be made by the parent component, before passing page parameters to child panel.
+	 * 
+	 * @param pageRequestParameters
+	 *            page request parameters to clean up
+	 * @return {@link PageParameters} instance with removed parameters
+	 */
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+		return pageRequestParameters;
 	}
 
 	/**
@@ -241,17 +257,20 @@ public abstract class AbstractPluginPanel<K extends AbstractPluginBean, T extend
 		return securityFacade;
 	}
 
-	/**
-	 * Returns existings page parameters
-	 * 
-	 * @return page parameters passed from page instance
-	 */
-	protected PageParameters getPageRequestParameters() {
-		return pageRequestParameters;
-	}
-
 	protected Class<? extends IRequestablePage> getParentPageClass() {
 		Page parentPage = getParent().getPage();
 		return parentPage.getClass();
+	}
+
+	/**
+	 * Gets pageRequestParameters.
+	 * 
+	 * @return pageRequestParameters
+	 */
+	public PageParameters getPageRequestParameters() {
+		if (pageRequestParameters == null) {
+			return getPage().getPageParameters();
+		}
+		return pageRequestParameters;
 	}
 }

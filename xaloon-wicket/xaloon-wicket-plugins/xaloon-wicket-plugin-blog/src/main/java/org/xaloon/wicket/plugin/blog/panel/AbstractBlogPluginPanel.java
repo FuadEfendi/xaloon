@@ -16,6 +16,9 @@
  */
 package org.xaloon.wicket.plugin.blog.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -24,7 +27,11 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.xaloon.core.api.date.DateService;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
+import org.xaloon.core.api.plugin.comment.CommentDao;
+import org.xaloon.wicket.component.navigation.BookmarkablePagingNavigator;
+import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
 import org.xaloon.wicket.plugin.blog.BlogFacade;
@@ -53,14 +60,32 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 
 	protected static final String KEY_VALUE_BLOG_TAG = "BLOG_ENTRY_TAG";
 
+	private final static List<String> AVAILABLE_PARAMETERS = new ArrayList<String>();
 
+	static {
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_USERNAME);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_YEAR);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_MONTH);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_DAY);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_PATH);
+		AVAILABLE_PARAMETERS.add(BlogPageConstants.CATEGORY_CODE);
+		AVAILABLE_PARAMETERS.add(TagCloudPanel.QUERY_BY_TAG);
+		AVAILABLE_PARAMETERS.add(BookmarkablePagingNavigator.PAGE_QUERY_ID);
+	}
+	
 	@Inject
 	protected BlogFacade blogFacade;
 
 	@Inject
+	protected CommentDao commentDao;
+	
+	@Inject
 	@Named("blogEntryKeyValueDao")
 	protected KeyValueDao<String, String, JpaBlogEntryTag> keyValueDao;
 
+	@Inject
+	protected DateService dateService;
+	
 	/**
 	 * Construct.
 	 * 
@@ -133,12 +158,24 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		}
 		return result;
 	}
+	
+	@Override
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters) {
+		PageParameters result = new PageParameters();
+		
+		for (String key : AVAILABLE_PARAMETERS) {
+			if (!pageRequestParameters.get(key).isEmpty()) {
+				result.add(key, pageRequestParameters.get(key));
+			}
+		}
+		return pageRequestParameters.overwriteWith(result);
+	}
 
 	protected BookmarkablePageLink<Void> createBlogCategoryLink(final BlogEntry blogEntry) {
 		PageParameters categoryPageParameters = new PageParameters();
 		BookmarkablePageLink<Void> categoryLink = new BookmarkablePageLink<Void>("link-category", getBlogCategoryPageClass(), categoryPageParameters);
 		if (blogEntry.getCategory() != null) {
-			categoryPageParameters.set(BlogEntryListByCategoryPanel.CATEGORY_CODE, blogEntry.getCategory().getCode());
+			categoryPageParameters.set(BlogPageConstants.CATEGORY_CODE, blogEntry.getCategory().getCode());
 			categoryLink.add(new Label("label-category", new Model<String>(blogEntry.getCategory().getName())));
 		} else {
 			categoryLink.setVisible(false);
@@ -150,7 +187,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		PageParameters authorPageParameters = new PageParameters();
 		BookmarkablePageLink<Void> authorLink = new BookmarkablePageLink<Void>("link-author", getBlogBloggerPageClass(), authorPageParameters);
 		if (blogEntry.getOwner() != null) {
-			authorPageParameters.set(BlogEntryListByBloggerPanel.BLOGGER_USERNAME, blogEntry.getOwner().getUsername());
+			authorPageParameters.set(BlogPageConstants.BLOG_USERNAME, blogEntry.getOwner().getUsername());
 			authorLink.add(new Label("author", new Model<String>(blogEntry.getOwner().getDisplayName())));
 		} else {
 			authorLink.setVisible(false);

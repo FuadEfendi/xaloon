@@ -16,8 +16,6 @@
  */
 package org.xaloon.core.api.storage;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 
 import org.xaloon.core.api.bookmark.Bookmarkable;
@@ -120,14 +118,6 @@ public interface FileDescriptor extends Bookmarkable, Persistable {
 	 * @return true if file is loaded from external link
 	 */
 	boolean isExternal();
-
-	/**
-	 * Only supported by external files
-	 * 
-	 * @return converted link into @see {@link URL}
-	 * @throws MalformedURLException
-	 */
-	URL getExternalImage() throws MalformedURLException;
 
 	/**
 	 * Returns file storage service provider bean name. It might be used if mixes are used to store files

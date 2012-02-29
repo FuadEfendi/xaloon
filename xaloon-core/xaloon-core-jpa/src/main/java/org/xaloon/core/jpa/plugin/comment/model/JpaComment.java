@@ -34,14 +34,36 @@ public class JpaComment extends JpaMessage implements Comment {
 	@Column(name = "ENABLED", nullable = false)
 	private boolean enabled;
 
-	@Column(name = "OBJECT_ID", nullable = false)
-	private Long objectId;
+	@Column(name = "ENTITY_ID", nullable = false)
+	private Long entityId;
 
-	@Column(name = "COMPONENT_ID", nullable = false)
-	private Long componentId;
+	@Column(name = "CATEGORY_ID", nullable = false)
+	private Long categoryId;
 
 	@Column(name = "PATH")
 	private String path;
+
+	@Column(name = "INAPPROPRIATE")
+	private boolean inappropriate;
+
+	/**
+	 * Gets inappropriate.
+	 * 
+	 * @return inappropriate
+	 */
+	public boolean isInappropriate() {
+		return inappropriate;
+	}
+
+	/**
+	 * Sets inappropriate.
+	 * 
+	 * @param inappropriate
+	 *            inappropriate
+	 */
+	public void setInappropriate(boolean inappropriate) {
+		this.inappropriate = inappropriate;
+	}
 
 	/**
 	 * @return path where comment was posted
@@ -57,20 +79,21 @@ public class JpaComment extends JpaMessage implements Comment {
 		this.path = path;
 	}
 
-	public Long getComponentId() {
-		return componentId;
+
+	public Long getEntityId() {
+		return entityId;
 	}
 
-	public void setComponentId(Long componentId) {
-		this.componentId = componentId;
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
 	}
 
-	public Long getObjectId() {
-		return objectId;
+	public Long getCategoryId() {
+		return categoryId;
 	}
 
-	public void setObjectId(Long objectId) {
-		this.objectId = objectId;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public boolean isEnabled() {

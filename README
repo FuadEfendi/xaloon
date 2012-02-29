@@ -1,45 +1,50 @@
-xaloon components
+Xaloon for Apache Wicket 1.5
+============================
 
-1. Requirements to compile
- You need to download and install these jars:
- <dependency>
-			<groupId>javax.media</groupId>
-			<artifactId>jai-core</artifactId>
-			<version>1.1.3</version>
-			<scope>provided</scope> 
-		</dependency>
-		<dependency>
-			<groupId>com.sun.media</groupId>
-			<artifactId>jai-codec</artifactId>
-			<version>1.1.3</version>
-			<scope>provided</scope>
-		</dependency>
-	Or add external repository to your settings.xml:
-	<profiles>
-		<profile>
-			<id>xaloon-external-repositories</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>				
-			</activation>
-			<repositories>
-				<repository>
-					<id>jboss-repository</id>
-					<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-				</repository>
-				<repository>
-					<id>EclipseLink Repo</id>
-					<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-				</repository>  
-				<repository> 
-					<id>googlecode-jqwicket</id> 
-					<url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url> 
-				</repository> 
-				<repository>
-					<id>mandubian-mvn</id>
-					<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
-				</repository>
-			</repositories>
-		</profile>
-	</profiles>	
-	
-2.
+Licence
+-------
+
+Xaloon is distributed under the terms of the Apache Software Foundation
+license, version 2.0. The text is included in the file LICENSE in the root
+of the project.
+
+Getting started
+---------------
+
+Required dependencies
+---------------------
+
+Add external repository to your settings.xml:
+
+<profiles>
+ <profile>
+  <id>xaloon-external-repositories</id>
+  <activation>
+   <activeByDefault>true</activeByDefault>				
+  </activation>
+  <repositories>
+   <repository>
+    <id>jboss-repository</id>
+    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+   </repository>
+   <repository>
+    <id>EclipseLink Repo</id>
+    <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+   </repository>  
+   <repository> 
+    <id>googlecode-jqwicket</id> 
+    <url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url> 
+   </repository> 
+   <repository>
+    <id>mandubian-mvn</id>
+    <url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
+   </repository>
+  </repositories>
+ </profile>
+</profiles>	
+
+These repositories include:
+ - Offline dependencies for JAI;
+ - Eclipselink dependencies if using eclipselink ORM instead of Hibernate;
+ - JQWicket dependency;
+ - Google picasa services if xaloon-wicket-plugin-gdata plugin is used to store images.

@@ -116,9 +116,9 @@ public class ClassifiersPanel extends AbstractClassifiersPanel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return dataContainer;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(dataContainer);
+			};
 		};
 		addNewClassifierModalWindow.setContent(new NewClassifierPanel<Classifier>(addNewClassifierModalWindow, getPageRequestParameters()));
 		add(addNewClassifierModalWindow);

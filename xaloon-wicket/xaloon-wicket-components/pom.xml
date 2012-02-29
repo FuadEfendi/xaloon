@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>xaloon-wicket-parent</artifactId>
 		<groupId>org.xaloon.wicket</groupId>
-		<version>1.5.1-SNAPSHOT</version>
+		<version>1.5.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xaloon-wicket-components</artifactId>
 	<packaging>jar</packaging>
@@ -14,13 +14,6 @@
 	</description>
 
 	<dependencies>
-		<!-- Junit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Xaloon -->
 		<dependency>
 			<groupId>org.xaloon.core</groupId>
@@ -58,6 +51,37 @@
 		<dependency>
 			<groupId>com.google.code.jqwicket</groupId>
 			<artifactId>jqwicket</artifactId>
+		</dependency>
+
+		<!-- TEST RELATED DEP -->
+		<!-- Add jpa entities for simple test -->
+		<dependency>
+			<groupId>org.xaloon.core</groupId>
+			<artifactId>xaloon-core-jpa</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.xaloon.wicket</groupId>
+			<artifactId>xaloon-wicket-components-resources</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- needs extra dependencies: objenesis & hamcrest TODO move to root pom -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

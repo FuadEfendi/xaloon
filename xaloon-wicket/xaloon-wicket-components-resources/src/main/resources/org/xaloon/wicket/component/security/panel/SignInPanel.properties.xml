@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="NO_ACCOUNT_FOR_USERNAME">Username/password incorrect</entry>
+	<entry key="INVALID_USERNAME_PASSWORD">Username/password incorrect</entry>
+	<entry key="LOGIN_FAILED">Username/password incorrect</entry>
+	<entry key="ACCOUNT_DISABLED">Account is disabled. Please, contact the administrator.</entry>
+	<entry key="ACCOUNT_EXPIRED">Account is expired. Please, contact the administrator.</entry>
+	<entry key="ACCOUNT_LOCKED">Account is locked. Please, contact the administrator.</entry>
+	<entry key="CREDENTIALS_EXPIRED">Credentials expired. Please, contact the administrator.</entry>	
+</properties>

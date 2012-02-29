@@ -16,10 +16,17 @@
  */
 package org.xaloon.wicket.plugin.blog;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
+import org.xaloon.core.impl.security.DefaultSecurityEntity;
+import org.xaloon.core.impl.security.DefaultSecurityRole;
 import org.xaloon.wicket.plugin.blog.panel.admin.BlogPluginAdministrationPanel;
 
 
@@ -30,11 +37,13 @@ import org.xaloon.wicket.plugin.blog.panel.admin.BlogPluginAdministrationPanel;
  */
 @Named
 public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Blog entry view counter identifier
+	 */
+	public static final String VIEW_COUNT_BLOG_ENTRY = "VIEW_COUNT_BLOG_ENTRY";
+
 
 	/**
 	 * Blog category classifier
@@ -56,5 +65,17 @@ public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
 	@Override
 	public Class<?> getAdministratorFormClass() {
 		return BlogPluginAdministrationPanel.class;
+	}
+	
+	@Override
+	public List<SecurityRole> getSupportedRoles() {
+		SecurityRole role = new DefaultSecurityRole(BlogSecurityAuthorities.ROLE_BLOGGER);
+		role.getAuthorities().addAll(getSupportedAuthorities());
+		return Arrays.asList(role);
+	}
+	
+	@Override
+	public List<Authority> getSupportedAuthorities() {
+		return Arrays.asList(new Authority[]{new DefaultSecurityEntity(BlogSecurityAuthorities.BLOG_CREATOR)});
 	}
 }

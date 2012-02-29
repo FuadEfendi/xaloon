@@ -20,7 +20,9 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.util.DefaultKeyValue;
 
 /**
  * Simple meta tag markup container
@@ -63,6 +65,16 @@ public class MetaTagWebContainer extends WebMarkupContainer {
 	 */
 	public MetaTagWebContainer(IModel<KeyValue<String, String>> model) {
 		super(model.getObject().getKey(), model);
+	}
+
+	/**
+	 * Construct. new model will be created from provided parameters.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public MetaTagWebContainer(String key, String value) {
+		this(new Model<KeyValue<String, String>>(new DefaultKeyValue<String, String>(key, value)));
 	}
 
 	/**

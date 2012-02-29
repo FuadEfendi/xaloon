@@ -16,7 +16,6 @@
  */
 package org.xaloon.core.api.storage;
 
-import java.io.InputStream;
 import java.io.Serializable;
 
 /**
@@ -60,7 +59,7 @@ public interface FileRepositoryFacade extends Serializable {
 	 *            full path to the specified file in repository
 	 * @return input stream of specified file. null - if there is no result.
 	 */
-	InputStream getFileByPath(String path);
+	byte[] getFileByPath(String path);
 
 	/**
 	 * Returns file input stream by unique identifier. Unique identifier is provided by specific file repository implementation.

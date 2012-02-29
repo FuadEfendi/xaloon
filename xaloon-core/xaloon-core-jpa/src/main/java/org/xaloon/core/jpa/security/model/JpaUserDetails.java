@@ -30,7 +30,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.xaloon.core.api.security.UserDetails;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.jpa.model.AbstractEntity;
 
 /**
@@ -65,9 +67,17 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userDetails", orphanRemoval = true)
 	private List<JpaUserAlias> aliases = new ArrayList<JpaUserAlias>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "XAL_SECURITY_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID"))
 	private List<JpaAuthority> authorities = new ArrayList<JpaAuthority>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "XAL_SECURITY_USER_ROLES", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+	private List<JpaRole> roles = new ArrayList<JpaRole>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "XAL_SECURITY_USER_GROUPS", joinColumns = @JoinColumn(name = "USER_DETAILS_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"))
+	private List<JpaGroup> groups = new ArrayList<JpaGroup>();
 
 	/**
 	 * @see UserDetails#getUsername()
@@ -164,8 +174,11 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 		this.enabled = enabled;
 	}
 
+
 	/**
-	 * @see UserDetails#getAuthorities()
+	 * Gets authorities.
+	 * 
+	 * @return authorities
 	 */
 	public List<JpaAuthority> getAuthorities() {
 		return authorities;
@@ -204,6 +217,63 @@ public class JpaUserDetails extends AbstractEntity implements UserDetails {
 	 */
 	public void setAliases(List<JpaUserAlias> aliases) {
 		this.aliases = aliases;
+	}
+
+	/**
+	 * Gets roles.
+	 * 
+	 * @return roles
+	 */
+	public List<JpaRole> getRoles() {
+		return roles;
+	}
+
+	/**
+	 * Sets roles.
+	 * 
+	 * @param roles
+	 *            roles
+	 */
+	public void setRoles(List<JpaRole> roles) {
+		this.roles = roles;
+	}
+
+	/**
+	 * Gets groups.
+	 * 
+	 * @return groups
+	 */
+	public List<JpaGroup> getGroups() {
+		return groups;
+	}
+
+	/**
+	 * Sets groups.
+	 * 
+	 * @param groups
+	 *            groups
+	 */
+	public void setGroups(List<JpaGroup> groups) {
+		this.groups = groups;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof JpaUserDetails)) {
+			return false;
+		}
+		JpaUserDetails entity = (JpaUserDetails)obj;
+
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(getId(), entity.getId());
+		return equalsBuilder.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(getId());
+		return hashCodeBuilder.hashCode();
 	}
 
 	@Override

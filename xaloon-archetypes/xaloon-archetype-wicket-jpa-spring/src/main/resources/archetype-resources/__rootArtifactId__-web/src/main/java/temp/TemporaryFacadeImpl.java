@@ -20,18 +20,25 @@
 
 package ${package}.temp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.xaloon.core.api.classifier.dao.ClassifierDao;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
-import org.xaloon.core.api.security.SecurityRoles;
+import org.xaloon.core.api.security.RoleService;
+import org.xaloon.core.api.security.SecurityAuthorities;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.user.UserFacade;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.jpa.classifier.model.JpaClassifier;
 import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;
-import org.xaloon.core.jpa.user.model.JpaUser;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
+import org.xaloon.wicket.plugin.blog.BlogSecurityAuthorities;
+import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
 
 
 @Named
@@ -51,30 +58,75 @@ public class TemporaryFacadeImpl implements TemporaryFacade {
 	@Inject
 	private UserFacade userFacade;
 	
+	@Inject
+	private RoleService roleService;
+	
 	/**
 	 * create initial demo data
 	 */
 	public void initDemoData() {
 		initClassifiers();
-		initUserInfo();
+		initAdminUserInfo();
+		initSimpleUserInfo();
+		
+		initBloggerInfo();
 	}
 
-	private void initUserInfo() {
+	private void initAdminUserInfo() {
 		String username = "demo";
 		if (userFacade.getUserByUsername(username) == null) {
-			JpaUser user = new JpaUser();
+			User user = userFacade.newUser();
 			
 			user.setUsername(username);
 			user.setEmail("test@test.com");
 			user.setFirstName("Demo");
 			user.setLastName("Demum");
 			String activationKey = userFacade.registerUser(user, username, true, null);
-			userFacade.activate(activationKey);
+			userFacade.activate(activationKey, username);
 			
-			userFacade.assignRole(username, SecurityRoles.AUTHENTICATED_USER);
-			userFacade.assignRole(username, SecurityRoles.BLOG_CREATOR);
-			userFacade.assignRole(username, SecurityRoles.SYSTEM_ADMINISTRATOR);	
+			UserDetails userDetails = userFacade.loadUserDetails(username);
+			List<String> selections = new ArrayList<String>();
+			selections.add(SecurityAuthorities.ROLE_SYSTEM_ADMINISTRATOR);
+			selections.add(SecurityAuthorities.ROLE_CLASSIFIER_ADMINISTRATOR);
+			selections.add(GallerySecurityAuthorities.ROLE_GALLERY_USER);
+			selections.add(BlogSecurityAuthorities.ROLE_BLOGGER);
 			
+			roleService.assignAuthoritiesByName(userDetails, selections);
+		}
+	}
+	
+	private void initSimpleUserInfo() {
+		String username = "user";
+		if (userFacade.getUserByUsername(username) == null) {
+			User user = userFacade.newUser();
+			
+			user.setUsername(username);
+			user.setEmail("user@test.com");
+			user.setFirstName("Simple");
+			user.setLastName("User");
+			String activationKey = userFacade.registerUser(user, username, true, null);
+			userFacade.activate(activationKey, username);		
+		}
+	}
+	
+	private void initBloggerInfo() {
+		String username = "blogger";
+		if (userFacade.getUserByUsername(username) == null) {
+			User user = userFacade.newUser();
+			
+			user.setUsername(username);
+			user.setEmail("blogger@test.com");
+			user.setFirstName("blogger");
+			user.setLastName("User");
+			String activationKey = userFacade.registerUser(user, username, true, null);
+			userFacade.activate(activationKey, username);
+			
+			UserDetails userDetails = userFacade.loadUserDetails(username);
+			List<String> selections = new ArrayList<String>();
+			selections.add(GallerySecurityAuthorities.ROLE_GALLERY_USER);
+			selections.add(BlogSecurityAuthorities.ROLE_BLOGGER);
+			
+			roleService.assignAuthoritiesByName(userDetails, selections);		
 		}
 	}
 

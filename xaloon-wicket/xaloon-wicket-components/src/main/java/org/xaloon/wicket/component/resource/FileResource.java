@@ -1,10 +1,7 @@
 package org.xaloon.wicket.component.resource;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.resource.DynamicImageResource;
@@ -49,13 +46,7 @@ public class FileResource extends DynamicImageResource {
 		if (StringUtils.isEmpty(value)) {
 			return null;
 		}
-		byte[] theBytes = null;
-		try {
-			theBytes = IOUtils.toByteArray(fileRepository.getFileByPath(value));
-		} catch (IOException e) {
-			logger.error("Error while reading from input stream", e);
-		}
-		return theBytes;
+		return fileRepository.getFileByPath(value);
 	}
 
 	/**

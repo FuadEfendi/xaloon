@@ -26,6 +26,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.inject.ServiceLocator;
+import org.xaloon.core.api.security.AuthorityFacade;
 
 /**
  * @author vytautas r.
@@ -43,6 +44,9 @@ public class PluginLoader implements Serializable {
 	@Inject
 	@Named("pluginRegistry")
 	private PluginRegistry pluginRegistry;
+
+	@Inject
+	private AuthorityFacade authorityFacade;
 
 	private List<Plugin> loadedPlugins;
 
@@ -67,6 +71,7 @@ public class PluginLoader implements Serializable {
 				LOGGER.warn(String.format("Plugin '%s' is already registered. Ignoring ...", plugin.getClass().getName()));
 			} catch (PluginNotFoundException e) {
 				pluginRegistry.register(plugin);
+				authorityFacade.registerRoles(plugin);
 			}
 		}
 	}

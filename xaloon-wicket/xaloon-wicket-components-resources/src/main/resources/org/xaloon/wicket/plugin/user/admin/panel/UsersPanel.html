@@ -1,0 +1,54 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+<head>
+</head>
+<body>
+<wicket:panel  xmlns:wicket>
+	<h2>Users</h2>
+	<form wicket:id="search">
+		<div><input type="text" wicket:id="q"/></div>
+		<div><input class="formbutton" type="submit" value="Find" wicket:id="submit"/></div>
+	</form>
+	<div wicket:id="container">
+		<table>
+			<tr>
+				<td>Delete</td>
+				<td style="width:150px;">username</td>
+				<td>enabled</td>
+				<td>account not expired</td>
+				<td>account not locked</td>
+				<td>credentials not expired</td>
+			</tr>
+			<tr wicket:id="security-users">
+				<td><a href="#" wicket:id="deleteUser">Delete</a></td>
+				<td>
+					<a href="#" wicket:id="details-link"><span wicket:id="username"/></a>
+				</td>
+				<td><input type="checkbox" wicket:id="accountEnabled"/></td>
+				<td><input type="checkbox" wicket:id="accountNonExpired"/></td>
+				<td><input type="checkbox" wicket:id="accountNonLocked"/></td>
+				<td><input type="checkbox" wicket:id="credentialsNonExpired"/></td>
+			</tr>
+		</table>
+		<div>
+			<span wicket:id="navigator"></span>
+		</div>
+	</div>
+</wicket:panel>
+</body>
+</html>

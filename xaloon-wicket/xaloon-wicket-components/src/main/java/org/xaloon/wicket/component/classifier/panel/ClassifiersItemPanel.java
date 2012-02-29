@@ -84,16 +84,17 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 	@Override
 	protected void onInitialize(EmptyPlugin plugin, AbstractPluginBean pluginBean) {
-		if (getPageRequestParameters().isEmpty()) {
+		PageParameters params = getPageRequestParameters();
+		if (params.isEmpty()) {
 			setVisible(false);
 			setResponsePage(ClassifiersPage.class);
 			return;
 		}
 
-		final String classifierType = getPageRequestParameters().get(ClassifiersPanel.PARAM_CLASSIFIER_TYPE).toString();
+		final String classifierType = params.get(ClassifiersPanel.PARAM_CLASSIFIER_TYPE).toString();
 		String parentClassifierItem = null;
-		if (getPageRequestParameters().get(PARENT_ITEM) != null) {
-			parentClassifierItem = getPageRequestParameters().get(PARENT_ITEM).toString();
+		if (params.get(PARENT_ITEM) != null) {
+			parentClassifierItem = params.get(PARENT_ITEM).toString();
 		}
 
 		// Add data container
@@ -132,12 +133,11 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getOnCloseComponent() {
-				return dataContainer;
-			}
+			protected void addComponentsToRefresh(java.util.List<Component> components) {
+				components.add(dataContainer);
+			};
 		};
-		addNewClassifierModalWindow.setContent(new NewClassifierItemPanel<ClassifierItem, Classifier>(addNewClassifierModalWindow,
-			getPageRequestParameters()));
+		addNewClassifierModalWindow.setContent(new NewClassifierItemPanel<ClassifierItem, Classifier>(addNewClassifierModalWindow, params));
 
 		add(addNewClassifierModalWindow);
 

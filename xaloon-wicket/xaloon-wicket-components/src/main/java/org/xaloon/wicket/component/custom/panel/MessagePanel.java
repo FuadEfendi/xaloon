@@ -22,6 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.message.model.Message;
 import org.xaloon.core.api.plugin.email.EmailFacade;
 import org.xaloon.core.api.plugin.email.EmailPluginBean;
@@ -50,9 +51,10 @@ public class MessagePanel extends AbstractPluginPanel<EmailPluginBean, EmailPlug
 	 * Construct.
 	 * 
 	 * @param id
+	 * @param pageParameters
 	 */
-	public MessagePanel(String id) {
-		super(id);
+	public MessagePanel(String id, PageParameters pageParameters) {
+		super(id, pageParameters);
 	}
 
 	class LeaveMessageForm extends org.xaloon.wicket.component.text.MessageForm<Message> {
@@ -77,7 +79,7 @@ public class MessagePanel extends AbstractPluginPanel<EmailPluginBean, EmailPlug
 				setResponsePage(Application.get().getHomePage());
 			} else {
 				getSession().error("Message cannot be sent due to system configuration restrictions!");
-				throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getPage().getClass(), getPage().getPageParameters()).toString());
+				throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getPage().getClass(), getPageRequestParameters()).toString());
 			}
 		}
 
@@ -97,5 +99,10 @@ public class MessagePanel extends AbstractPluginPanel<EmailPluginBean, EmailPlug
 		DefaultMessage message = new DefaultMessage();
 		message.setFromUser(new DefaultUser());
 		add(new LeaveMessageForm("contact-form", new CompoundPropertyModel<Message>(message)));
+	}
+
+	@Override
+	protected PageParameters cleanupPageRequestParameters(PageParameters pageRequestParameters2) {
+		return new PageParameters();
 	}
 }

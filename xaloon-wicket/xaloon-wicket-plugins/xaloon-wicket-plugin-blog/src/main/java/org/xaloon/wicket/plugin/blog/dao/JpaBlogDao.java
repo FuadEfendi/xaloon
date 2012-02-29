@@ -28,6 +28,7 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntry;
@@ -48,7 +49,7 @@ public class JpaBlogDao implements BlogDao {
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
-
+	
 	public void save(BlogEntry blogEntry) {
 		persistenceServices.edit(blogEntry);
 	}
@@ -94,7 +95,7 @@ public class JpaBlogDao implements BlogDao {
 	}
 
 	private QueryBuilder createQueryBuilder(String selectString, BlogEntrySearchRequest blogEntrySearchRequest) {
-		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be ");
+		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be");
 		if (!StringUtils.isEmpty(blogEntrySearchRequest.getUsername())) {
 			queryBuilder.addParameter("be.owner.username", "USERNAME", blogEntrySearchRequest.getUsername());
 		}
@@ -118,5 +119,12 @@ public class JpaBlogDao implements BlogDao {
 	@Override
 	public List<BlogEntry> findAvailableBlogEntryList(int first, int count) {
 		return findAvailableBlogEntryList(new BlogEntrySearchRequest(), first, count);
+	}
+
+	@Override
+	public void deleteBlogsByUsername(User userToBeDeleteds) {
+		QueryBuilder update = new QueryBuilder("delete from " + JpaBlogEntry.class.getSimpleName() + " b");
+		update.addParameter("b.owner", "_USER", userToBeDeleteds);
+		persistenceServices.executeUpdate(update);
 	}
 }

@@ -19,86 +19,149 @@
 <body>
 <wicket:panel>
 	<h2>Create new blog entry</h2>
-	<form class="blog-entry-form" wicket:id="blog-entry-form">
-		<table class="blog-entry">
-			<tr>
-	  			<td>&nbsp;</td>
-	  			<td><span wicket:id="feedback-panel"/></td>
-	  		</tr>
-			<tr>
-	  			<td><label for="title">Title</label></td>
-	  			<td class="align_right"><input id="title" wicket:id="title" class="input-blog-title"/></td>
-	  		</tr>
-	  		<tr>
-	  			<td><label for="sticky">Blog entry on top of page</label></td>
-	  			<td class="align_right"><input id="sticky" type="checkbox" wicket:id="sticky"/></td>
-	  		</tr>
-	  		
-		    <tr>
-	  			<td><label for="blogEntryPathType">Blog path type</label></td>
-	  			<td class="align_right"><select id="blogEntryPathType" wicket:id="blogEntryPathType"></select></td>
-	  		</tr>
-	  		<tr wicket:id="customPathContainer">
-	  			<td colspan="2">
-	  				<wicket:enclosure child="customPath">
-	  				<table class="blog-entry">
-	  					<tr>
-	  						<td><label for="customPath">Custom URL path</label></td>
-	  						<td class="align_right"><input id="customPath" wicket:id="customPath" class="input-blog-path"/></td>	  						
-	  					</tr>
-	  					<tr>
-				  			<td>&nbsp;</td>
-				  			<td class="notification align_right">Optional. If not provided, URL will be generated from title.</td>
-				  		</tr>
-	  				</table>
-	  				</wicket:enclosure>
-	  			</td>
-	  			
-	  		</tr>	  		
-	  		<tr>
-	  			<td><label for="entry_thumbnail">Blog entry thumbnail</label></td>
-	  			<td class="align_right">
-					<div wicket:id="image-administration-panel"/>
-				</td>
-	  		</tr>
-	  		<tr>
-	  			<td colspan="2"><label for="entry_content">Blog entry content</label></td>
-	  		</tr>
-	  		<tr>
-	  			<td colspan="2" class="align_right">
-	  				<textarea id="entry_content" wicket:id="content" cols="110" rows="30" class="entry_content">test rich text input</textarea>
-	  			</td>
-	  		</tr>
-	  		<tr>
-	  			<td><label for="category">Category</label></td>
-	  			<td class="align_right">
-	  				<select id="category" wicket:id ="category"><option></option><option>Lithuania</option> </select>
-	  			</td>
-	  		</tr>
-	  		<tr>
-	  			<td><label for="tags-panel">Tags for blog entry</label></td>
-	  			<td class="align_right">
-	  				<div id="tags-panel" wicket:id="tags-panel"/>
-				</td>
-	  		</tr>
-	  		<tr>
-	  			<td><label for="images-panel">Blog entry image album</label></td>
-	  			<td class="align_right">
-	  				<div id="images-panel">
-	  					<div wicket:id="images-administration"/>
-	  				</div>
-				</td>
-	  		</tr>
-	  		<tr>
-	  			<td>&nbsp;</td>
-	  			<td>
-					<div class="align_right">
-						<input class="formbutton" type="submit" value="Save"/>				
+	<div id="stylized" class="blog-entry-form">
+	<form wicket:id="blog-entry-form">
+		<div class="send-additional-info-txt"><span wicket:id="feedback-panel"/></div>
+		<fieldset id="blog-information">
+			<legend>BLOG INFORMATION</legend>
+			<div>
+				<label>Title
+					<span class="small">Blog entry title</span>
+				</label>
+				<input type="text" name="title" id="title" class="width_long input" wicket:id="title"/>
+			</div>
+			<div  wicket:id="customPathContainer">
+				<wicket:enclosure child="customPath">
+				<label>Custom URL path
+					<span class="small">Optional. If not provided, URL will be generated from title.</span>
+				</label>
+				<input type="text" name="title" id="title" class="width_long input" wicket:id="customPath" />
+				</wicket:enclosure>
+			</div>
+			
+			<div>
+				<label>Path type
+					<span class="small">Blog entry path type</span>
+				</label>
+				<select name="path_type" id="path_type" class="width_long select" wicket:id="blogEntryPathType">
+					<option value="USERNAME_DATE_TITLE" selected="selected">author/year/month/day/blog title</option>
+					<option value="USERNAME_TITLE">author/blog title</option>
+					<option value="TITLE">blog title</option>
+					<option value="CUSTOM">custom blog path</option>
+				</select>
+			</div>
+			
+			<div>
+				<label>Category
+					<span class="small">Blog entry main category</span>
+				</label>
+				<select name="category" id="category" class="width_long select"  wicket:id="category">
+					<option value="" selected="selected">Choose One</option>
+					<option value="557056">concept</option>
+					<option value="557057">main cars</option>
+				</select>
+			</div>
+			
+			<div class="row width_shorter">
+				<label>Sticky entry
+					<span class="small">Blog entry on top of page</span>
+				</label>
+				<input type="checkbox" name="sticky" id="sticky" class="input" wicket:id="sticky"/>
+			</div>
+			
+			<div class="row width_wide">
+				<label>Tags
+					<span class="small">Additional tags for this blog entry</span>
+				</label>
+				<div wicket:id="tags-panel">
+					<input type="text" name="tags" id="tags" class="width_shorter"/><span><a href="#">add selected</a></span>
+				</div>		
+			</div>
+		</fieldset>
+		
+		<wicket:enclosure child="image-administration-panel">
+		<fieldset id="thumbnail">
+			<legend>THUMBNAIL</legend>
+			<div  wicket:id="image-administration-panel">
+			<div>
+				<label>External file
+					<span class="small">Add external image to gallery</span>
+				</label>
+				<input type="text" name="image_remote" id="image_remote"  class="width_long"/>
+			</div>
+			<div>
+				<label>Or upload file
+					<span class="small">Add local image to gallery</span>
+				</label>
+				<input type="file" name="image_local" id="image_local"  class="width_long"/>
+			</div>
+			<div>
+				<button type="submit" class="button2">Upload file</button>
+				<div class="spacer"></div>
+			</div>
+			<div>				
+				<div>
+					<div id="single_image_panel7d">
+						<div class="float-left model-info-photo">
+							<div class="edit-panel">
+								<a href="#" class="delete-link" id="delete_image_link7e" onclick="#"><span></span></a>
+							</div>
+							<img alt="ttt" src="1.jpg" width="158" height="82">
+						</div>
 					</div>
-				</td>
-	  		</tr>
-  		</table>
-	</form>
+				</div>
+			</div>
+			</div>
+		</fieldset>
+		</wicket:enclosure>
+		<fieldset id="blog-entry-content">
+			<legend>Content</legend>
+			<div>
+				<textarea wicket:id="content"></textarea>
+			</div>
+		</fieldset>
+		<wicket:enclosure child="images-administration">
+		<fieldset id="images">
+			<legend>IMAGES</legend>
+			<div  wicket:id="images-administration">
+			<div>
+				<label>External file
+					<span class="small">Add external image to gallery</span>
+				</label>
+				<input type="text" name="image_remote" id="image_remote"  class="width_long"/>
+			</div>
+			<div>
+				<label>Or upload file
+					<span class="small">Add local image to gallery</span>
+				</label>
+				<input type="file" name="image_local" id="image_local"  class="width_long"/>
+			</div>
+			<div>
+				<button type="submit" class="button2">Upload file</button>
+				<div class="spacer"></div>
+			</div>
+			<div>				
+				<div>
+					<div id="single_image_panel7d">
+						<div class="float-left model-info-photo">
+							<div class="edit-panel">
+								<a href="#" class="delete-link" id="delete_image_link7e" onclick="#"><span></span></a>
+							</div>
+							<img alt="ttt" src="1.jpg" width="158" height="82">
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</fieldset>
+		</wicket:enclosure>
+		<div>
+			<div class="spacer"></div>
+			<button type="submit">Create blog entry</button>
+			<div class="spacer"></div>
+		</div>
+  </form> 
+	</div>
 </wicket:panel>
 </body>
 </html>

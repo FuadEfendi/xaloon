@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>xaloon-parent</artifactId>
 		<groupId>org.xaloon</groupId>
-		<version>1.5.1-SNAPSHOT</version>
+		<version>1.5.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.xaloon.archetype</groupId>
 	<artifactId>xaloon-archetype-parent</artifactId>

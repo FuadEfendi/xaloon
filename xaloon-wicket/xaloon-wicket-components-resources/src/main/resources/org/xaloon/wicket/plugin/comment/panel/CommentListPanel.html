@@ -22,11 +22,24 @@
 	<h2>Comments</h2>
 	<div wicket:id="container">
 		<div class="comments-block" wicket:id="comment-list">
-			<wicket:enclosure child="image-link"><img src="#" wicket:id="image-link"/></wicket:enclosure>
-			<div class="comment-author blogger-comment-icon"><a href="#" wicket:id="external-link"><span wicket:id="displayName"></span></a> wrote ...</div>
-			<div class="comment-body" wicket:id="message"/>
-			<div class="comment-footer">
-				<span class="comment-timestamp" wicket:id="comment-timestamp">2010-12-25 01:43</span>
+			
+			<div class="comment-content">
+				<div class="comment-author blogger-comment-icon">
+					<wicket:enclosure child="image-link">
+						<div class="comment-image">
+							<img src="#" wicket:id="image-link"/>
+						</div>
+					</wicket:enclosure>
+					<div class="comment-author-link">
+						<a href="#" wicket:id="external-link"><span wicket:id="displayName"></span></a> wrote ...
+					</div>
+				</div>
+				<div class="comment-body" wicket:id="message"/>
+				<div class="comment-footer">
+					<a href="#" wicket:id="inappropriateFlag">Flag as inappropriate</a>
+					<a href="#" wicket:id="delete-comment">Delete comment</a>
+					<span class="comment-timestamp" wicket:id="comment-timestamp">2010-12-25 01:43</span>
+				</div>
 			</div>
 		</div>
 		<div>

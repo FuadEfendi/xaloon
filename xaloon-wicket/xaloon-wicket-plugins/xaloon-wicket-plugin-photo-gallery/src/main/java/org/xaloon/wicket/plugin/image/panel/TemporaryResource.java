@@ -16,12 +16,7 @@
  */
 package org.xaloon.wicket.plugin.image.panel;
 
-import java.io.IOException;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.wicket.request.resource.DynamicImageResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.storage.FileDescriptor;
 
 /**
@@ -33,8 +28,6 @@ public class TemporaryResource extends DynamicImageResource {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(TemporaryResource.class);
 
 	private FileDescriptor temporaryImage;
 
@@ -50,11 +43,7 @@ public class TemporaryResource extends DynamicImageResource {
 	@Override
 	protected byte[] getImageData(Attributes attributes) {
 		if (!isEmpty()) {
-			try {
-				return IOUtils.toByteArray(temporaryImage.getImageInputStreamContainer().getInputStream());
-			} catch (IOException e) {
-				LOGGER.error("Failed loading input stream from temporary resource", e);
-			}
+			return temporaryImage.getImageInputStreamContainer().asByteArray();
 		}
 		return null;
 	}

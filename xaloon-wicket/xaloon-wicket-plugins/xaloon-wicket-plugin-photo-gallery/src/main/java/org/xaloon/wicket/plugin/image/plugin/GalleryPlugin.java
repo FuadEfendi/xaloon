@@ -16,17 +16,23 @@
  */
 package org.xaloon.wicket.plugin.image.plugin;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.xaloon.core.api.plugin.AbstractPlugin;
+import org.xaloon.core.api.security.model.Authority;
+import org.xaloon.core.api.security.model.SecurityRole;
 import org.xaloon.core.impl.plugin.category.DefaultPluginCategories;
+import org.xaloon.core.impl.security.DefaultSecurityEntity;
+import org.xaloon.core.impl.security.DefaultSecurityRole;
 
 /**
  * @author vytautas r.
  */
 @Named("galleryPlugin")
 public class GalleryPlugin extends AbstractPlugin<GalleryPluginBean> {
-
 	/**
 	 * 
 	 */
@@ -37,5 +43,17 @@ public class GalleryPlugin extends AbstractPlugin<GalleryPluginBean> {
 	 */
 	public GalleryPlugin() {
 		setCategory(DefaultPluginCategories.PRODUCTS);
+	}
+	
+	@Override
+	public List<SecurityRole> getSupportedRoles() {
+		SecurityRole role = new DefaultSecurityRole(GallerySecurityAuthorities.ROLE_GALLERY_USER);
+		role.getAuthorities().addAll(getSupportedAuthorities());
+		return Arrays.asList(role);
+	}
+	
+	@Override
+	public List<Authority> getSupportedAuthorities() {
+		return Arrays.asList(new Authority[]{new DefaultSecurityEntity(GallerySecurityAuthorities.IMAGE_EDIT), new DefaultSecurityEntity(GallerySecurityAuthorities.IMAGE_DELETE)});
 	}
 }

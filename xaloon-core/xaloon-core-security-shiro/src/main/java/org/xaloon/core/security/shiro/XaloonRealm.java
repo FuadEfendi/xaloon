@@ -24,7 +24,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.xaloon.core.api.security.UserDetails;
+import org.xaloon.core.api.security.model.UserDetails;
 import org.xaloon.core.security.shiro.util.PrincipalResolver;
 
 /**

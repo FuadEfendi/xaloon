@@ -31,6 +31,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -57,22 +58,9 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Column(name = "CUSTOM_PATH")
 	private String customPath;
 
-	@Column(name = "DESCRIPTION_CLEAN")
-	@Lob
-	private String descriptionClean;
-
 	@ManyToOne
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
-
-	@Column(name = "VIEW_COUNT")
-	private Long viewCount;
-
-	@Column(name = "COMMENT_COUNT")
-	private Long commentCount;
-
-	@Column(name = "RATING")
-	private Long rating;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinTable(name = "XAL_BLOG_ENTRY_TAGS", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
@@ -90,19 +78,9 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	private String content;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy("sticky desc")
 	@JoinTable(name = "XAL_BLOG_ENTRY_IMAGES", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
 	private List<JpaImage> images = new ArrayList<JpaImage>();
-
-	public String getDescriptionClean() {
-		return descriptionClean;
-	}
-
-	/**
-	 * @param descriptionClean
-	 */
-	public void setDescriptionClean(String descriptionClean) {
-		this.descriptionClean = descriptionClean;
-	}
 
 	public JpaClassifierItem getCategory() {
 		return category;
@@ -113,39 +91,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	 */
 	public void setCategory(JpaClassifierItem category) {
 		this.category = category;
-	}
-
-	public Long getViewCount() {
-		return viewCount;
-	}
-
-	/**
-	 * @param viewCount
-	 */
-	public void setViewCount(Long viewCount) {
-		this.viewCount = viewCount;
-	}
-
-	public Long getCommentCount() {
-		return commentCount;
-	}
-
-	/**
-	 * @param commentCount
-	 */
-	public void setCommentCount(Long commentCount) {
-		this.commentCount = commentCount;
-	}
-
-	public Long getRating() {
-		return rating;
-	}
-
-	/**
-	 * @param rating
-	 */
-	public void setRating(Long rating) {
-		this.rating = rating;
 	}
 
 	public List<JpaBlogEntryTag> getTags() {
@@ -213,7 +158,7 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	}
 
 	@Override
-	public Long getComponentId() {
+	public Long getTrackingCategoryId() {
 		return 1000L;// TODO FIX return CommentComponentContainer.COMPONENT_BLOG_ENTRY;
 	}
 

@@ -16,6 +16,9 @@
  */
 package org.xaloon.core.api.user;
 
+import java.util.List;
+import java.util.Map;
+
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.security.LoginService;
 import org.xaloon.core.api.user.dao.UserDao;
@@ -46,4 +49,6 @@ public interface UserFacade extends UserDao, LoginService {
 	 * @return null if operation completed successfully, otherwise error code, which might be localized
 	 */
 	String sendNewPassword(String email);
+
+	List<UserSearchResult> findCombinedUsers(Map<String, String> filter, int first, int count);
 }

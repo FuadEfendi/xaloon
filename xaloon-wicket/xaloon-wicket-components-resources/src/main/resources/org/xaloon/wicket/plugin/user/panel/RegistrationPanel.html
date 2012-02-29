@@ -66,6 +66,12 @@
 			    	<span class="formw"><span class="error_fp" wicket:id="repeat_password_fp"></span></span>
 			    </div>
 		    </wicket:enclosure>
+		    <wicket:enclosure child="recaptcha-panel">
+		    <div class="row">
+		    	<span class="label"><label for="recaptcha">Recaptcha verification</label></span>
+			    <span class="formw"><span id="recaptcha" wicket:id="recaptcha-panel" style="width:40%" class="align_right"></span></span>
+		    </div>
+			</wicket:enclosure>
 		</fieldset>
 		
 		<table class="user_form">

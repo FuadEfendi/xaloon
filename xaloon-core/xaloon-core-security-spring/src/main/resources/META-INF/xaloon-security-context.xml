@@ -38,8 +38,7 @@
 				<value>org.xaloon.core.jpa.security.model.JpaUserDetails</value>	
 				<value>org.xaloon.core.jpa.security.model.JpaUserAlias</value>	
 				<value>org.xaloon.core.jpa.security.model.JpaGroup</value>	
-				<value>org.xaloon.core.jpa.security.model.JpaGroupAuthority</value>	
-				<value>org.xaloon.core.jpa.security.model.JpaGroupMembers</value>		
+				<value>org.xaloon.core.jpa.security.model.JpaRole</value>		
 			</list>
 		</property>
 	</bean>	

@@ -39,4 +39,15 @@ public interface InputStreamContainer extends Serializable {
 	 * @return true if there is no input stream found
 	 */
 	boolean isEmpty();
+
+	InputStreamContainerOptions getOptions();
+
+	void setOptions(InputStreamContainerOptions options);
+
+	/**
+	 * Returns input stream as byte array
+	 * 
+	 * @return input stream converted into byte array
+	 */
+	byte[] asByteArray();
 }

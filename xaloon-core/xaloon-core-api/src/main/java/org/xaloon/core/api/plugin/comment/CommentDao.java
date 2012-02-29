@@ -19,10 +19,17 @@ package org.xaloon.core.api.plugin.comment;
 import java.io.Serializable;
 import java.util.List;
 
+import org.xaloon.core.api.user.model.User;
+
 /**
  * @author vytautas r.
  */
 public interface CommentDao extends Serializable {
+	/**
+	 * Property for counter to identify that comment count should be incremented
+	 */
+	String ENTRY_COUNT_COMMENT = "ENTRY_COUNT_COMMENT";
+
 	/**
 	 * Save comment to storage
 	 * 
@@ -79,9 +86,8 @@ public interface CommentDao extends Serializable {
 	 * Modify comment and save
 	 * 
 	 * @param comment
-	 * @param enabled
 	 */
-	void enable(Comment comment, boolean enabled);
+	void enable(Comment comment);
 
 	/**
 	 * Delete all comments, which are still waiting for approval. Should be a spam.
@@ -92,4 +98,31 @@ public interface CommentDao extends Serializable {
 	 * @return create new instance of Comment persistable object
 	 */
 	Comment newComment();
+
+	/**
+	 * @param comment
+	 *            comment which contains inappropriate content
+	 * @param flag
+	 *            true/false - false means rollback inappropriate comment to proper state
+	 */
+	void markAsInappropriate(Comment comment, boolean flag);
+
+	/**
+	 * Returns the list of inappropriate comments
+	 * 
+	 * @return the list of inappropriate comments
+	 */
+	List<Comment> getInappropriateCommentsForApproval();
+
+	/**
+	 * Delete all comments, which are inappropriate. Should be a spam.
+	 */
+	void deleteInappropriateCommentsForApproval();
+
+	/**
+	 * Delete all comments for specified user
+	 * 
+	 * @param userToBeDeleted
+	 */
+	void deleteCommentsByUsername(User userToBeDeleted);
 }

@@ -53,6 +53,7 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	@Audited(state = AuditState.DELETE)
 	public <T> void remove(T o) {
 		getEm().remove(getEm().merge(o));
+		getEm().flush();
 	}
 
 	/**
@@ -62,13 +63,14 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	@Audited(state = AuditState.DELETE)
 	public <T> void remove(Class<T> clazz, Long id) {
 		getEm().remove(getEm().getReference(clazz, id));
+		getEm().flush();
 	}
 
 	/**
 	 * 
-	 * @see org.xaloon.core.api.persistence.PersistenceServices#find(java.lang.Class, java.lang.Long)
+	 * @see org.xaloon.core.api.persistence.PersistenceServices#find(Class, Object)
 	 */
-	public <T> T find(Class<T> clazz, Long id) {
+	public <T> T find(Class<T> clazz, Object id) {
 		return getEm().find(clazz, id);
 	}
 
@@ -175,12 +177,12 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	}
 
 	@Override
-	public void flush() {
-		getEm().flush();
+	public int executeNativeUpdate(String query) {
+		return getEm().createNativeQuery(query).executeUpdate();
 	}
 
 	@Override
-	public int executeNativeUpdate(String query) {
-		return getEm().createNativeQuery(query).executeUpdate();
+	public void flush() {
+		getEm().flush();
 	}
 }

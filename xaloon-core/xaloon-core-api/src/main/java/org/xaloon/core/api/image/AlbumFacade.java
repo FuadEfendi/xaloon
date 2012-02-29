@@ -109,4 +109,26 @@ public interface AlbumFacade extends Serializable {
 	 * @throws IOException
 	 */
 	FileDescriptor createPhysicalFile(Image temporaryImage, FileDescriptor existingToUpdate) throws MalformedURLException, IOException;
+
+	/**
+	 * Update existing image
+	 * 
+	 * @param image
+	 *            image to update
+	 */
+	void save(org.xaloon.core.api.image.model.Image image);
+
+	/**
+	 * Delete all images by provided username
+	 * 
+	 * @param userToBeDeleted
+	 */
+	void deleteImagesByUsername(User userToBeDeleted);
+
+	/**
+	 * Delete all albums by provided username
+	 * 
+	 * @param userToBeDeleted
+	 */
+	void deleteAlbumsByUsername(User userToBeDeleted);
 }

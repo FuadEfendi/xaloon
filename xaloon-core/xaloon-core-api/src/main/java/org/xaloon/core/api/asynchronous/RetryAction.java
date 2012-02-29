@@ -17,7 +17,9 @@
 package org.xaloon.core.api.asynchronous;
 
 import java.io.Serializable;
+import java.util.Random;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,12 @@ public abstract class RetryAction<T, Z> implements Serializable {
 
 	private int millisecondsToSleep = 10000;
 
+	private int retryCount = 3;
+
+	private boolean randomTimeUsed;
+
+	private boolean exceptionErrorLevel = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -47,17 +55,6 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param sleepFirst
-	 * @param millisecondsToSleep
-	 */
-	public RetryAction(boolean sleepFirst, int millisecondsToSleep) {
-		this.sleepFirst = sleepFirst;
-		this.millisecondsToSleep = millisecondsToSleep;
-	}
-
-	/**
 	 * @param parameters
 	 * @return expected result type
 	 * @throws InterruptedException
@@ -65,17 +62,31 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	public T perform(Z parameters) throws InterruptedException {
 		int i = 0;
 		T result = null;
-		while (result == null && i++ < 3) {
+		int timeToSleep = millisecondsToSleep;
+		if (randomTimeUsed) {
+			timeToSleep = new Random().nextInt(timeToSleep);
+		}
+		while (result == null && i++ < retryCount) {
 			if (sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %s s(%s)", Thread.currentThread().getName(), i,
+						DateFormatUtils.format(timeToSleep, "ss:SSS"), parameters));
 				}
-				Thread.sleep(millisecondsToSleep);
+				Thread.sleep(timeToSleep);
 			}
-			result = onPerform(parameters);
+			try {
+				result = onPerform(parameters);
+			} catch (Exception e) {
+				if (exceptionErrorLevel) {
+					LOGGER.error("Action thrown an exception!", e);
+				} else {
+					LOGGER.debug("Action thrown an exception!", e);
+				}
+			}
 			if (result == null && !sleepFirst) {
 				if (LOGGER.isWarnEnabled()) {
-					LOGGER.warn(String.format("[%d] Sleeping for 10 seconds(%s)", i, parameters));
+					LOGGER.warn(String.format("[%s]: [%d] Sleeping for %s s(%s)", Thread.currentThread().getName(), i,
+						DateFormatUtils.format(timeToSleep, "ss:SSS"), parameters));
 				}
 				Thread.sleep(millisecondsToSleep);
 			}
@@ -84,4 +95,64 @@ public abstract class RetryAction<T, Z> implements Serializable {
 	}
 
 	protected abstract T onPerform(Z parameters);
+
+	/**
+	 * Sets sleepFirst.
+	 * 
+	 * @param sleepFirst
+	 *            sleepFirst
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setSleepFirst(boolean sleepFirst) {
+		this.sleepFirst = sleepFirst;
+		return this;
+	}
+
+	/**
+	 * Sets millisecondsToSleep.
+	 * 
+	 * @param millisecondsToSleep
+	 *            millisecondsToSleep
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setMillisecondsToSleep(int millisecondsToSleep) {
+		this.millisecondsToSleep = millisecondsToSleep;
+		return this;
+	}
+
+	/**
+	 * Sets retryCount.
+	 * 
+	 * @param retryCount
+	 *            retryCount
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+		return this;
+	}
+
+	/**
+	 * Sets randomTimeUsed.
+	 * 
+	 * @param randomTimeUsed
+	 *            randomTimeUsed
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setRandomTimeUsed(boolean randomTimeUsed) {
+		this.randomTimeUsed = randomTimeUsed;
+		return this;
+	}
+
+	/**
+	 * Sets exceptionErrorLevel.
+	 * 
+	 * @param exceptionErrorLevel
+	 *            exceptionErrorLevel
+	 * @return this instance
+	 */
+	public RetryAction<T, Z> setExceptionErrorLevel(boolean exceptionErrorLevel) {
+		this.exceptionErrorLevel = exceptionErrorLevel;
+		return this;
+	}
 }

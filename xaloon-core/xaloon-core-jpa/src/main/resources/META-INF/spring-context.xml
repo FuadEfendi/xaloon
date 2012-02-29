@@ -41,7 +41,10 @@
 				
 				<!-- Audit -->
 				<value>org.xaloon.core.jpa.audit.model.JpaAuditEntity</value>		
-				<value>org.xaloon.core.jpa.audit.model.JpaAuditEntityItem</value>							
+				<value>org.xaloon.core.jpa.audit.model.JpaAuditEntityItem</value>	
+				
+				<!-- Counter -->
+				<value>org.xaloon.core.jpa.counting.model.JpaCounterEntity</value>							
 			</list>
 		</property>
 	</bean>	
