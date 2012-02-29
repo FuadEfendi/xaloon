@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.xaloon.plugins</groupId>
 		<artifactId>xaloon-wicket-plugins-parent</artifactId>
-		<version>1.5.1</version>
+		<version>1.5.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xaloon-wicket-plugin-authentication</artifactId>
 	<packaging>jar</packaging>
