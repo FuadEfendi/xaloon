@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
@@ -40,17 +42,17 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 public class CdiProxyFieldValueFactory implements IFieldValueFactory {
 	private static final String NULL = "NULL";
-	
+
 	private final ISpringContextLocator contextLocator;
 	private final SpringAnnotationResolver[] beanNameResolvers;
-	
+
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
 	private final ConcurrentHashMap<Class<?>, String> beanNameCache = Generics.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
-	public CdiProxyFieldValueFactory(ISpringContextLocator contextLocator, boolean wrapInProxies, SpringAnnotationResolver ... beanNameResolvers) {
+	public CdiProxyFieldValueFactory(ISpringContextLocator contextLocator, boolean wrapInProxies, SpringAnnotationResolver... beanNameResolvers) {
 		this.contextLocator = contextLocator;
 		this.wrapInProxies = wrapInProxies;
 		this.beanNameResolvers = beanNameResolvers;
@@ -87,14 +89,21 @@ public class CdiProxyFieldValueFactory implements IFieldValueFactory {
 	}
 
 	private String getBeanName(final Field field) {
-		String name = beanNameCache.get(field.getType());
+		String name = null;
+		Named annotation = field.getAnnotation(Named.class);
+		if (annotation != null && !StringUtils.isEmpty(annotation.value())) {
+			name = annotation.value();
+		}
+		if (StringUtils.isEmpty(name)) {
+			name = beanNameCache.get(field.getType());
+		}
 		if (StringUtils.isEmpty(name)) {
 			name = resolveBeanName(field);
 			if (StringUtils.isEmpty(name)) {
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType());					
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType());
 			}
 			if (!StringUtils.isEmpty(name)) {
-				beanNameCache.put(field.getType(), name);			
+				beanNameCache.put(field.getType(), name);
 			} else {
 				beanNameCache.put(field.getType(), NULL);
 			}
@@ -124,7 +133,7 @@ public class CdiProxyFieldValueFactory implements IFieldValueFactory {
 		while (it.hasNext()) {
 			final String possibility = it.next();
 			if (ctx instanceof AbstractApplicationContext) {
-				BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext) ctx).getBeanFactory(), possibility);
+				BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx).getBeanFactory(), possibility);
 				if (BeanFactoryUtils.isFactoryDereference(possibility) || possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate()) {
 					it.remove();
 				}
@@ -137,9 +146,9 @@ public class CdiProxyFieldValueFactory implements IFieldValueFactory {
 			if (ctx instanceof AbstractApplicationContext) {
 				List<String> primaries = new ArrayList<String>();
 				for (String name : names) {
-					BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext) ctx).getBeanFactory(), name);
+					BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx).getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition) {
-						if (((AbstractBeanDefinition) beanDef).isPrimary()) {
+						if (((AbstractBeanDefinition)beanDef).isPrimary()) {
 							primaries.add(name);
 						}
 					}
@@ -167,7 +176,7 @@ public class CdiProxyFieldValueFactory implements IFieldValueFactory {
 		} else {
 			BeanFactory parent = beanFactory.getParentBeanFactory();
 			if (parent != null && parent instanceof ConfigurableListableBeanFactory) {
-				return getBeanDefinition((ConfigurableListableBeanFactory) parent, name);
+				return getBeanDefinition((ConfigurableListableBeanFactory)parent, name);
 			} else {
 				return null;
 			}
