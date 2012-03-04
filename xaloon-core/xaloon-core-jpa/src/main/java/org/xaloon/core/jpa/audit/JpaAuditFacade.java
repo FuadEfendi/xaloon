@@ -117,7 +117,9 @@ public class JpaAuditFacade implements AuditFacade {
 						details.setCreateDate(new Date());
 						details.setUpdateDate(new Date());
 						details.setName(parentClass.getName() + "." + fieldName);
-						details.setValue(value.toString());
+						if (value != null) {
+							details.setValue(value.toString());
+						}
 						details.setKey(annotation.key());
 						ae.getAuditEntityItems().add(details);
 					}
@@ -132,7 +134,7 @@ public class JpaAuditFacade implements AuditFacade {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AuditEntity> search(List<String> auditableEntityNames, int first, int count) {
-		return em.createQuery("select a from " + JpaAuditEntity.class.getSimpleName() + " a")
+		return em.createQuery("select a from " + JpaAuditEntity.class.getSimpleName() + " a order by a.createDate desc")
 			.setFirstResult(first)
 			.setMaxResults(count)
 			.getResultList();
