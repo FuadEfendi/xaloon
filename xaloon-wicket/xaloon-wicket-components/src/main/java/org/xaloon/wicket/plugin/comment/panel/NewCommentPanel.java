@@ -95,20 +95,18 @@ public class NewCommentPanel extends AbstractPluginPanel<CommentPluginBean, Comm
 			super.onInitialize();
 		}
 
-		@Override
-		protected void onValidate() {
-			Comment comment = getModelObject();
-			if (StringUtils.isEmpty(comment.getMessage()) || comment.getMessage().length() < 10) {
-				error(getString("error_EmptyComment"));
-			}
-		}
-
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void onSubmit() {
 			final PageParameters pageParameters = getPageRequestParameters();
 
 			Comment comment = getModelObject();
+
+			if (StringUtils.isEmpty(comment.getMessage()) || comment.getMessage().length() < 10) {
+				error(getString("error_EmptyComment"));
+				return;
+			}
+
 			String absolutePath = UrlUtils.toAbsolutePath((Class<? extends Page>)getParentPageClass(), pageParameters);
 			comment.setPath(absolutePath);
 			if (!getPluginBean().isApplyByAdministrator() || securityFacade.isOwnerOfObject(authorUsername)) {
