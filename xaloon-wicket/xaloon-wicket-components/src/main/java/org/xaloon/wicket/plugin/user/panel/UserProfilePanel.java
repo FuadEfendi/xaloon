@@ -138,7 +138,7 @@ public class UserProfilePanel<T extends User> extends Panel {
 	}
 
 	private void createUserProfileImagePanel(Form<T> profileForm, T user) {
-		InputStreamContainerOptions options = new InputStreamContainerOptions().setHeight(80).setWidth(80).setResize(!user.isExternal());
+		InputStreamContainerOptions options = new InputStreamContainerOptions().setHeight(60).setWidth(60).setResize(!user.isExternal());
 		IModel<FileDescriptor> fModel = new PropertyModel<FileDescriptor>(user, "photoThumbnail");
 		ThumbnailManagementPanel thumbnailManagementPanel = new ThumbnailManagementPanel("user-photo-thumbnail", fModel, options);
 		profileForm.add(thumbnailManagementPanel);
