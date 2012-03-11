@@ -74,8 +74,8 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 	}
 
 	@Override
-	public <T extends ClassifierItem> void createClassifierItem(T item) {
-		persistenceServices.createOrEdit(item);
+	public <T extends ClassifierItem> T createClassifierItem(T item) {
+		return persistenceServices.createOrEdit(item);
 	}
 
 
@@ -113,6 +113,10 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 
 		if (!StringUtils.isEmpty(classifierItemSearchRequest.getClassifierItemCode())) {
 			queryBuilder.addParameter("cli.code", "ITEM_CODE", classifierItemSearchRequest.getClassifierItemCode().toUpperCase());
+		}
+
+		if (!StringUtils.isEmpty(classifierItemSearchRequest.getClassifierItemName())) {
+			queryBuilder.addParameter("cli.name", "ITEM_NAME", classifierItemSearchRequest.getClassifierItemName().toUpperCase(), false, true);
 		}
 
 		if (classifierItemSearchRequest.isParentSelection()) {

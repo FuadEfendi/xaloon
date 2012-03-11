@@ -34,8 +34,9 @@ public interface ClassifierItemDao extends Serializable {
 	 * 
 	 * @param item
 	 *            instance to persist.
+	 * @return created item
 	 */
-	<T extends ClassifierItem> void createClassifierItem(T item);
+	<T extends ClassifierItem> T createClassifierItem(T item);
 
 	/**
 	 * Counts how many classifier items are in storage by provided parameters

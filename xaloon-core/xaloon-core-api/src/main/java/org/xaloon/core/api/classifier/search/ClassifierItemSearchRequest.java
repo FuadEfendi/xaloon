@@ -33,6 +33,8 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 
 	private String classifierItemCode;
 
+	private String classifierItemName;
+
 	private String parentClassifierItemCode;
 
 	/**
@@ -88,5 +90,24 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 	 */
 	public boolean isParentSelection() {
 		return StringUtils.isEmpty(parentClassifierItemCode) && StringUtils.isEmpty(classifierItemCode);
+	}
+
+	/**
+	 * Gets classifierItemName.
+	 * 
+	 * @return classifierItemName
+	 */
+	public String getClassifierItemName() {
+		return classifierItemName;
+	}
+
+	/**
+	 * Sets classifierItemName.
+	 * 
+	 * @param classifierItemName
+	 *            classifierItemName
+	 */
+	public void setClassifierItemName(String classifierItemName) {
+		this.classifierItemName = classifierItemName;
 	}
 }

@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.xaloon.core.api.audit.annotation.Auditable;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.util.UrlUtil;
@@ -120,22 +122,26 @@ public class JpaClassifierItem extends BookmarkableEntity implements ClassifierI
 	}
 
 	@Override
-	public int hashCode() {
-		if (getId() != null) {
-			return getId().intValue();
-		} else {
-			return super.hashCode();
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof JpaClassifierItem)) {
+			return false;
 		}
+		JpaClassifierItem item = (JpaClassifierItem)obj;
+
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(getCode(), item.getCode());
+		equalsBuilder.append(getName(), item.getName());
+		equalsBuilder.append(getClassifier().getType(), item.getClassifier().getType());
+		return equalsBuilder.isEquals();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if ((obj != null) && (obj instanceof JpaClassifierItem)) {
-			if ((getId() != null) && (((JpaClassifierItem)obj).getId() != null)) {
-				return getId().equals(((JpaClassifierItem)obj).getId());
-			}
-		}
-		return super.equals(obj);
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(getCode());
+		hashCodeBuilder.append(getName());
+		hashCodeBuilder.append(getClassifier().getType());
+		return hashCodeBuilder.hashCode();
 	}
 
 	@Override
