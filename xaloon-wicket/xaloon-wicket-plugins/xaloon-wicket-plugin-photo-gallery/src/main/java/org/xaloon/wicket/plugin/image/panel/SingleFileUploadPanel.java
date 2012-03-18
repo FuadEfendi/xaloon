@@ -38,6 +38,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
+import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.wicket.component.resource.WicketInputStreamContainer;
 
 /**
@@ -156,7 +157,7 @@ public class SingleFileUploadPanel extends Panel {
 			temporaryImage.setImageInputStreamContainer(new WicketInputStreamContainer(fileUpload));
 			temporaryImage.setMimeType(fileUpload.getContentType());
 			temporaryImage.setName(fileUpload.getClientFileName());
-			temporaryImage.setPath(fileUpload.getClientFileName());
+			temporaryImage.setPath(UrlUtil.encode(fileUpload.getClientFileName()));
 			temporaryImage.setSize(fileUpload.getSize());
 		}
 

@@ -119,7 +119,7 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 			queryBuilder.addParameter("cli.name", "ITEM_NAME", classifierItemSearchRequest.getClassifierItemName().toUpperCase(), false, true);
 		}
 
-		if (classifierItemSearchRequest.isParentSelection()) {
+		if (classifierItemSearchRequest.isParentSelection() && !classifierItemSearchRequest.isIgnoreParentCode()) {
 			queryBuilder.addExpression("cli.parent is null");
 		}
 		queryBuilder.setFirstRow(classifierItemSearchRequest.getFirstRow());

@@ -37,6 +37,27 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 
 	private String parentClassifierItemCode;
 
+	private boolean ignoreParentCode;
+
+	/**
+	 * Gets ignoreParentCode.
+	 * 
+	 * @return ignoreParentCode
+	 */
+	public boolean isIgnoreParentCode() {
+		return ignoreParentCode;
+	}
+
+	/**
+	 * Sets ignoreParentCode.
+	 * 
+	 * @param ignoreParentCode
+	 *            ignoreParentCode
+	 */
+	public void setIgnoreParentCode(boolean ignoreParentCode) {
+		this.ignoreParentCode = ignoreParentCode;
+	}
+
 	/**
 	 * @return classifier type
 	 */

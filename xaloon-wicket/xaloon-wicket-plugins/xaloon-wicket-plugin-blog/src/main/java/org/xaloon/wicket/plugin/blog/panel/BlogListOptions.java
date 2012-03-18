@@ -18,6 +18,8 @@ package org.xaloon.wicket.plugin.blog.panel;
 
 import java.io.Serializable;
 
+import org.xaloon.core.api.image.ImageSize;
+
 /**
  * @author vytautas r.
  */
@@ -35,6 +37,8 @@ public class BlogListOptions implements Serializable {
 	private int descriptionLength = -1;
 
 	private String descriptionStyle;
+	
+	private ImageSize imageSize;
 
 	/**
 	 * Gets maxBlogEntriesCount.
@@ -117,6 +121,22 @@ public class BlogListOptions implements Serializable {
 	 */
 	public BlogListOptions setDescriptionStyle(String descriptionStyle) {
 		this.descriptionStyle = descriptionStyle;
+		return this;
+	}
+
+	/**
+	 * @return the imageSize
+	 */
+	public ImageSize getImageSize() {
+		return imageSize;
+	}
+
+	/**
+	 * @param imageSize the imageSize to set
+	 * @return the instance
+	 */
+	public BlogListOptions setImageSize(ImageSize imageSize) {
+		this.imageSize = imageSize;
 		return this;
 	}
 }

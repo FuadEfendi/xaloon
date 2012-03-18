@@ -41,7 +41,7 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private BlogListOptions blogListOptions;
+	protected BlogListOptions blogListOptions;
 	
 	/**
 	 * Construct.
@@ -128,9 +128,15 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 
 				// Add image to link
 				if (thumbnail != null) {
-					ImageLink imageLink = new ImageLink("image", thumbnail.getPath());
-					imageLink.setWidth(getPluginBean().getBlogImageWidth());
-					imageLink.setHeight(getPluginBean().getBlogImageHeight());
+					ImageLink imageLink = new ImageLink("image", getModifiedPath(thumbnail.getPath()));
+					int imageWidth = getPluginBean().getBlogImageWidth();
+					int imageHeight = getPluginBean().getBlogImageHeight();
+					if (blogListOptions.getImageSize() != null) {
+						imageWidth = blogListOptions.getImageSize().getWidth();
+						imageHeight = blogListOptions.getImageSize().getHeight();
+					}
+					imageLink.setWidth(imageWidth);
+					imageLink.setHeight(imageHeight);
 					imageLink.setTitle(blogEntry.getTitle());
 
 					link_image.add(imageLink);
@@ -185,6 +191,17 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 		};
 		dataContainer.addAbstractPageableView(blogEntryDataView, !(blogListOptions.getMaxBlogEntriesCount() > 0));
 	}
+
+	/**
+	 * Path optimizations should be done here if necessary
+	 * 
+	 * @param path
+	 * @return
+	 */
+	protected String getModifiedPath(String path) {
+		return path;
+	}
+
 
 	protected FileDescriptor getBlogEntryThumbnail(BlogEntry blogEntry) {
 		if (blogEntry.getThumbnail() != null) {

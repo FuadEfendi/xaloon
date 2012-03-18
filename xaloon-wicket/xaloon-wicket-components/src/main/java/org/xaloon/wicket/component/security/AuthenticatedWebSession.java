@@ -83,6 +83,7 @@ public class AuthenticatedWebSession extends WebSession {
 
 	private AuthenticationToken signinInternal(AuthenticationToken authenticationResultToken) {
 		if (authenticationResultToken.isAuthenticated()) {
+			replaceSession();
 			bind();
 		}
 		return authenticationResultToken;
