@@ -86,7 +86,7 @@ public class PicasaFileStorageService implements FileStorageService {
 	@Override
 	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer, Map<String, Object> additionalProperties) {
 		try {
-			String userEmail = (String)additionalProperties.get("useremail");
+			String userEmail = (String)additionalProperties.get(FileStorageService.PARAMETER_USER_EMAIL);
 			if (StringUtils.isEmpty(userEmail)) {
 				userEmail = securityFacade.getCurrentUserEmail();
 			}
