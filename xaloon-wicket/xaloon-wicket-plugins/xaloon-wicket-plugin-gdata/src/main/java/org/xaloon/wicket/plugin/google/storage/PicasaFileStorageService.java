@@ -97,7 +97,7 @@ public class PicasaFileStorageService implements FileStorageService {
 				throw new IllegalArgumentException("location is not provided!");
 			}
 			final PicasawebService picasawebService = new PicasawebService("xaloon-application");
-			Object accessTokenValue = (Object)additionalProperties.get("authToken");
+			Object accessTokenValue = (Object)additionalProperties.get(FileStorageService.PARAMETER_USER_TOKEN);
 			if (accessTokenValue == null) {
 				accessTokenValue = Configuration.get().getOauthSecurityTokenProvider().getSecurityToken();
 			}
