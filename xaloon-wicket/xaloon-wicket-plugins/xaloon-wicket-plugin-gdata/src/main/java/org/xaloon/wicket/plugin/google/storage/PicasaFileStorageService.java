@@ -88,7 +88,7 @@ public class PicasaFileStorageService implements FileStorageService {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer, Map<String, Object> additionalProperties) {
+	public KeyValue<String, String> storeFile(final FileDescriptor fileDescriptor, final InputStreamContainer inputStreamContainer, Map<String, Object> additionalProperties) {
 		try {
 			String userEmail = (String)additionalProperties.get(FileStorageService.PARAMETER_USER_EMAIL);
 			if (StringUtils.isEmpty(userEmail)) {
@@ -116,12 +116,6 @@ public class PicasaFileStorageService implements FileStorageService {
 
 			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId());
 
-			final PhotoEntry myPhoto = new PhotoEntry();
-			myPhoto.setTitle(new PlainTextConstruct(fileDescriptor.getPath()));
-
-			MediaStreamSource myMedia = new MediaStreamSource(inputStreamContainer.getInputStream(), "image/jpeg");
-			myPhoto.setMediaSource(myMedia);
-
 			PhotoEntry entry =new RetryAction<PhotoEntry, Void>(false) {
 
 				/**
@@ -132,13 +126,22 @@ public class PicasaFileStorageService implements FileStorageService {
 				@Override
 				protected PhotoEntry onPerform(Void parameters) {
 					try {
+						PhotoEntry myPhoto = new PhotoEntry();
+						String title = fileDescriptor.getPath();
+						if (title.length() > 99) {
+							title = title.substring(0,99);
+						}
+						myPhoto.setTitle(new PlainTextConstruct(title));
+
+						MediaStreamSource myMedia = new MediaStreamSource(inputStreamContainer.getInputStream(), "image/jpeg");
+						myPhoto.setMediaSource(myMedia);
 						return picasawebService.insert(albumPostUrl, myPhoto);
 					} catch (Exception e) {
 						LOGGER.error("Could not upload photo, due to picasa service error!", e);
 					}
 					return null;
 				}
-			}.setRandomTimeUsed(true).setMillisecondsToSleep(20000).setRetryCount(5). perform(null);
+			}.setRandomTimeUsed(true).setMillisecondsToSleep(10000).setRetryCount(5). perform(null);
 			 
 			if (entry == null) {
 				emailFacade.sendMailToSystem(String.format("Upload of image failed: %s", fileDescriptor.getPath()), emailFacade.getSystemEmail(), "Picasa File Storage");

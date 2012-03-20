@@ -64,7 +64,7 @@ public abstract class RetryAction<T, Z> implements Serializable {
 		T result = null;
 		int timeToSleep = millisecondsToSleep;
 		if (randomTimeUsed) {
-			timeToSleep = new Random().nextInt(timeToSleep);
+			timeToSleep = new Random().nextInt(timeToSleep) + timeToSleep;
 		}
 		while (result == null && i++ < retryCount) {
 			if (sleepFirst) {
