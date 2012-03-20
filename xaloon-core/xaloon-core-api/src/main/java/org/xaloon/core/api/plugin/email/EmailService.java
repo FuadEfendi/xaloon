@@ -49,4 +49,11 @@ public interface EmailService extends Serializable {
 	 * @return true if email plugin is enabled
 	 */
 	boolean isEnabled();
+
+	/**
+	 * Returns email of the system administrator
+	 * 
+	 * @return system administrator's email
+	 */
+	String getSystemEmail();
 }

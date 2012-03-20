@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.asynchronous.RetryAction;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.core.api.plugin.email.EmailFacade;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileStorageService;
@@ -76,6 +77,9 @@ public class PicasaFileStorageService implements FileStorageService {
 
 	@Inject
 	private SecurityFacade securityFacade;
+	
+	@Inject
+	private EmailFacade emailFacade;
 
 	@Override
 	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer) {
@@ -134,9 +138,10 @@ public class PicasaFileStorageService implements FileStorageService {
 					}
 					return null;
 				}
-			}.perform(null);
+			}.setRandomTimeUsed(true).setMillisecondsToSleep(20000).setRetryCount(5). perform(null);
 			 
 			if (entry == null) {
+				emailFacade.sendMailToSystem(String.format("Upload of image failed: %s", fileDescriptor.getPath()), emailFacade.getSystemEmail(), "Picasa File Storage");
 				throw new RuntimeException("Could not finish action, because service is not relialible!");
 			}
 			String identifier = "/albumid/" + album.getGphotoId() + "/photoid/" + entry.getGphotoId();
