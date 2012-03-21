@@ -21,17 +21,15 @@
 	<h2>Image information</h2>
 	<form wicket:id="image-form">
 		<div wicket:id="feedback"></div>
-		<div class="row width_shorter">
-				<label>Sticky image
-					<span class="small">Image should be first in order</span>
-				</label>
-				<input type="checkbox" name="sticky" id="sticky" class="input" wicket:id="sticky"/>
-			</div>
+		
 		<div>
-			<input type="text" wicket:id="title"/>
+			Title: <input type="text" wicket:id="title"/>
 		</div>
 		<div>
-			<TEXTAREA cols="20" rows="5" class="entry_content" wicket:id="description"></TEXTAREA>
+			Custom order: <input type="text" wicket:id="customOrder"/>
+		</div>
+		<div>
+			Description: <TEXTAREA cols="20" rows="5" class="entry_content" wicket:id="description"></TEXTAREA>
 		</div>
 		<div>
 			<input type="button" value="Save" wicket:id="submit"/>

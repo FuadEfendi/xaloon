@@ -89,7 +89,8 @@ public class ClassifierItemListPanel extends Panel {
 		addCreateNewClassifierItem(classifierItemOptions, classifierDropDownChoice);
 	}
 
-	private void addCreateNewClassifierItem(final ClassifierItemOptions classifierItemOptions, final ClassifierDropDownChoice classifierDropDownChoice) {
+	protected void addCreateNewClassifierItem(final ClassifierItemOptions classifierItemOptions,
+		final ClassifierDropDownChoice classifierDropDownChoice) {
 		final ModalWindow modal2 = new CustomModalWindow("modal2") {
 			private static final long serialVersionUID = 1L;
 

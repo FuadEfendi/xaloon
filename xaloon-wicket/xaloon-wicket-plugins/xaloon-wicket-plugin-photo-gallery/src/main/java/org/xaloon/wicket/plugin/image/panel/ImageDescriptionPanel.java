@@ -2,7 +2,6 @@ package org.xaloon.wicket.plugin.image.panel;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -41,9 +40,9 @@ public abstract class ImageDescriptionPanel extends Panel {
 		// Add image title
 		imageForm.add(new TextField<String>("title"));
 
-		// Add image title
-		imageForm.add(new CheckBox("sticky"));
-
+		// Add custom order
+		imageForm.add(new TextField<Integer>("customOrder"));
+				
 		// Add image description
 		imageForm.add(new TextArea<String>("description"));
 

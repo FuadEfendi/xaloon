@@ -78,7 +78,7 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	private String content;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("sticky desc")
+	@OrderBy("customOrder asc")
 	@JoinTable(name = "XAL_BLOG_ENTRY_IMAGES", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
 	private List<JpaImage> images = new ArrayList<JpaImage>();
 

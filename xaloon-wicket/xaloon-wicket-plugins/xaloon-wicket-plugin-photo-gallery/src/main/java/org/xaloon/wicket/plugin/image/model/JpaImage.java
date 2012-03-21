@@ -52,9 +52,9 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "THUMBNAIL_ID", referencedColumnName = "ID")
 	private JpaFileDescriptor thumbnail;
-
-	@Column(name = "IS_STICKY")
-	private boolean sticky;
+	
+	@Column(name = "CUSTOM_ORDER")
+	private int customOrder = 9999;
 	
 	@Column(name = "TITLE")
 	private String title;
@@ -296,16 +296,16 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	}
 
 	/**
-	 * @return the sticky
+	 * @return the customOrder
 	 */
-	public boolean isSticky() {
-		return sticky;
+	public int getCustomOrder() {
+		return customOrder;
 	}
 
 	/**
-	 * @param sticky the sticky to set
+	 * @param customOrder the customOrder to set
 	 */
-	public void setSticky(boolean sticky) {
-		this.sticky = sticky;
+	public void setCustomOrder(int customOrder) {
+		this.customOrder = customOrder;
 	}
 }
