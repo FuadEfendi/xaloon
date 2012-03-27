@@ -1,116 +1,365 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
-   <title>Getting Started</title>
-	<section>
-		<title>Building startup project</title>
-		<section>
-			<title>Web container based project</title>
-			<para>
-				Xaloon provides several archetypes to create project structure in more elegant way.
-			</para>
-			<para>Generating project:</para>
-			<programlisting language="java"><![CDATA[[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns5="http://www.w3.org/1999/xhtml"
+         xmlns:ns4="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns3="http://www.w3.org/2000/svg"
+         xmlns:ns2="http://www.w3.org/1999/xlink"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Getting Started</title>
+
+  <section>
+    <title>Building startup project</title>
+
+    <section>
+      <title>Web container based project</title>
+
+      <para>Xaloon provides several archetypes to create project structure in
+      more elegant way.</para>
+
+      <para>Generating project:</para>
+
+      <programlisting language="java">[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
 -DarchetypeArtifactId=xaloon-archetype-wicket-jpa-spring \
--DarchetypeVersion=1.5.0 \
+-DarchetypeVersion=1.5.? \
 -DgroupId=com.mycompany \
--DartifactId=myproject]]></programlisting>
-			<para>
-				This will create ready-to-deploy web application, which can be started using web application container, such Apache Tomcat, Jetty. Created project contains these dependencies:	
-			</para>
-			<itemizedlist>
-				<listitem>
-					<para>xaloon wicket components, xaloon JPA persistence, xaloon plugins</para>
-				</listitem>
-				<listitem>
-					<para>hibernate - for persistence management</para>
-				</listitem>
-				<listitem>
-					<para>spring - for DI, security and transaction management</para>
-				</listitem>
-			</itemizedlist>
-			<para>Deploying and running application:</para>
-			<programlisting><![CDATA[[xaloon/myproject/myproject-web]$ mvn jetty:run]]></programlisting>
-			<para>This will start jetty container with xaloon application deployed.</para>
-		</section>
-		<section>
-			<title>Glassfish JEE project</title>
-			<para>Generating project:</para>
-			<programlisting><![CDATA[[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
+-DartifactId=myproject</programlisting>
+
+      <para>This will create ready-to-deploy web application, which can be
+      started using web application container, such Apache Tomcat, Jetty.
+      Created project contains these dependencies:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>xaloon wicket components, xaloon JPA persistence, xaloon
+          plugins</para>
+        </listitem>
+
+        <listitem>
+          <para>hibernate - for persistence management</para>
+        </listitem>
+
+        <listitem>
+          <para>spring - for DI, security and transaction management</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Deploying and running application:</para>
+
+      <programlisting>[xaloon/myproject/myproject-web]$ mvn jetty:run</programlisting>
+
+      <para>This will start jetty container with xaloon application
+      deployed.</para>
+    </section>
+
+    <section>
+      <title>Glassfish JEE project</title>
+
+      <para>Generating project:</para>
+
+      <programlisting>[xaloon]$ mvn archetype:generate -DarchetypeGroupId=org.xaloon.archetype \
 -DarchetypeArtifactId=xaloon-archetype-wicket-jpa-glassfish \
--DarchetypeVersion=1.5.0 \
+-DarchetypeVersion=1.5.? \
 -DgroupId=com.mycompany \
--DartifactId=myproject-j2ee]]></programlisting>
-			<para>
-				This will create ready-to-deploy web application, which can be started using Glassfish 3.1. Created project will contain these dependencies:</para>
-			<itemizedlist>
-				<listitem>
-					<para>xaloon wicket components, xaloon JPA persistence, xaloon plugins</para>
-				</listitem>
-				<listitem>
-					<para>apache shiro - for security</para>
-				</listitem>				
-			</itemizedlist>
-			<para>xaloon application will reuse Java EE 6 capabilities:</para>	
-			<itemizedlist>
-				<listitem>
-					<para>CDI - for dependency injection</para>
-				</listitem>
-				<listitem>
-					<para>JPA - for persistence</para>
-				</listitem>
-				<listitem>
-					<para>Partially - Java EE security. Standard security roles are used to authorise wicket web pages.</para>
-				</listitem>		
-				<listitem>
-					<para>Transaction management</para>
-				</listitem>						
-			</itemizedlist>	
-			<para>You should have Glassfish >=3.1.1 up and running. Also database should be started. Then
-				deployment is very easy. You should change glassfish username and password in
-				<emphasis>pom.xml</emphasis> file</para>
-			<programlisting><![CDATA[[xaloon/myproject-j2ee/myproject-j2ee-ear]$ mvn glassfish:deploy]]></programlisting>
-		</section>
-		<section>
-			<title>Default username/password</title>
-			<para>Default username/password is created when generating demo application or application from
-				archtype: <emphasis>demo/demo</emphasis>. This is done by class
-				TemporaryFacadeImpl.java which is invoked on application startup. You should use
-				this class only for test purposes.</para>
-		</section>
-	</section>
-	<section>
-		<title>Configuration</title>
-		<para></para>
-	</section>
-	<section>
-		<title>Adding existing plugin</title>
-		<para></para>
-	</section>
-   	<section>
-		<title>Creating project manually</title>
-		<section>
-			<title>Add maven dependencies</title>
-			<para></para>
-		</section>
-		<section>
-			<title>Creating Apache Wicket Web application</title>
-			<para></para>
-		</section>
-		<section>
-			<title>Implementing custom layout</title>
-			<para></para>
-		</section>
-		<section>
-			<title>Creating new page</title>
-			<para></para>
-		</section>
-		<section>
-			<title>Mounting pages</title>
-			<para></para>
-		</section>
-		<section>
-			<title>Adding security</title>
-			<para></para>
-		</section>
-	</section>	
+-DartifactId=myproject-j2ee</programlisting>
+
+      <para>This will create ready-to-deploy web application, which can be
+      started using Glassfish 3.1. Created project will contain these
+      dependencies:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>xaloon wicket components, xaloon JPA persistence, xaloon
+          plugins</para>
+        </listitem>
+
+        <listitem>
+          <para>apache shiro - for security</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>xaloon application will reuse Java EE 6 capabilities:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>CDI - for dependency injection</para>
+        </listitem>
+
+        <listitem>
+          <para>JPA - for persistence</para>
+        </listitem>
+
+        <listitem>
+          <para>Partially - Java EE security. Standard security roles are used
+          to authorise wicket web pages.</para>
+        </listitem>
+
+        <listitem>
+          <para>Transaction management</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>You should have Glassfish &gt;=3.1.1 up and running. Also database
+      should be started. Then deployment is very easy. You should change
+      glassfish username and password in <emphasis>pom.xml</emphasis>
+      file</para>
+
+      <programlisting>[xaloon/myproject-j2ee/myproject-j2ee-ear]$ mvn glassfish:deploy</programlisting>
+    </section>
+
+    <section>
+      <title>Default username/password</title>
+
+      <para>Default username/password is created when generating demo
+      application or application from archtype:
+      <emphasis>demo/demo</emphasis>. This is done by class
+      TemporaryFacadeImpl.java which is invoked on application startup. You
+      should use this class only for test purposes.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Configuration</title>
+
+    <para>There are three layers of application configuration:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Dependecy &amp; plugin usage at design time(edit pom.xml)</para>
+      </listitem>
+
+      <listitem>
+        <para>Application configuration.</para>
+      </listitem>
+
+      <listitem>
+        <para>Plugin management online.</para>
+      </listitem>
+    </orderedlist>
+
+    <section>
+      <title>Dependecy &amp; plugin usage at design time(edit pom.xml)</title>
+
+      <para>You can modify your application architecture design using pom.xml
+      and addind removing dependencies. These dependencies are available at
+      the moment:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>xaloon-core-jpa - JPA implementation for xaloon-core-api
+          (default, required)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-core-jcr - JCR implementation for file storage
+          (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-core-cache - Jboss infinispan implementation for
+          caching (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-core-security-shiro - Apache Shiro based security
+          implementation (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-core-security-spring - Spring based security
+          implementation (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-core-security-spring - Spring based security
+          implementation (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-components - Apache Wicket core components
+          (required)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-components-resources - Apache Wicket resources
+          (required, html, xml, css, etc)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-components-jee - CDI integration for Java EE 6
+          environment (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-components-spring - additional spring components
+          if spring is used (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-plugin-authentication - external authentication
+          plugin for google oauth 2, facebook, linkedin, twitter
+          (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-plugin-blog - blog plugin (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-plugin-gdata - picasaweb as a image repository
+          (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-plugin-google - various google related
+          components (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>xaloon-wicket-plugin-photo-gallery - Simple photo gallery
+          plugin (optional)</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Application configuration.</title>
+
+      <para>Customized <emphasis
+      role="bold">org.xaloon.wicket.component.security.AuthenticatedWebApplication
+      </emphasis>class is at your service with initial system configuration.
+      However, you can extend this class and override existing properties with
+      your ones. This might give huge flexibility while configuring your
+      application.</para>
+
+      <programlisting>@Override
+	protected Class&lt;? extends User&gt; getPersistedUserImplementation() {
+		return JpaUser.class;
+	}</programlisting>
+
+      <para>This method should be used if you extended <emphasis
+      role="bold">org.xaloon.core.jpa.user.model.JpaUser</emphasis> class and
+      would like to override default one.</para>
+
+      <programlisting>@Override
+	protected void onAddMountScannerListener(SpringMountScanner scanner) {
+		scanner.addMountScannerListener(new TrailingSlashPageMountingListener());
+	}</programlisting>
+
+      <para><emphasis role="bold">onAddMountScannerListener - <emphasis>you
+      should use this method if you want to provide custom page mounting
+      listener for you pages. It is helpful if you have different page
+      mounting strategy and would like to use it. It also possible to add page
+      mounting listener as additional one if you want to have backward
+      compatibility with your previous application version which had
+      difference mounting strategy.</emphasis></emphasis></para>
+
+      <programlisting>@Override
+	protected void onBeforeMountPackage(List&lt;String&gt; mountingPackages) {
+		mountingPackages.add("com.mycompany");
+	}</programlisting>
+
+      <para><emphasis role="bold">onBeforeMountPackage</emphasis> - add
+      package name which should be scanned for <emphasis
+      role="bold">@MountPage</emphasis> annotation and which should be mounted
+      by xaloon mounting system.</para>
+
+      <programlisting>@Override
+	protected void initComponentInjector() {
+		SpringAnnotationResolver[] resolvers = new SpringAnnotationResolver[] {new CdiAnnotationResolver(), new SpringBeanAnnotationResolver()};
+		getComponentInstantiationListeners().add(new CdiComponentInjector(this, resolvers));
+		Injector.get().inject(this);
+	}</programlisting>
+
+      <para><emphasis role="bold">initComponentInjector</emphasis> - configure
+      injectors. Here you may add Spring, CDI or both dependency
+      injectors.</para>
+
+      <programlisting>@Override
+	protected void onLoadConfiguration(Configuration config) {
+		config.setBeanLocatorAdapter(new SpringBeanLocatorAdapter());
+		config.getUserListenerCollection().add(new BlogUserListener());
+		config.getUserListenerCollection().add(new GalleryUserListener());
+	}</programlisting>
+
+      <para>onLoadConfiguration - additional configuration for xaloon based
+      application. Usually it is technical configuration. Here you can provide
+      your custom plugin bean serializer (<emphasis
+      role="bold">org.xaloon.core.api.plugin.PluginBeanSerializer</emphasis>),
+      bean locator adapter (<emphasis
+      role="bold">org.xaloon.core.api.inject.BeanLocatorAdapter</emphasis>),
+      file repository cache (<emphasis
+      role="bold">org.xaloon.core.api.cache.Cache</emphasis>). Also you may
+      add custom listeners for specific actions, such as user entity listener
+      (<emphasis
+      role="bold">org.xaloon.core.api.user.UserListener</emphasis>), plugin
+      registry event listener (<emphasis
+      role="bold">org.xaloon.core.api.plugin.PluginRegistryListener</emphasis>),
+      resource repository event listener (<emphasis
+      role="bold">org.xaloon.core.api.plugin.resource.ResourceRepositoryListener</emphasis>)</para>
+    </section>
+
+    <section>
+      <title>Plugin management online.</title>
+
+      <para><figure>
+          <title>plugin management panel online</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="media/plugin-management-online.png"
+                         width="800"/>
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Each plugin has it's own properties, which might be configured
+      while application is running. These properties are stored in database
+      and reloaded once they are changed. It is the easiest way to change
+      custom properties once it is required, without application restart.
+      Plugin administration panel is provided by xaloon for modification of
+      these properties (it is accessible via user interface at <emphasis
+      role="bold">[HOST][/CONTEXT]/admin/plugin-management/</emphasis>).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Creating project manually</title>
+
+    <section>
+      <title>Add maven dependencies</title>
+
+      <para/>
+    </section>
+
+    <section>
+      <title>Creating Apache Wicket Web application</title>
+
+      <para/>
+    </section>
+
+    <section>
+      <title>Implementing custom layout</title>
+
+      <para/>
+    </section>
+
+    <section>
+      <title>Creating new page</title>
+
+      <para/>
+    </section>
+
+    <section>
+      <title>Mounting pages</title>
+
+      <para/>
+    </section>
+
+    <section>
+      <title>Adding security</title>
+
+      <para/>
+    </section>
+  </section>
 </chapter>
