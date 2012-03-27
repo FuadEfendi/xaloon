@@ -17,12 +17,14 @@
 package org.xaloon.wicket.component.mount.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.xaloon.wicket.component.mount.MountScanner;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.component.security.AuthenticatedWebApplication;
 
 /**
  * Implementation class for {@link MountScanner} uses spring package scanner to scan packages for required annotation
@@ -41,6 +43,7 @@ public class SpringMountScanner extends MountScanner<WebApplication> {
 	private AnnotatedMountScanner annotatedMountScanner = new AnnotatedMountScanner();
 
 	@Override
+	@Deprecated
 	public List<Class<?>> mountPackage(WebApplication application, String packageName) {
 		// Scan for web pages
 		List<Class<?>> result = annotatedMountScanner.scanPackage(packageName, MountPage.class);
@@ -48,5 +51,10 @@ public class SpringMountScanner extends MountScanner<WebApplication> {
 		// Notify waiting listeners
 		getMountScannerListenerCollection().onMount(result);
 		return result;
+	}
+
+	public void mountPackage(AuthenticatedWebApplication application, Map<String, Class<?>> mountPages) {
+		// Notify waiting listeners
+		getMountScannerListenerCollection().onMount(mountPages);
 	}
 }

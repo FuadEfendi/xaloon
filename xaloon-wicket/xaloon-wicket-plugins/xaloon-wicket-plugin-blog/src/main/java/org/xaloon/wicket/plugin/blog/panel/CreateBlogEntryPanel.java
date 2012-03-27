@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator.MaximumLengthValidator;
 import org.xaloon.core.api.classifier.ClassifierItem;
@@ -29,6 +30,7 @@ import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.panel.AlbumAdministrationPanel;
 import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
+import org.xaloon.wicket.util.UrlUtils;
 
 import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
 import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
@@ -167,7 +169,8 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 					: null;
 				blogFacade.storeBlogEntry(entry, thumbnailToAdd, deleteThumbnail, getPluginBean(), albumAdministrationPanel.getImagesToDelete(),
 					albumAdministrationPanel.getImagesToAdd());
-				setResponsePage(getBlogEntryListPageClass());
+				String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
+				throw new RedirectToUrlException(url);
 			} catch (Exception e) {
 				e.printStackTrace();
 				error("Could not save data.please, try again: " + e.getMessage());

@@ -17,7 +17,9 @@
 package org.xaloon.wicket.component.security;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -40,6 +42,8 @@ import org.xaloon.core.impl.path.DefaultFileDescriptorAbsolutePathStrategy;
 import org.xaloon.core.impl.plugin.category.CategoryGroupPluginRegistryListener;
 import org.xaloon.core.impl.plugin.category.CategoryMenuPluginRegistryListener;
 import org.xaloon.wicket.component.mount.DefaultPageMountScannerListener;
+import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.component.mount.impl.AnnotatedMountScanner;
 import org.xaloon.wicket.component.mount.impl.SpringMountScanner;
 import org.xaloon.wicket.component.resource.FileResource;
 import org.xaloon.wicket.component.resource.ImageLink;
@@ -138,14 +142,38 @@ public abstract class AuthenticatedWebApplication extends WebApplication {
 	}
 
 	private void mountPackages(List<String> mountingPackages) {
+		AnnotatedMountScanner annotatedMountScanner = new AnnotatedMountScanner();
+
 		SpringMountScanner scanner = new SpringMountScanner();
 		scanner.addMountScannerListener(dynamicMenuMountScannerListener);
 		onAddMountScannerListener(scanner);
+		Map<String, Class<?>> mountPages = new HashMap<String, Class<?>>();
 		for (String mountingPackage : mountingPackages) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Mounting package: " + mountingPackage);
 			}
-			scanner.mountPackage(this, mountingPackage);
+			parseMountingPages(mountingPackage, annotatedMountScanner, mountPages);
+		}
+		scanner.mountPackage(this, mountPages);
+	}
+
+	private void parseMountingPages(String mountingPackage, AnnotatedMountScanner annotatedMountScanner, Map<String, Class<?>> mountPages) {
+		// Scan for web pages
+		List<Class<?>> result = annotatedMountScanner.scanPackage(mountingPackage, MountPage.class);
+		for (Class<?> item : result) {
+			String value = org.xaloon.wicket.util.UrlUtils.generateFullvalue(item);
+			if (!mountPages.containsKey(value)) {
+				mountPages.put(value, item);
+			} else {
+				/** Override existing page with the page which has higher weight */
+				Class<?> foundClass = mountPages.get(value);
+				MountPage existingMountPage = foundClass.getAnnotation(MountPage.class);
+
+				MountPage itemMountPage = item.getAnnotation(MountPage.class);
+				if (itemMountPage.weight() > existingMountPage.weight()) {
+					mountPages.put(value, item);
+				}
+			}
 		}
 	}
 

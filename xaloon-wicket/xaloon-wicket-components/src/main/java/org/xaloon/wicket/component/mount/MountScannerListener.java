@@ -18,6 +18,7 @@ package org.xaloon.wicket.component.mount;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Listener gets result of class list which was mounted depending on application
@@ -33,5 +34,15 @@ public interface MountScannerListener extends Serializable {
 	 *            list of classes which are mounted
 	 * 
 	 */
+	@Deprecated
 	void onMount(List<Class<?>> classesToMount);
+
+	/**
+	 * Method is called when classes are scanned and mounted
+	 * 
+	 * @param mountPages
+	 *            map of classes with paths which should be mounted
+	 * 
+	 */
+	void onMount(Map<String, Class<?>> mountPages);
 }

@@ -1,12 +1,13 @@
 package org.xaloon.wicket.plugin.blog.page;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
 import org.xaloon.wicket.plugin.blog.BlogPageConstants;
-import org.xaloon.wicket.plugin.blog.panel.BlogEntryListPanel;
 import org.xaloon.wicket.plugin.blog.panel.BlogEntryPanel;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * This is default example of Blog entry page.
@@ -31,8 +32,8 @@ public class BlogEntryNoUserPage extends LayoutWebPage {
 		if (!pageParameters.get(BlogPageConstants.BLOG_PATH).isEmpty()) {
 			String blogPathString = pageParameters.get(BlogPageConstants.BLOG_PATH).toString();
 			if ("list".equalsIgnoreCase(blogPathString)) {
-				pageParameters.remove(BlogPageConstants.BLOG_PATH);
-				return new BlogEntryListPanel(id, pageParameters);
+				String url = UrlUtils.generateFullvalue(BlogEntryListPage.class);
+				throw new RedirectToUrlException(url);
 			}
 		}
 		return new BlogEntryPanel(id, pageParameters);

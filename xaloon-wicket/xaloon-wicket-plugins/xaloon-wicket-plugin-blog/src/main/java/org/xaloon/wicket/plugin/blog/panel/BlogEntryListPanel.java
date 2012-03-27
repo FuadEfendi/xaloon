@@ -14,6 +14,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileDescriptor;
@@ -21,6 +22,7 @@ import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.util.Link;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * Default usage: new BlogEntryListPanel("blog-list"); You might want to use custom blog page, then you should override method
@@ -176,7 +178,8 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 					@Override
 					public void onClick() {
 						getBlogFacade().deleteBlogEntryByPath(blogEntry.getOwner().getUsername(), blogEntry.getPath());
-						setResponsePage(getBlogEntryListPageClass());
+						String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
+						throw new RedirectToUrlException(url);
 					}
 				};
 				link_delete.add(AttributeModifier.replace("onClick", "if(!confirm('" + BlogEntryListPanel.this.getString(DELETE_CONFIRMATION) + "')) return false;"));

@@ -17,6 +17,8 @@
 package org.xaloon.wicket.component.mount;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestMapper;
@@ -40,6 +42,16 @@ public abstract class AbstractPageMountScannerListener implements MountScannerLi
 			application.getRootRequestMapperAsCompound().add(getMountedMapper((Class)pageClass));
 		}
 	}
+
+	@Override
+	public void onMount(Map<String, Class<?>> mountPages) {
+		Application application = Application.get();
+		for (Map.Entry<String, Class<?>> item : mountPages.entrySet()) {
+			application.getRootRequestMapperAsCompound().add(getMountedMapper(item));
+		}
+	}
+
+	protected abstract IRequestMapper getMountedMapper(Entry<String, Class<?>> item);
 
 	protected abstract IRequestMapper getMountedMapper(Class<? extends IRequestablePage> pageClass);
 }

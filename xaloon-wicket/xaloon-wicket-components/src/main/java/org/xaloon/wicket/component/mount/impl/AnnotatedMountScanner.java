@@ -30,7 +30,7 @@ import org.xaloon.core.api.path.DelimiterEnum;
  * @version 1.1, 09/28/10
  * @since 1.3
  */
-class AnnotatedMountScanner implements Serializable {
+public class AnnotatedMountScanner implements Serializable {
 
 	/**
 	 * 

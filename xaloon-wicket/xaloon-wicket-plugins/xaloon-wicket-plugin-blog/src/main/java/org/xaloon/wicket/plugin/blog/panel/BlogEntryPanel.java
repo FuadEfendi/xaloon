@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryTag;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListByTagPage;
 import org.xaloon.wicket.plugin.comment.panel.CommentContainerPanel;
 import org.xaloon.wicket.plugin.image.galleria.panel.GalleriaImagesPanel;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * Required PagePamaters:
@@ -63,25 +65,21 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onInitialize(BlogPlugin plugin, BlogPluginBean pluginBean) {
+		String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
+		
 		if (getPageRequestParameters().isEmpty()) {
 			LOGGER.warn("Page request parameters were not provided!");
-			setVisible(false);
-			setResponsePage(getBlogEntryListPageClass());
-			return;
+			throw new RedirectToUrlException(url);
 		}
 		BlogEntryParameters parameters = parseBlogEntryParameters();
 		if (parameters == null) {
 			LOGGER.warn("Page request parameters were not correct type: " + getPageRequestParameters());
-			setVisible(false);
-			setResponsePage(getBlogEntryListPageClass());
-			return;
+			throw new RedirectToUrlException(url);
 		}
 		final BlogEntry blogEntry = getBlogFacade().findEntryByPath(parameters.getUsername(), parameters.getPath());
 		if (blogEntry == null) {
 			LOGGER.warn("Blog entry was not found!. Username: " + parameters.getUsername() + "\tPath: " + parameters.getPath());
-			setVisible(false);
-			setResponsePage(getBlogEntryListPageClass());
-			return;
+			throw new RedirectToUrlException(url);
 		}
 
 		// Increment view count of blog entry

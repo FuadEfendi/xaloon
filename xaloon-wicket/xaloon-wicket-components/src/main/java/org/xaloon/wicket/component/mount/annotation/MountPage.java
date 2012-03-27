@@ -101,4 +101,12 @@ public @interface MountPage {
 	 * @return string format of WebPage frequency in sitemap.xml
 	 */
 	String frequency() default DEFAULT_FREQUENCY;
+
+	/**
+	 * The weight of page when it come to overriding of two conflicting pages with the same mounting path. The page with lower weight will be
+	 * overridden and with higher weight page.
+	 * 
+	 * @return mount page weight used to determine if it should be overridden or not. default is 0
+	 */
+	int weight() default 0;
 }

@@ -16,7 +16,9 @@
  */
 package org.xaloon.wicket.plugin.menu;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -154,5 +156,10 @@ public class DynamicMenuMountScannerListener implements MountScannerListener {
 			dynamicMenuPlugin = pluginRegistry.lookup(DynamicMenuPlugin.class);
 		}
 		return dynamicMenuPlugin;
+	}
+
+	@Override
+	public void onMount(Map<String, Class<?>> mountPages) {
+		onMount(new ArrayList<Class<?>>(mountPages.values()));
 	}
 }

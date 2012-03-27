@@ -16,6 +16,8 @@
  */
 package org.xaloon.wicket.component.mount.impl;
 
+import java.util.Map.Entry;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -35,8 +37,12 @@ public class TrailingSlashPageMountingListener extends AbstractPageMountScannerL
 
 	@Override
 	protected IRequestMapper getMountedMapper(Class<? extends IRequestablePage> pageClass) {
-		String suffix = DelimiterEnum.SLASH.value();
 		String value = org.xaloon.wicket.util.UrlUtils.generateFullvalue(pageClass);
+		return createRequestMapper(pageClass, value);
+	}
+
+	private IRequestMapper createRequestMapper(Class<? extends IRequestablePage> pageClass, String value) {
+		String suffix = DelimiterEnum.SLASH.value();
 		if (StringUtils.isEmpty(value)) {
 			throw new RuntimeException("Could not mount class: " + pageClass);
 		}
@@ -44,6 +50,12 @@ public class TrailingSlashPageMountingListener extends AbstractPageMountScannerL
 			value = value + suffix;
 		}
 		return new MountedMapper(value, pageClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected IRequestMapper getMountedMapper(Entry<String, Class<?>> item) {
+		return createRequestMapper((Class<? extends IRequestablePage>)item.getValue(), item.getKey());
 	}
 
 }
