@@ -169,12 +169,12 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 					: null;
 				blogFacade.storeBlogEntry(entry, thumbnailToAdd, deleteThumbnail, getPluginBean(), albumAdministrationPanel.getImagesToDelete(),
 					albumAdministrationPanel.getImagesToAdd());
-				String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
-				throw new RedirectToUrlException(url);
 			} catch (Exception e) {
 				e.printStackTrace();
 				error("Could not save data.please, try again: " + e.getMessage());
 			}
+			String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
+			throw new RedirectToUrlException(url);
 		}
 
 		private void addBlogEntryImagePanel() {

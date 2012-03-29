@@ -21,9 +21,9 @@ import javax.inject.Named;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.keyvalue.KeyValue;
+import org.xaloon.wicket.plugin.blog.BlogConfigElement;
 import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
-import org.xaloon.wicket.plugin.blog.page.BlogEntryNoDatePage;
 
 /**
  * @author vytautas r.
@@ -38,8 +38,9 @@ public class UserTitleBlogEntryPathResolver extends BlogTitlePathResolver {
 
 	@Override
 	public KeyValue<Class<? extends Page>, PageParameters> getBlogEntryLink(BlogEntry blogEntry) {
+		BlogConfigElement cfg = blogPlugin.getTechnicalConfiguration();
 		KeyValue<Class<? extends Page>, PageParameters> result = super.getBlogEntryLink(blogEntry);
-		result.setKey(BlogEntryNoDatePage.class);
+		result.setKey(cfg.getBlogEntryNoDatePage());
 		result.getValue().set(BlogPageConstants.BLOG_USERNAME, blogEntry.getOwner().getUsername());
 		return result;
 	}

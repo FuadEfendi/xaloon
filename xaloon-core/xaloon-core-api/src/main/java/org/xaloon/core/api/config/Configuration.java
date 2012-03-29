@@ -175,6 +175,9 @@ public class Configuration {
 		this.fileDescriptorAbsolutePathStrategy = fileDescriptorAbsolutePathStrategy;
 	}
 
+	/**
+	 * @return external authentication security token provider
+	 */
 	public OauthSecurityTokenProvider getOauthSecurityTokenProvider() {
 		if (oauthSecurityTokenProvider == null) {
 			throw new IllegalArgumentException("Application is not properly configured! Instance of OauthSecurityTokenProvider is not provided!");
@@ -182,6 +185,9 @@ public class Configuration {
 		return oauthSecurityTokenProvider;
 	}
 
+	/**
+	 * @param oauthSecurityTokenProvider
+	 */
 	public void setOauthSecurityTokenProvider(OauthSecurityTokenProvider oauthSecurityTokenProvider) {
 		this.oauthSecurityTokenProvider = oauthSecurityTokenProvider;
 	}

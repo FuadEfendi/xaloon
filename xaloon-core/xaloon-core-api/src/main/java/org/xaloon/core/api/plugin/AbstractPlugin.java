@@ -70,6 +70,8 @@ public abstract class AbstractPlugin<T extends AbstractPluginBean> implements Pl
 	 */
 	private String type;
 
+	private PluginConfigEntry technicalConfiguration;
+
 	/**
 	 * Construct.
 	 */
@@ -198,6 +200,16 @@ public abstract class AbstractPlugin<T extends AbstractPluginBean> implements Pl
 	public List<Authority> getSupportedAuthorities() {
 		return new ArrayList<Authority>();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <Z extends PluginConfigEntry> Z getTechnicalConfiguration() {
+		return (Z)technicalConfiguration;
+	}
+
+	public <U extends PluginConfigEntry> void setTechnicalConfiguration(U technicalConfiguration) {
+		this.technicalConfiguration = technicalConfiguration;
+	};
 
 	@Override
 	public String toString() {
