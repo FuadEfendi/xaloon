@@ -72,8 +72,8 @@ public class NewClassifierItemPanel<T extends ClassifierItem, K extends Classifi
 		super(addNewClassifierModalWindow.getContentId());
 		this.addNewClassifierModalWindow = addNewClassifierModalWindow;
 		classifierType = pageParameters.get(ClassifiersPanel.PARAM_CLASSIFIER_TYPE).toString();
-		if (pageParameters.get(ClassifiersItemPanel.PARENT_ITEM) != null) {
-			parentClassifierItemCode = pageParameters.get(ClassifiersItemPanel.PARENT_ITEM).toString();
+		if (pageParameters.get(ClassifierConstants.PARENT_ITEM) != null) {
+			parentClassifierItemCode = pageParameters.get(ClassifierConstants.PARENT_ITEM).toString();
 		}
 	}
 

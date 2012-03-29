@@ -23,7 +23,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.wicket.plugin.blog.BlogPageConstants;
+import org.xaloon.wicket.component.classifier.panel.ClassifierConstants;
 import org.xaloon.wicket.plugin.blog.ldm.BlogEntryDetachableModel;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
@@ -62,7 +62,7 @@ public class BlogEntryListByCategoryPanel extends BlogEntryListPanel {
 		if (getPageRequestParameters().isEmpty()) {
 			throw new RedirectToUrlException(url);
 		}
-		String categoryValue = getPageRequestParameters().get(BlogPageConstants.CATEGORY_CODE).toString();
+		String categoryValue = getPageRequestParameters().get(ClassifierConstants.PARENT_ITEM).toString();
 		if (StringUtils.isEmpty(categoryValue)) {
 			throw new RedirectToUrlException(url);
 		}

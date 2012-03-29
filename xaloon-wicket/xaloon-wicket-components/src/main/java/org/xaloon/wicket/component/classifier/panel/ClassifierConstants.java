@@ -14,36 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.blog;
+package org.xaloon.wicket.component.classifier.panel;
 
 import java.io.Serializable;
 
 /**
  * @author vytautas r.
  */
-public interface BlogPageConstants extends Serializable {
+public interface ClassifierConstants extends Serializable {
 	/**
-	 * The username of the blogger
+	 * query name for parent classifier item used in URL
 	 */
-	String BLOG_USERNAME = "blogger";
-
-	/**
-	 * The blog entry encoded path
-	 */
-	String BLOG_PATH = "blog_path";
-
-	/**
-	 * The blog entry year
-	 */
-	String BLOG_YEAR = "blog_year";
-
-	/**
-	 * The blog entry month
-	 */
-	String BLOG_MONTH = "blog_month";
-
-	/**
-	 * The blog entry day
-	 */
-	String BLOG_DAY = "blog_day";
+	String PARENT_ITEM = "cl_p";
 }

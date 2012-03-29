@@ -51,12 +51,6 @@ import org.xaloon.wicket.util.Link;
  * @author vytautas r.
  */
 public class ClassifiersItemPanel extends AbstractClassifiersPanel {
-
-	/**
-	 * query name for parent classifier item used in URL
-	 */
-	public static final String PARENT_ITEM = "p";
-
 	/**
 	 * 
 	 */
@@ -93,8 +87,8 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 		final String classifierType = params.get(ClassifiersPanel.PARAM_CLASSIFIER_TYPE).toString();
 		String parentClassifierItem = null;
-		if (params.get(PARENT_ITEM) != null) {
-			parentClassifierItem = params.get(PARENT_ITEM).toString();
+		if (params.get(ClassifierConstants.PARENT_ITEM) != null) {
+			parentClassifierItem = params.get(ClassifierConstants.PARENT_ITEM).toString();
 		}
 
 		// Add data container
@@ -115,7 +109,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 				// Add link
 				PageParameters pageParameters = new PageParameters();
 				pageParameters.set(ClassifiersPanel.PARAM_CLASSIFIER_TYPE, classifierType);
-				pageParameters.add(PARENT_ITEM, classifierItem.getCode());
+				pageParameters.add(ClassifierConstants.PARENT_ITEM, classifierItem.getCode());
 				BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("link-item", ClassifiersItemPage.class, pageParameters);
 				item.add(link);
 				link.add(new Label("code", new Model<String>(classifierItem.getCode())));

@@ -101,7 +101,7 @@ public class ClassifierItemListPanel extends Panel {
 		};
 		PageParameters params = new PageParameters();
 		params.set(ClassifiersPanel.PARAM_CLASSIFIER_TYPE, classifierItemOptions.getClassifierType());
-		params.set(ClassifiersItemPanel.PARENT_ITEM, parentClassifierItem);
+		params.set(ClassifierConstants.PARENT_ITEM, parentClassifierItem);
 		modal2.setContent(new NewClassifierItemPanel<ClassifierItem, Classifier>(modal2, params));
 		modal2.setVisible(securityFacade.hasAny(SecurityAuthorities.CLASSIFIER_EDIT));
 		add(modal2);

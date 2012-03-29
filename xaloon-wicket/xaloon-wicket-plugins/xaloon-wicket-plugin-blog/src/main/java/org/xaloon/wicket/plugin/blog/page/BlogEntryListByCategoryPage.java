@@ -19,15 +19,15 @@ package org.xaloon.wicket.plugin.blog.page;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.application.page.LayoutWebPage;
+import org.xaloon.wicket.component.classifier.panel.ClassifierConstants;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
-import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.panel.BlogEntryListByCategoryPanel;
 
 
 /**
  * @author vytautas r.
  */
-@MountPage(value = "/blog-by-category/${" + BlogPageConstants.CATEGORY_CODE + "}", visible = false, order = 100)
+@MountPage(value = "/blog-by-category/${" + ClassifierConstants.PARENT_ITEM + "}", visible = false, order = 100)
 public class BlogEntryListByCategoryPage extends LayoutWebPage {
 
 	/**
