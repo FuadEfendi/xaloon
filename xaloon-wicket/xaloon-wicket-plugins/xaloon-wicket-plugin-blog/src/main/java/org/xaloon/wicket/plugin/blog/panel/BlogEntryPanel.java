@@ -22,7 +22,6 @@ import org.xaloon.wicket.application.page.LayoutWebPage;
 import org.xaloon.wicket.component.html.MetaTagWebContainer;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
-import org.xaloon.wicket.plugin.addthis.panel.AddThisPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
@@ -124,9 +123,6 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 
 		// Add content
 		add(new Label("content", new Model<String>(blogEntry.getContent())).setEscapeModelStrings(false));
-
-		// Add add-this panel
-		add(new AddThisPanel("add-this-panel"));
 
 		// Add comment plugin
 		add(new CommentContainerPanel("commenting-plugin", new Model<Commentable>(blogEntry), getPageRequestParameters())
