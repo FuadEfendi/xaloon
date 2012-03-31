@@ -1,8 +1,8 @@
 /**
- * @preserve Galleria Classic Theme 2011-08-01
+ * @preserve Galleria Classic Theme 2011-08-01-test
  * http://galleria.aino.se
  *
- * Copyright (c) 2011, Aino
+ * Copyright 2012, Aino
  * Licensed under the MIT license.
  */
 

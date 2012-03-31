@@ -42,6 +42,7 @@ import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.storage.DefaultInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.storage.InputStreamContainerOptions;
@@ -72,6 +73,9 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
+	
+	@Inject
+	private FileDescriptorDao fileDescriptorDao;
 
 	public Album newAlbum() {
 		return new JpaAlbum();
@@ -168,6 +172,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		updateFileDescriptor(temporaryImage, result);
 
 		if (temporaryImage.isExternal() && !temporaryImage.isResize()) {
+			result = fileDescriptorDao.save(result);
 			return result;
 		}
 		InputStreamContainer inputStreamContainer = null;

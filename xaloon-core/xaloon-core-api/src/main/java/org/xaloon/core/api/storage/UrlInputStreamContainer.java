@@ -33,6 +33,8 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static final String WWW_YOUTUBE_COM = "www.youtube.com";
+
 	private String url;
 
 	/**
@@ -52,7 +54,15 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 */
 	public UrlInputStreamContainer(String url, InputStreamContainerOptions options) {
 		super(options);
-		this.url = url;
+		this.url = validateAndFix(url);
+	}
+
+	private String validateAndFix(String url2) {
+		if (url2.contains(WWW_YOUTUBE_COM)) {
+			String youtubeId = url2.substring(url2.indexOf("=") + 1);
+			return "http://img.youtube.com/vi/" + youtubeId + "/1.jpg";
+		}
+		return url2;
 	}
 
 	@Override
@@ -62,6 +72,15 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Could not create url", e);
 		}
+	}
+
+	/**
+	 * Gets url.
+	 * 
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
 	}
 
 	@Override
