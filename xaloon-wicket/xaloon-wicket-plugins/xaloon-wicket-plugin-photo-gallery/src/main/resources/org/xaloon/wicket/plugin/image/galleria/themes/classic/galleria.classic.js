@@ -88,6 +88,19 @@ Galleria.addTheme({
         this.bind('loadfinish', function(e) {
             this.$('loader').fadeOut(200);
         });
+        
+        this.attachKeyboard({
+            left: this.prev, // applies the native prev() function
+            right: this.next,
+            up: function() {
+                // custom up action
+                Galleria.log('up pressed');
+            },
+            13: function() {
+                // start playing when return (keyCode 13) is pressed:
+                this.play(3000);
+            }
+        });
     }
 });
 
