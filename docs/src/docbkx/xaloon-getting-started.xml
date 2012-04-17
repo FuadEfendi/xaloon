@@ -136,7 +136,7 @@
       </listitem>
     </orderedlist>
 
-    <section>
+    <section xml:id="dependency-plugin-usage">
       <title>Dependecy &amp; plugin usage at design time(edit pom.xml)</title>
 
       <para>You can modify your application architecture design using pom.xml
@@ -329,13 +329,141 @@
     <section>
       <title>Add maven dependencies</title>
 
-      <para/>
+      <para>For basic xaloon support with Apache Wicket these dependencies should be added to existing maven configuration:</para>
+      <para>
+        <programlisting language="java"><![CDATA[
+<dependency>
+	<groupId>org.xaloon.core</groupId>
+	<artifactId>xaloon-core-security-spring</artifactId>
+	<version>${xaloon.version}</version>
+</dependency>
+
+<dependency>
+	<groupId>org.xaloon.wicket</groupId>
+	<artifactId>xaloon-wicket-components</artifactId>
+	<version>${xaloon.version}</version>
+</dependency>
+
+<dependency>
+	<groupId>org.xaloon.wicket</groupId>
+	<artifactId>xaloon-wicket-components-resources</artifactId>
+	<version>${xaloon.version}</version>
+</dependency>
+
+<dependency>
+	<groupId>org.xaloon.wicket</groupId>
+	<artifactId>xaloon-wicket-components-spring</artifactId>
+	<version>${xaloon.version}</version>
+</dependency>
+]]></programlisting>
+      </para>
+      <para> This will configure JPA, Spring, Spring Security, Apache Wicket dependencies for you.
+        Available maven dependencies are listed <command linkend="dependency-plugin-usage">here</command>. An alternative would be to used predefined
+        xaloon profile: </para>
+      <para>
+        <programlisting language="java"><![CDATA[
+<dependency>
+	<groupId>org.xaloon.profiles</groupId>
+	<artifactId>xaloon-profiles-hibernate-spring</artifactId>
+	<version>${xaloon.version}</version>
+	<type>pom</type>
+</dependency>
+]]></programlisting>    
+        
+      </para>
+      <para> Extra dependencies will be added based on selected profile. More information about
+        profiles may be found at <command linkend="xaloon-profiles">xaloon profiles</command>. </para>
     </section>
 
     <section>
       <title>Creating Apache Wicket Web application</title>
 
-      <para/>
+      <para>The easiest way to get most of xaloon features is to extend <emphasis role="bold"
+          >org.xaloon.wicket.component.security.AuthenticatedWebApplication</emphasis> This abstract
+        Wicket application already has a set of predefined properties and what a developer has to do
+        is just configure custom properties:</para>
+      <itemizedlist>
+        <listitem>
+          <para>configure component injectors (<emphasis role="italic"
+              >initComponentInjector()</emphasis>). Supported injectors - Spring CDI injector with
+            supported annotations: @Inject, @SpreanBean, Java EE CDI injector with supported
+            annotation: @Inject.</para>
+          <para>
+            <programlisting language="java"><![CDATA[
+@Override
+	protected void initComponentInjector() {
+		SpringAnnotationResolver[] resolvers = new SpringAnnotationResolver[] { new CdiAnnotationResolver(), 
+                                                      new SpringBeanAnnotationResolver() };
+		getComponentInstantiationListeners().add(new CdiComponentInjector(this, resolvers));
+		Injector.get().inject(this);
+	}
+]]></programlisting>  
+          </para>
+        </listitem>
+        <listitem>
+          <para>add/override custom mount scanner if necessary (<emphasis role="italic"
+              >onAddMountScannerListener()</emphasis>).</para>
+          <para>
+            <programlisting language="java"><![CDATA[
+@Override
+	protected void onAddMountScannerListener(SpringMountScanner scanner) {
+		super.onAddMountScannerListener(scanner);
+		scanner.addMountScannerListener(new TrailingSlashPageMountingListener());
+	}
+]]></programlisting>  
+          </para>
+        </listitem>
+        <listitem>
+          <para>add custom package to scan for mountable pages (<emphasis role="italic"
+              >onBeforeMountPackage()</emphasis>).</para>
+          <para>
+            <programlisting language="java"><![CDATA[
+@Override
+	protected void onBeforeMountPackage(List<String> mountingPackages) {
+		mountingPackages.add("com.mycompany");
+	}
+]]></programlisting>  
+          </para>
+        </listitem>
+        <listitem>
+          <para>set custom extension of <emphasis role="bold"
+              >org.xaloon.core.jpa.user.model.JpaUser</emphasis> class (<emphasis role="italic"
+              >getPersistedUserImplementation()</emphasis>).</para>
+          <para>
+            <programlisting language="java"><![CDATA[
+@Override
+	protected Class<? extends User> getPersistedUserImplementation() {
+		return JpaExtendedUser.class;
+	}
+]]></programlisting>  
+          </para>
+        </listitem>
+        <listitem>
+          <para>set custom properties for system <emphasis role="bold"
+              >org.xaloon.core.api.config.Configuration</emphasis> (<emphasis role="italic"
+              >onLoadConfiguration()</emphasis>).</para>
+          <para>
+            <programlisting language="java"><![CDATA[
+@Override
+	protected void onLoadConfiguration(Configuration config) {
+		config.setBeanLocatorAdapter(new SpringBeanLocatorAdapter());
+		config.getUserListenerCollection().add(new GalleryUserListener());
+		config.getUserListenerCollection().add(new BlogUserListener());
+	}
+]]></programlisting>  
+          </para>
+          <para><emphasis role="bold">org.xaloon.core.api.user.UserListenerCollection</emphasis>
+            plays major role for plugin development, which has a dependency to user. Each such
+            plugin must implement <emphasis role="bold"
+              >org.xaloon.core.api.user.UserListener</emphasis> and add this implementation class to
+            user listener collection. Once user is deleted from the system, all user listeners will
+            be invoked before deletion of the selected user.</para>
+        </listitem>
+        <listitem>
+          <para>load custom JavaScript libraries (<emphasis role="italic"
+              >initJavascriptComponents()</emphasis>).</para>
+        </listitem> 
+      </itemizedlist>
     </section>
 
     <section>
@@ -347,7 +475,7 @@
     <section>
       <title>Creating new page</title>
 
-      <para/>
+      <para>mmm</para>
     </section>
 
     <section>
@@ -359,6 +487,12 @@
     <section>
       <title>Adding security</title>
 
+      <para/>
+    </section>
+    
+    <section>
+      <title>Loading custom beans at runtime</title>
+      
       <para/>
     </section>
   </section>
