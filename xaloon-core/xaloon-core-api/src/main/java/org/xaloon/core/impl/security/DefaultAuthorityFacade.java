@@ -22,6 +22,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.plugin.Plugin;
 import org.xaloon.core.api.security.AuthorityFacade;
 import org.xaloon.core.api.security.AuthorityService;
@@ -39,6 +41,8 @@ import org.xaloon.core.api.security.model.SecurityRole;
 @Named("authorityFacade")
 public class DefaultAuthorityFacade implements AuthorityFacade {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAuthorityFacade.class);
 
 	@Inject
 	private RoleService roleService;
@@ -58,9 +62,13 @@ public class DefaultAuthorityFacade implements AuthorityFacade {
 		List<Authority> authoritiesToAssign = new ArrayList<Authority>();
 		for (Authority authority : authorities) {
 			Authority persistedAuthority = authorityService.findOrCreateAuthority(authority.getName());
-			authoritiesToAssign.add(persistedAuthority);
+			if (!securityRole.getAuthorities().contains(persistedAuthority)) {
+				authoritiesToAssign.add(persistedAuthority);
+			}
 		}
 		if (!authoritiesToAssign.isEmpty()) {
+			LOGGER.debug(String.format("Registering new security role '%s' and it's authorities: %s", securityRole.getName(),
+				authoritiesToAssign.toString()));
 			roleService.assignChildren(securityRole, authoritiesToAssign);
 		}
 	}
