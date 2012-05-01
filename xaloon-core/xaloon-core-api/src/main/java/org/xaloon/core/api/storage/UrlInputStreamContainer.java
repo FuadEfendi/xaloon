@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -32,8 +34,6 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private static final String WWW_YOUTUBE_COM = "www.youtube.com";
 
 	private String url;
 
@@ -58,10 +58,16 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	}
 
 	private String validateAndFix(String url2) {
-		if (url2.contains(WWW_YOUTUBE_COM)) {
-			String youtubeId = url2.substring(url2.indexOf("=") + 1);
-			return "http://img.youtube.com/vi/" + youtubeId + "/1.jpg";
+		// Check if link is from youtube
+		Pattern rex = Pattern.compile("(?:videos\\/|v=)([\\w-]+)");
+		Matcher m = rex.matcher(url2);
+		if (m.find()) {
+			String YouTubeVideoID = m.group(1);
+			if (!StringUtils.isEmpty(YouTubeVideoID)) {
+				return "http://img.youtube.com/vi/" + YouTubeVideoID + "/1.jpg";
+			}
 		}
+
 		return url2;
 	}
 

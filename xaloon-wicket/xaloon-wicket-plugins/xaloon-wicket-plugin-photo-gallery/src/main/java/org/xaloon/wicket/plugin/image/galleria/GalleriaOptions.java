@@ -32,10 +32,10 @@ public class GalleriaOptions extends AbstractJQOptions<GalleriaOptions> {
 	private static final long serialVersionUID = 1L;
 
 	public static final JavaScriptResourceReference GALLERIA_JS_MIN = new JavaScriptResourceReference(GalleriaOptions.class,
-			"galleria-latest.min.js");
+			"galleria-1.2.7.min.js");
 
 	public static final JavaScriptResourceReference GALLERIA_JS_THEME = new JavaScriptResourceReference(GalleriaOptions.class,
-			"themes/classic/galleria.classic.js");
+			"themes/classic/galleria.classic.min.js");
 
 	public static final CssResourceReference GALLERIA_CSS_THEME = new CssResourceReference(GalleriaOptions.class,
 			"themes/classic/galleria.classic.css");
