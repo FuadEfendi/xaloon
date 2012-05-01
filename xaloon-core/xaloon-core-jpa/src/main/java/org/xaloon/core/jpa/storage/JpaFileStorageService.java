@@ -45,7 +45,7 @@ import org.xaloon.core.jpa.storage.model.JpaFileStorage;
  * @author vytautas r.
  */
 @Named(FileStorageService.FILE_STORAGE_SERVICE_JPA)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class JpaFileStorageService implements FileStorageService {
 

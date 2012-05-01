@@ -70,6 +70,7 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Started: scheduleInMemory()");
 		}
+		InputStreamContainer inputStreamContainer = null;
 		try {
 			// Get file storage service provider
 			String fileStorageServiceProvider = ServiceLocator.get().getServiceProviderName(FileStorageService.class);
@@ -86,7 +87,7 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 				return null;
 			}
 			// Load parameters
-			InputStreamContainer inputStreamContainer = resizeIfRequired(jobParameters.getInputStreamContainer());
+			inputStreamContainer = resizeIfRequired(jobParameters.getInputStreamContainer());
 			String userEmail = jobParameters.getUserEmail();
 
 			Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -97,7 +98,16 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 				LOGGER.info(String.format("Start storing file into repository: %s", fileDescriptor.getName()));
 			}
 			// store file into physical location and get it's unique id
-			KeyValue<String, String> uniqueIdentifier = fileStorageService.storeFile(fileDescriptor, inputStreamContainer, additionalProperties);
+			KeyValue<String, String> uniqueIdentifier = null;
+			try {
+				uniqueIdentifier = fileStorageService.storeFile(fileDescriptor, inputStreamContainer, additionalProperties);
+			} catch (Exception e) {
+				LOGGER.error("Could not store file with provided implementation, retrying with JPA implementation", e);
+				fileStorageServiceProvider = FileStorageService.FILE_STORAGE_SERVICE_JPA;
+				uniqueIdentifier = ServiceLocator.get()
+					.getInstance(FileStorageService.class, fileStorageServiceProvider)
+					.storeFile(fileDescriptor, inputStreamContainer);
+			}
 
 			// Update file descriptor
 			fileDescriptor.setFileStorageServiceProvider(fileStorageServiceProvider);
@@ -106,8 +116,11 @@ public class FileStorageJobService implements ScheduledJobService<FileStorageJob
 				LOGGER.info(String.format("Storage complete for file: %s", fileDescriptor.getName()));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("Exception while executing job.", e);
+		} finally {
+			if (inputStreamContainer != null) {
+				inputStreamContainer.close();
+			}
 		}
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Finished: scheduleInMemory()");

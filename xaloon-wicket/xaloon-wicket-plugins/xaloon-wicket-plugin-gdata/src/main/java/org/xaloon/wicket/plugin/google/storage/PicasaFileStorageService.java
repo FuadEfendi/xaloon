@@ -62,7 +62,7 @@ import com.google.gdata.util.ServiceException;
  * @author vytautas.r
  */
 @Named("picasaFileStorageService")
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class PicasaFileStorageService implements FileStorageService {
 
@@ -149,14 +149,12 @@ public class PicasaFileStorageService implements FileStorageService {
 			}
 			String identifier = "/albumid/" + album.getGphotoId() + "/photoid/" + entry.getGphotoId();
 			KeyValue<String, String> result = new DefaultKeyValue<String, String>(entry.getMediaContents().get(0).getUrl(), identifier);
-			LOGGER.info("New image uploaded.");
+			LOGGER.info("New image uploaded:" + identifier);
 			return result;
 		} catch (Exception e) {
 			LOGGER.error("Got exception", e);
 			throw new RuntimeException(e);
-		} finally {
-			inputStreamContainer.close();
-		}
+		} 
 	}
 
 	private void setSecurityToken(PicasawebService picasawebService, Object accessTokenValue) {
