@@ -35,11 +35,6 @@ import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
  */
 public interface BlogFacade extends Serializable {
 	/**
-	 * Default location where to store blog thumbnails
-	 */
-	String BLOG_THUMBNAILS = "blog-thumbnails";
-
-	/**
 	 * Default location where to store blog images
 	 */
 	String BLOG_IMAGES = "blog-images";

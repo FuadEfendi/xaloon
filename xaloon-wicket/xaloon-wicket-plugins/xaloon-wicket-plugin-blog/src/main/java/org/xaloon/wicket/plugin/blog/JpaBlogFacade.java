@@ -33,6 +33,7 @@ import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.ImageLocationResolver;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
@@ -40,7 +41,6 @@ import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
-import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.wicket.plugin.blog.dao.BlogDao;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
@@ -75,6 +75,8 @@ public class JpaBlogFacade implements BlogFacade {
 
 	@Inject
 	private AlbumFacade albumFacade;
+	
+	private ImageLocationResolver<BlogEntry> imageLocationResolver;
 
 	/**
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#storeBlogEntry(BlogEntry, BlogPluginBean, List, List)
@@ -104,7 +106,7 @@ public class JpaBlogFacade implements BlogFacade {
 			thumbnailToAdd.setWidth(pluginBean.getBlogImageWidth());
 			thumbnailToAdd.setResize(true);
 			thumbnailToAdd.setModifyPath(true);
-			thumbnailToAdd.setLocation(BLOG_THUMBNAILS);
+			thumbnailToAdd.setLocation(getImageLocationResolver().resolveThumbnailLocation(entry));
 			FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
 			entry.setThumbnail(fileDescriptor);
 		}
@@ -118,7 +120,7 @@ public class JpaBlogFacade implements BlogFacade {
 		if (entry == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			return;
 		}
-		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, UrlUtil.encode(entry.getTitle()), BLOG_THUMBNAILS);
+		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, getImageLocationResolver().resolveImageLocation(entry), getImageLocationResolver().resolveThumbnailLocation(entry));
 	}
 
 	private String createDescription(BlogEntry entry, BlogPluginBean pluginBean) {
@@ -257,4 +259,17 @@ public class JpaBlogFacade implements BlogFacade {
 	public Image newImage() {
 		return albumFacade.newImage();
 	}
+
+	/**
+	 * @return the imageLocationResolver
+	 */
+	@SuppressWarnings("unchecked")
+	public ImageLocationResolver<BlogEntry> getImageLocationResolver() {
+		if (imageLocationResolver == null) {
+			imageLocationResolver = ServiceLocator.get().getInstance(ImageLocationResolver.class);
+		}
+		return imageLocationResolver;
+	}
+	
+	
 }
