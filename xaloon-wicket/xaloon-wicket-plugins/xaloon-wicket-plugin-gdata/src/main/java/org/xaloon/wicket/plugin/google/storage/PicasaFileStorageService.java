@@ -108,11 +108,7 @@ public class PicasaFileStorageService implements FileStorageService {
 			
 			setSecurityToken(picasawebService, accessTokenValue);
 			
-			String albumsUrl = API_PREFIX + userEmail + "?kind=album";
-
-			UserFeed userFeed = getFeed(picasawebService, albumsUrl, UserFeed.class);
-
-			GphotoEntry album = findOrCreateAlbum(picasawebService, userFeed, UrlUtil.encode(fileDescriptor.getLocation()));
+			GphotoEntry album = findOrCreateAlbum(picasawebService, userEmail, UrlUtil.encode(fileDescriptor.getLocation()));
 
 			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId());
 
@@ -171,8 +167,11 @@ public class PicasaFileStorageService implements FileStorageService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private GphotoEntry findOrCreateAlbum(PicasawebService picasawebService, UserFeed userFeed, String location) throws MalformedURLException,
+	private synchronized GphotoEntry findOrCreateAlbum(PicasawebService picasawebService, String userEmail, String location) throws MalformedURLException,
 			IOException, ServiceException {
+		String albumsUrl = API_PREFIX + userEmail + "?kind=album";
+		
+		UserFeed userFeed = getFeed(picasawebService, albumsUrl, UserFeed.class);
 		GphotoEntry album = findAlbum(userFeed, location);
 		if (album == null) {
 			album = createAlbum(picasawebService, location);
