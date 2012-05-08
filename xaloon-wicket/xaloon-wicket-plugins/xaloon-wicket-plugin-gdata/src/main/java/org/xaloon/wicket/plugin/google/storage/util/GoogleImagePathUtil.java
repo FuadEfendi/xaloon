@@ -1,6 +1,7 @@
 package org.xaloon.wicket.plugin.google.storage.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +25,9 @@ public class GoogleImagePathUtil implements Serializable{
 			return StringUtils.join(path, "/");
 		} else {
 			List<String> items = Arrays.asList(path);
-			items.add(lastElem-1, "s" + size);
-			return StringUtils.join(items, "/");
+			List<String> result = new ArrayList<String>(items);
+			result.add(lastElem-1, "s" + size);
+			return StringUtils.join(result, "/");
 		}
 	}
 
