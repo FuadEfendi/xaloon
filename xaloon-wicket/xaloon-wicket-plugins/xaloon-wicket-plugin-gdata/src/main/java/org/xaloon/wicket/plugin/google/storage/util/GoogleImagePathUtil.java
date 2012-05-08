@@ -14,9 +14,6 @@ public class GoogleImagePathUtil implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static String getGoogleResizedPath(String imagePath, int size) {
-		if (StringUtils.isEmpty(imagePath) || !imagePath.contains("ggpht.com") || !imagePath.contains("google")) {
-			return imagePath;
-		}
 		
 		String[] path = imagePath.split("/");
 		int lastElem = path.length-1;
