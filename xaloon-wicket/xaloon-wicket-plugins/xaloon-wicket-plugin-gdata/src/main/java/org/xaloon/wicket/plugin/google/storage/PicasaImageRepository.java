@@ -33,7 +33,7 @@ public class PicasaImageRepository extends AbstractImageRepository {
 	private FileStorageService fileStorageService;
 	
 	@Inject
-	@Named(FileStorageService.FILE_STORAGE_SERVICE_JPA)
+	@Named("jpaImageRepository")
 	private ImageRepository alternativeImageRepository;
 
 	/**
