@@ -52,6 +52,7 @@ public class PicasaImageRepository extends AbstractImageRepository {
 	protected KeyValue<String, String> storeFile(Image image, ImageOptions options) throws IOException {
 		KeyValue<String, String> uniqueIdentifier = new DefaultKeyValue<String, String>();
 		uniqueIdentifier.setKey(GoogleImagePathUtil.getGoogleResizedPath(image.getPath(), options.getImageSize().getWidth()));
+		uniqueIdentifier.setValue(uniqueIdentifier.getKey());
 		return uniqueIdentifier;
 	}
 }
