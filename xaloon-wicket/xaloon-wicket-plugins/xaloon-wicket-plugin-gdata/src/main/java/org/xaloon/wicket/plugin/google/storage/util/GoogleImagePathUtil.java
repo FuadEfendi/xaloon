@@ -19,14 +19,14 @@ public class GoogleImagePathUtil implements Serializable{
 		String[] path = imagePath.split("/");
 		int lastElem = path.length-1;
 		
-		if (isGoogleWidthProvided(path[lastElem-1])) {
+		if (isGoogleWidthProvided(path[lastElem])) {
 			//replace existing with new one
-			path[lastElem-1] = "s" + size;
+			path[lastElem] = "s" + size;
 			return StringUtils.join(path, "/");
 		} else {
 			List<String> items = Arrays.asList(path);
 			List<String> result = new ArrayList<String>(items);
-			result.add(lastElem-1, "s" + size);
+			result.add(lastElem, "s" + size);
 			return StringUtils.join(result, "/");
 		}
 	}
