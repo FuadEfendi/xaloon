@@ -2,6 +2,10 @@ package org.xaloon.wicket.plugin.google.storage;
 
 import java.io.IOException;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -14,6 +18,9 @@ import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.util.DefaultKeyValue;
 import org.xaloon.wicket.plugin.google.storage.util.GoogleImagePathUtil;
 
+@Named("picasaImageRepository")
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class PicasaImageRepository extends AbstractImageRepository {
 
 	/**
