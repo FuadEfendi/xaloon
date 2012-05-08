@@ -44,7 +44,7 @@ import org.xaloon.core.api.storage.InputStreamContainer;
 public class JpaImageRepository extends AbstractImageRepository {
 
 	@Inject
-	@Named("jpaFileStorageService")
+	@Named(FileStorageService.FILE_STORAGE_SERVICE_JPA)
 	private FileStorageService fileStorageService;
 
 	@Inject
