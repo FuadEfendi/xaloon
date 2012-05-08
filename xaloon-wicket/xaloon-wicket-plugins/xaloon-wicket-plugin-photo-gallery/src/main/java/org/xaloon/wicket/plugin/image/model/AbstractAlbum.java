@@ -135,4 +135,12 @@ public abstract class AbstractAlbum extends BookmarkableEntity implements Album 
 		}
 		this.owner = (JpaUser)owner;
 	}
+	
+	@Override
+	public String getOwnerUsername() {
+		if (getOwner() != null) {
+			return getOwner().getUsername();
+		}
+		return null;
+	}
 }

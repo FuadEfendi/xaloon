@@ -14,36 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.image.model;
+package org.xaloon.core.api.image;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 
-import org.xaloon.core.api.util.UrlUtil;
+import org.xaloon.core.api.image.model.Image;
 
 /**
+ * File repository to manage image upload
+ * 
  * @author vytautas r.
  */
-@Cacheable
-@Entity
-@Table(name = "XAL_ALBUM", uniqueConstraints = { @UniqueConstraint(columnNames = { "PATH" }) })
-public class JpaAlbum extends AbstractAlbum {
+public interface ImageRepository extends Serializable {
+	Image uploadImage(Image image, ImageOptions options);
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	protected void beforeCreate() {
-		super.beforeCreate();
-		setPath(UrlUtil.encode(getTitle()));
-	}
-	
-	@Override
-	public Long getTrackingCategoryId() {
-		return 9000L;// TODO FIX return CommentComponentContainer.COMPONENT_BLOG_ENTRY;
-	}
+	ImageRepository getAlternativeImageRepository();
 }

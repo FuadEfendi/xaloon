@@ -82,7 +82,7 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#storeBlogEntry(BlogEntry, BlogPluginBean, List, List)
 	 */
 	@Override
-	public void storeBlogEntry(final BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
+	public void storeBlogEntry(BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
 		List<Image> imagesToAdd) throws IOException {
 
 		// Delete images if any
@@ -102,18 +102,20 @@ public class JpaBlogFacade implements BlogFacade {
 		entry.setDescription(createDescription(entry, pluginBean));
 
 		if (thumbnailToAdd != null) {
-			thumbnailToAdd.setHeight(pluginBean.getBlogImageHeight());
-			thumbnailToAdd.setWidth(pluginBean.getBlogImageWidth());
-			thumbnailToAdd.setResize(true);
-			thumbnailToAdd.setModifyPath(true);
-			thumbnailToAdd.setLocation(getImageLocationResolver().resolveThumbnailLocation(entry));
-			FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
-			entry.setThumbnail(fileDescriptor);
+			//thumbnailToAdd.setHeight(pluginBean.getBlogImageHeight());
+			//thumbnailToAdd.setWidth(pluginBean.getBlogImageWidth());
+			//thumbnailToAdd.setResize(true);
+			//thumbnailToAdd.setModifyPath(true);
+			//thumbnailToAdd.setLocation(getImageLocationResolver().resolveThumbnailLocation(entry));
+			//FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
+			//entry.setThumbnail(fileDescriptor);
 		}
+		entry = blogDao.save(entry);
+		
 		// Check and store images for this blog entry
 		storeImagesToBlogEntry(pluginBean, entry, imagesToAdd);
 		// entry.setThumbnail(null);
-		blogDao.save(entry);
+		
 	}
 
 	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, final BlogEntry entry, final List<Image> imagesToAdd) {

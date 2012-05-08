@@ -73,6 +73,8 @@ public class PicasaFileStorageService implements FileStorageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PicasaFileStorageService.class);
 
+	private static final String NAME = "picasaFileStorageService";
+	
 	private static final String API_PREFIX = "https://picasaweb.google.com/data/feed/api/user/";
 
 	@Inject
@@ -235,6 +237,11 @@ public class PicasaFileStorageService implements FileStorageService {
 	public byte[] getByteArrayByIdentifier(String identifier) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 }

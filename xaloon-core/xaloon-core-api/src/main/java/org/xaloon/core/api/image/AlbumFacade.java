@@ -131,4 +131,6 @@ public interface AlbumFacade extends Serializable {
 	 * @param userToBeDeleted
 	 */
 	void deleteAlbumsByUsername(User userToBeDeleted);
+
+	List<Image> getImagesByAlbum(Album album);
 }

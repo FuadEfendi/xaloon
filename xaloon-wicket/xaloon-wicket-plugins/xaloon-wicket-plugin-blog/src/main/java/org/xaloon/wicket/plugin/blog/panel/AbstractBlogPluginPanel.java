@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.date.DateService;
+import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.wicket.component.classifier.panel.ClassifierConstants;
@@ -86,6 +87,9 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 
 	@Inject
 	protected DateService dateService;
+	
+	@Inject
+	protected AlbumFacade albumFacade;
 	
 	/**
 	 * Construct.

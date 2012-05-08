@@ -195,12 +195,9 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 		}
 
 		private AlbumAdministrationPanel addImageAlbumManagementPanel(Album album) {
-			List<Image> destination = new ArrayList<Image>();
-			if (album != null && !album.getImages().isEmpty()) {
-				destination.addAll(album.getImages());
-			}
+			List<Image> albumImages = albumFacade.getImagesByAlbum(album);
 
-			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", destination);
+			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", albumImages);
 			albumAdministrationPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
 			albumAdministrationPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
 			albumAdministrationPanel.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT));

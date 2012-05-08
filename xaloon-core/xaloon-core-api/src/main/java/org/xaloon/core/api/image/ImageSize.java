@@ -18,6 +18,8 @@ package org.xaloon.core.api.image;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author vytautas r.
  */
@@ -30,6 +32,10 @@ public class ImageSize implements Serializable {
 	private int width;
 
 	private int height;
+
+	private String title;
+
+	private String location;
 
 	/**
 	 * Construct.
@@ -49,6 +55,15 @@ public class ImageSize implements Serializable {
 	 */
 	public ImageSize(int width) {
 		this.width = width;
+	}
+
+	/**
+	 * Gets title.
+	 * 
+	 * @return title
+	 */
+	public String getTitle() {
+		return title;
 	}
 
 	/**
@@ -93,5 +108,43 @@ public class ImageSize implements Serializable {
 		return this;
 	}
 
+	public ImageSize location(String location) {
+		this.location = location;
+		return this;
+	}
 
+	/**
+	 * Gets location.
+	 * 
+	 * @return location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * Constructs visual description of image size
+	 * 
+	 * @return
+	 */
+	public String getFullTitle() {
+		StringBuilder fullTitle = new StringBuilder();
+		fullTitle.append('(').append(width).append(" px)");
+		if (!StringUtils.isEmpty(title)) {
+			fullTitle.append(' ').append(title);
+		}
+		return fullTitle.toString();
+	}
+
+	/**
+	 * Sets title.
+	 * 
+	 * @param title
+	 *            title
+	 * @return
+	 */
+	public ImageSize title(String title) {
+		this.title = title;
+		return this;
+	}
 }

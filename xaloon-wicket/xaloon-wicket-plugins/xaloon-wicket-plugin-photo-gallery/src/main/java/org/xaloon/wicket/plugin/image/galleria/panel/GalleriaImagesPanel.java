@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
@@ -55,16 +54,6 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 	public GalleriaImagesPanel(String id, List<Image> images) {
 		super(id, Model.of(images));
 
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 * @param imageAlbum
-	 */
-	public GalleriaImagesPanel(String id, Album imageAlbum) {
-		super(id, (imageAlbum != null) ? Model.of(imageAlbum.getImages()) : Model.of());
 	}
 
 	@Override

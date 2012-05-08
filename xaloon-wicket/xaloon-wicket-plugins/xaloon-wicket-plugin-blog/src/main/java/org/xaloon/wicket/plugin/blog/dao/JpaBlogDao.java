@@ -50,8 +50,9 @@ public class JpaBlogDao implements BlogDao {
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
 	
-	public void save(BlogEntry blogEntry) {
-		persistenceServices.edit(blogEntry);
+	public BlogEntry save(BlogEntry blogEntry) {
+		blogEntry = persistenceServices.edit(blogEntry);
+		return blogEntry;
 	}
 
 	public boolean deleteBlogEntry(BlogEntry blogEntry) {

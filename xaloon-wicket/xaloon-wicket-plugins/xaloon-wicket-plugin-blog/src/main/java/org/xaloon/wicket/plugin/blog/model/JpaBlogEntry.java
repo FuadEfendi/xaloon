@@ -30,18 +30,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
-import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.model.AbstractAlbum;
-import org.xaloon.wicket.plugin.image.model.JpaImage;
 
 /**
  * @author vytautas r.
@@ -76,11 +72,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Column(name = "CONTENT", nullable = false)
 	@Lob
 	private String content;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("customOrder asc")
-	@JoinTable(name = "XAL_BLOG_ENTRY_IMAGES", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
-	private List<JpaImage> images = new ArrayList<JpaImage>();
 
 	public JpaClassifierItem getCategory() {
 		return category;
@@ -187,31 +178,6 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 			return getOwner().getUsername();
 		}
 		return null;
-	}
-
-	/**
-	 * @see org.xaloon.core.api.image.model.Album#getImages()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<? extends Image> getImages() {
-		return images;
-	}
-
-	/**
-	 * @see org.xaloon.core.api.image.model.Album#setImages(java.util.List)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setImages(List<? extends Image> images) {
-		/**
-		 * assume that if at first element failed then all elements should fail. Of cource it is possible to switch values, but why somebody should do
-		 * this?
-		 */
-		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaImage)) {
-			throw new IllegalArgumentException("Wrong type for provided argument!");
-		}
-		this.images = (List<JpaImage>)images;
 	}
 
 	@Override

@@ -130,13 +130,19 @@ public class JpaFileStorageService implements FileStorageService {
 			jpaFileStorage.setFile(IOUtils.toByteArray(inputStreamContainer.getInputStream()));
 			jpaFileStorage = persistenceServices.create(jpaFileStorage);
 			String id = String.valueOf(jpaFileStorage.getId());
-			return new DefaultKeyValue<String, String>(id, id);
+			String path = Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(fileDescriptor, true, "");
+			return new DefaultKeyValue<String, String>(path, id);
 		} catch (IOException e) {
 			LOGGER.error("Could not convert input into byte array", e);
 		} finally {
-			inputStreamContainer.close();
+			// inputStreamContainer.close();
 		}
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return FileStorageService.FILE_STORAGE_SERVICE_JPA;
 	}
 
 }
