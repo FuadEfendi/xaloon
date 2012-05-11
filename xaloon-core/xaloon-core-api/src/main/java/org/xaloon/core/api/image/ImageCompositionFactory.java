@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.persistence;
+package org.xaloon.core.api.image;
 
 import java.io.Serializable;
 
-public interface CategoryPrimaryKey extends Serializable {
-	Long getEntityId();
+import org.xaloon.core.api.image.model.Album;
+import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 
-	void setEntityId(Long entityId);
+public interface ImageCompositionFactory extends Serializable {
 
-	Long getCategoryId();
+	ImageComposition newImageComposition(Album album, Image image);
 
-	void setCategoryId(Long categoryId);
 }

@@ -17,13 +17,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator.MaximumLengthValidator;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.exception.CreateClassInstanceException;
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.classifier.ClassifierDropDownChoice;
 import org.xaloon.wicket.component.tag.StringTokensPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
+import org.xaloon.wicket.plugin.blog.BlogImageCompositionFactory;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
@@ -194,7 +194,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			add(thumbnailManagementPanel);
 		}
 
-		private AlbumAdministrationPanel addImageAlbumManagementPanel(Album album) {
+		private AlbumAdministrationPanel addImageAlbumManagementPanel(BlogEntry album) {
 			List<Image> albumImages = albumFacade.getImagesByAlbum(album);
 
 			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", albumImages);

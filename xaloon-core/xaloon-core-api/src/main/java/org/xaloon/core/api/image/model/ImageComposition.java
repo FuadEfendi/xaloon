@@ -14,19 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.core.api.image;
+package org.xaloon.core.api.image.model;
 
-import java.io.Serializable;
+import org.xaloon.core.api.persistence.Persistable;
 
-import org.xaloon.core.api.image.model.ImageComposition;
+public interface ImageComposition extends Persistable {
+	/**
+	 * @return the object
+	 */
+	public Album getObject();
 
-/**
- * File repository to manage image upload
- * 
- * @author vytautas r.
- */
-public interface ImageRepository extends Serializable {
-	ImageComposition uploadImage(ImageComposition composition, ImageOptions options);
+	/**
+	 * @param object
+	 *            the object to set
+	 */
+	void setObject(Album object);
 
-	ImageRepository getAlternativeImageRepository();
+	/**
+	 * @return the image
+	 */
+	Image getImage();
+
+	/**
+	 * @param image
+	 *            the image to set
+	 */
+	void setImage(Image image);
 }

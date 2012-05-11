@@ -30,10 +30,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.image.model.Album;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
@@ -73,6 +76,9 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Lob
 	private String content;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="object", orphanRemoval = true)
+	private List<JpaBlogEntryImageComposition> images = new ArrayList<JpaBlogEntryImageComposition>();
+	
 	public JpaClassifierItem getCategory() {
 		return category;
 	}
@@ -178,6 +184,31 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 			return getOwner().getUsername();
 		}
 		return null;
+	}
+	
+	/**
+	 * @see org.xaloon.core.api.image.model.Album#getImages()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<? extends ImageComposition> getImages() {
+		return images;
+	}
+
+	/**
+	 * @see org.xaloon.core.api.image.model.Album#setImages(java.util.List)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setImages(List<? extends ImageComposition> images) {
+		/**
+		 * assume that if at first element failed then all elements should fail. Of cource it is possible to switch values, but why somebody should do
+		 * this?
+		 */
+		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaBlogEntryImageComposition)) {
+			throw new IllegalArgumentException("Wrong type for provided argument!");
+		}
+		this.images = (List<JpaBlogEntryImageComposition>)images;
 	}
 
 	@Override

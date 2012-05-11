@@ -33,7 +33,9 @@ import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.ImageCompositionFactory;
 import org.xaloon.core.api.image.ImageLocationResolver;
+import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
@@ -110,8 +112,8 @@ public class JpaBlogFacade implements BlogFacade {
 			//FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
 			//entry.setThumbnail(fileDescriptor);
 		}
+		//entry = blogDao.save(entry);
 		entry = blogDao.save(entry);
-		
 		// Check and store images for this blog entry
 		storeImagesToBlogEntry(pluginBean, entry, imagesToAdd);
 		// entry.setThumbnail(null);
@@ -122,7 +124,8 @@ public class JpaBlogFacade implements BlogFacade {
 		if (entry == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			return;
 		}
-		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, getImageLocationResolver().resolveImageLocation(entry), getImageLocationResolver().resolveThumbnailLocation(entry));
+		ImageCompositionFactory compositionFactory =  new BlogImageCompositionFactory();
+		albumFacade.addNewImagesToAlbum(entry, compositionFactory, imagesToAdd, getImageLocationResolver().resolveImageLocation(entry), getImageLocationResolver().resolveThumbnailLocation(entry));
 	}
 
 	private String createDescription(BlogEntry entry, BlogPluginBean pluginBean) {

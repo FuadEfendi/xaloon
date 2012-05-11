@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.storage.FileDescriptor;
@@ -44,7 +45,8 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	private FileDescriptorDao fileDescriptorDao;
 
 	@Override
-	public Image uploadImage(Image image, ImageOptions options) {
+	public ImageComposition uploadImage(ImageComposition composition, ImageOptions options) {
+		Image image = composition.getImage();
 		try {
 			// Create image
 			storeOriginalFile(image, options);
@@ -73,11 +75,13 @@ public abstract class AbstractImageRepository implements ImageRepository {
 					image.setAdditionalSizes(items);
 				}
 			}
-			return persistenceServices.createOrEdit(image);
+			// composition.setImage(persistenceServices.createOrEdit(composition.getImage()));
+			// composition.setObject(persistenceServices.createOrEdit(composition.getObject()));
+			return persistenceServices.edit(composition);
 		} catch (Exception e) {
 			LOGGER.error("Could not store image using picasa service", e);
 			if (getAlternativeImageRepository() != null) {
-				return getAlternativeImageRepository().uploadImage(image, options);
+				return getAlternativeImageRepository().uploadImage(composition, options);
 			}
 		} finally {
 			options.getImageInputStreamContainer().close();

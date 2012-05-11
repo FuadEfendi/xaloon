@@ -22,7 +22,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -31,14 +30,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.keyvalue.KeyValue;
-import org.xaloon.core.api.persistence.CategoryPrimaryKey;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.user.model.User;
-import org.xaloon.core.jpa.JpaCategoryPrimaryKey;
 import org.xaloon.core.jpa.storage.model.JpaFileDescriptor;
 import org.xaloon.core.jpa.user.model.JpaUser;
 
@@ -47,16 +43,13 @@ import org.xaloon.core.jpa.user.model.JpaUser;
  */
 @Entity
 @DiscriminatorValue("IMAGE")
-@Table(name = "XAL_IMAGE", uniqueConstraints=@UniqueConstraint(name="IMAGE_BELONGS_TO", columnNames={"ENTITY_ID", "CATEGORY_ID"}))
+@Table(name = "XAL_IMAGE")
 public class JpaImage extends JpaFileDescriptor implements Image {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Embedded
-	private JpaCategoryPrimaryKey referer;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "THUMBNAIL_ID", referencedColumnName = "ID")
@@ -210,19 +203,5 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 			throw new IllegalArgumentException("Wrong type for provided argument!");
 		}
 		this.additionalSizes = (List<JpaFileDescriptor>)additionalSizes;
-	}
-
-	/**
-	 * @return the referer
-	 */
-	public JpaCategoryPrimaryKey getReferer() {
-		return referer;
-	}
-
-	/**
-	 * @param referer the referer to set
-	 */
-	public void setReferer(CategoryPrimaryKey referer) {
-		this.referer = (JpaCategoryPrimaryKey)referer;
 	}
 }

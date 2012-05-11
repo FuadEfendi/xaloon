@@ -20,7 +20,8 @@
 				<!--Image -->
 				<value>org.xaloon.wicket.plugin.image.model.JpaAlbum</value>	
 				<value>org.xaloon.wicket.plugin.image.model.JpaImage</value>		
-				<value>org.xaloon.wicket.plugin.image.model.JpaImageTag</value>						
+				<value>org.xaloon.wicket.plugin.image.model.JpaImageTag</value>		
+				<value>org.xaloon.wicket.plugin.image.model.JpaAlbumImageComposition</value>						
 			</list>
 		</property>
 	</bean>	

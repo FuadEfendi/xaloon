@@ -19,7 +19,6 @@ package org.xaloon.core.api.image.model;
 import java.util.List;
 
 import org.xaloon.core.api.keyvalue.KeyValue;
-import org.xaloon.core.api.persistence.CategoryPrimaryKey;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.user.model.User;
 
@@ -29,11 +28,6 @@ import org.xaloon.core.api.user.model.User;
  * @author vytautas r.
  */
 public interface Image extends FileDescriptor {
-
-	CategoryPrimaryKey getReferer();
-
-	<T extends CategoryPrimaryKey> void setReferer(T referer);
-
 	/**
 	 * Gets thumbnail.
 	 * 

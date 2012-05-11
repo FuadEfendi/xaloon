@@ -66,7 +66,7 @@ public interface AlbumFacade extends Serializable {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	void addNewImagesToAlbum(Album album, List<Image> imagesToAdd, String imageLocation, String thumbnailLocation);
+	void addNewImagesToAlbum(Album album, ImageCompositionFactory factory, List<Image> imagesToAdd, String imageLocation, String thumbnailLocation);
 
 	/**
 	 * Delete image physical files from storage

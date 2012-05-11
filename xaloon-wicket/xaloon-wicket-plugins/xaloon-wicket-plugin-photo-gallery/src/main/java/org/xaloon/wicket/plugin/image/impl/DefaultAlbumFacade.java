@@ -32,11 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.ImageCompositionFactory;
 import org.xaloon.core.api.image.ImageOptions;
 import org.xaloon.core.api.image.ImageRepository;
 import org.xaloon.core.api.image.ImageSize;
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
@@ -45,7 +47,6 @@ import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
-import org.xaloon.core.jpa.JpaCategoryPrimaryKey;
 import org.xaloon.wicket.plugin.image.model.JpaAlbum;
 import org.xaloon.wicket.plugin.image.model.JpaImage;
 
@@ -94,13 +95,13 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void addNewImagesToAlbum(final Album album, List<Image> imagesToAdd, final String imageLocation, final String thumbnailLocation) {
-		if (album == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
+	public void addNewImagesToAlbum(Album album, ImageCompositionFactory factory, List<Image> imagesToAdd, final String imageLocation, final String thumbnailLocation) {
+		if (imagesToAdd == null || imagesToAdd.isEmpty()) {
 			throw new IllegalArgumentException("Missing arguments!");
 		}
 		for (final Image image : imagesToAdd) {
 			if (image.getId() == null) {
-				createImage(album, image, imageLocation, thumbnailLocation);
+				createImage(album, factory, image, imageLocation, thumbnailLocation);
 			}
 		}
 	}
@@ -161,9 +162,10 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	public void createImage(Album album, Image newImage, String imageLocation, String thumbnailLocation) {
-		newImage.setReferer(new JpaCategoryPrimaryKey(album.getId(), album.getTrackingCategoryId()));
+	public void createImage(Album album, ImageCompositionFactory factory, Image newImage, String imageLocation, String thumbnailLocation) {
+		ImageComposition composition = factory.newImageComposition(album, newImage);
 		newImage.setOwner(album.getOwner());
+		album.getImages().add(composition);
 		
 		// Threats image as original file descriptor and modifies required
 		// properties
@@ -182,7 +184,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			options.setModifyPath(true);
 			newImage.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(newImage, true, ""));
 		}
-		getImageRepository().uploadImage(newImage, options);
+		getImageRepository().uploadImage(composition, options);
 	}
 
 	@Override
@@ -219,9 +221,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		if (album.getId() == null) {
 			return new ArrayList<Image>();
 		}
-		QueryBuilder query = new QueryBuilder("select i from " + JpaImage.class.getSimpleName() + " i");
-		query.addParameter("i.referer.categoryId", "CATEGORY_ID", album.getTrackingCategoryId());
-		query.addParameter("i.referer.entityId", "ENTITY_ID", album.getId());
+		QueryBuilder query = new QueryBuilder("select i from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
+		query.addParameter("a.id", "_ID", album.getId());
 		return persistenceServices.executeQuery(query);
 	}
 }

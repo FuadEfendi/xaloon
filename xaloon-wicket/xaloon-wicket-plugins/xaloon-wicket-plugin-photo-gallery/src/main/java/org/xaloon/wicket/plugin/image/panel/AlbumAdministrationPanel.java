@@ -42,7 +42,7 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	private static final long serialVersionUID = 1L;
 
 	private int maxImagesAllowed = 999;
-
+	
 	// The list of images to be deleted
 	private List<Image> imagesToDelete = new ArrayList<Image>();
 
