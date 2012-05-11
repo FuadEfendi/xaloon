@@ -165,7 +165,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	public void createImage(Album album, ImageCompositionFactory factory, Image newImage, String imageLocation, String thumbnailLocation) {
 		ImageComposition composition = factory.newImageComposition(album, newImage);
 		newImage.setOwner(album.getOwner());
-		album.getImages().add(composition);
+		//album.getImages().add(composition);
 		
 		// Threats image as original file descriptor and modifies required
 		// properties
