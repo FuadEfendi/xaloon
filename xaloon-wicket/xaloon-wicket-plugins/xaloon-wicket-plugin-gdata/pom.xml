@@ -32,5 +32,12 @@
 			<groupId>com.google.gdata</groupId>
 			<artifactId>gdata-photos-2.0</artifactId>
 		</dependency>
+		
+		<!-- Junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

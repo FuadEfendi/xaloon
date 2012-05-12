@@ -17,17 +17,19 @@ public class GoogleImagePathUtil implements Serializable{
 	public static String getGoogleResizedPath(String imagePath, int size) {
 		
 		String[] path = imagePath.split("/");
-		int lastElem = path.length-1;
+		int lastElem = path.length-2;
 		
-		if (isGoogleWidthProvided(path[lastElem])) {
-			//replace existing with new one
-			path[lastElem] = "s" + size;
-			return StringUtils.join(path, "/");
-		} else if (path.length > 1) {
-			List<String> items = Arrays.asList(path);
-			List<String> result = new ArrayList<String>(items);
-			result.add(lastElem, "s" + size);
-			return StringUtils.join(result, "/");
+		if (lastElem > 0) {
+			if (isGoogleWidthProvided(path[lastElem])) {
+				//replace existing with new one
+				path[lastElem] = "s" + size;
+				return StringUtils.join(path, "/");
+			} else if (path.length > 1) {
+				List<String> items = Arrays.asList(path);
+				List<String> result = new ArrayList<String>(items);
+				result.add(lastElem+1, "s" + size);
+				return StringUtils.join(result, "/");
+			}
 		}
 		return imagePath;
 	}
