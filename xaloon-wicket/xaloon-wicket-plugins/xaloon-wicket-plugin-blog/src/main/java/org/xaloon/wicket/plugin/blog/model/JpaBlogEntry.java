@@ -35,7 +35,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;

@@ -23,12 +23,13 @@ public class GoogleImagePathUtil implements Serializable{
 			//replace existing with new one
 			path[lastElem] = "s" + size;
 			return StringUtils.join(path, "/");
-		} else {
+		} else if (path.length > 1) {
 			List<String> items = Arrays.asList(path);
 			List<String> result = new ArrayList<String>(items);
 			result.add(lastElem, "s" + size);
 			return StringUtils.join(result, "/");
 		}
+		return imagePath;
 	}
 
 	private static boolean isGoogleWidthProvided(String path) {
