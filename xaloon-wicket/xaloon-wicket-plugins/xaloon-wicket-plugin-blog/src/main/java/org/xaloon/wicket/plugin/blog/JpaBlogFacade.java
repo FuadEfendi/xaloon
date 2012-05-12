@@ -35,7 +35,6 @@ import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.image.ImageCompositionFactory;
 import org.xaloon.core.api.image.ImageLocationResolver;
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
@@ -103,17 +102,14 @@ public class JpaBlogFacade implements BlogFacade {
 		// Set short description of blog entry
 		entry.setDescription(createDescription(entry, pluginBean));
 
+		entry = blogDao.save(entry);
+		
 		if (thumbnailToAdd != null) {
-			//thumbnailToAdd.setHeight(pluginBean.getBlogImageHeight());
-			//thumbnailToAdd.setWidth(pluginBean.getBlogImageWidth());
-			//thumbnailToAdd.setResize(true);
-			//thumbnailToAdd.setModifyPath(true);
-			//thumbnailToAdd.setLocation(getImageLocationResolver().resolveThumbnailLocation(entry));
-			//FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
-			//entry.setThumbnail(fileDescriptor);
+			ImageCompositionFactory compositionFactory =  new BlogImageCompositionFactory();
+			albumFacade.uploadThumbnail(entry, compositionFactory, thumbnailToAdd, getImageLocationResolver().resolveThumbnailLocation(entry));
 		}
 		//entry = blogDao.save(entry);
-		entry = blogDao.save(entry);
+		
 		// Check and store images for this blog entry
 		storeImagesToBlogEntry(pluginBean, entry, imagesToAdd);
 		// entry.setThumbnail(null);

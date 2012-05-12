@@ -23,7 +23,6 @@ import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.classifier.ClassifierDropDownChoice;
 import org.xaloon.wicket.component.tag.StringTokensPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
-import org.xaloon.wicket.plugin.blog.BlogImageCompositionFactory;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;

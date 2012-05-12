@@ -133,4 +133,6 @@ public interface AlbumFacade extends Serializable {
 	void deleteAlbumsByUsername(User userToBeDeleted);
 
 	List<Image> getImagesByAlbum(Album album);
+
+	void uploadThumbnail(Album album, ImageCompositionFactory factory, Image thumbnailToAdd, String resolveThumbnailLocation);
 }

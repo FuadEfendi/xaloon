@@ -18,6 +18,7 @@ package org.xaloon.core.api.image;
 
 import java.io.Serializable;
 
+import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.ImageComposition;
 
 /**
@@ -29,4 +30,6 @@ public interface ImageRepository extends Serializable {
 	ImageComposition uploadImage(ImageComposition composition, ImageOptions options);
 
 	ImageRepository getAlternativeImageRepository();
+
+	Album uploadThumbnail(ImageComposition composition, ImageOptions options);
 }

@@ -165,12 +165,15 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	public void createImage(Album album, ImageCompositionFactory factory, Image newImage, String imageLocation, String thumbnailLocation) {
 		ImageComposition composition = factory.newImageComposition(album, newImage);
 		newImage.setOwner(album.getOwner());
-		//album.getImages().add(composition);
 		
-		// Threats image as original file descriptor and modifies required
-		// properties
+		// Threats image as original file descriptor and modifies required properties
 		newImage.setLocation(imageLocation);
 
+		ImageOptions options = newImageOptions(newImage, thumbnailLocation);
+		getImageRepository().uploadImage(composition, options);
+	}
+
+	private ImageOptions newImageOptions(Image newImage, String thumbnailLocation) {
 		ImageSize thumbnailSize = new ImageSize(158).setHeight(82).location(thumbnailLocation).title(newImage.getName());
 		InputStreamContainer inputStreamContainer = null;
 		if (newImage.isExternal()) {
@@ -184,7 +187,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			options.setModifyPath(true);
 			newImage.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(newImage, true, ""));
 		}
-		getImageRepository().uploadImage(composition, options);
+		return options;
 	}
 
 	@Override
@@ -224,5 +227,14 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		QueryBuilder query = new QueryBuilder("select i from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
 		query.addParameter("a.id", "_ID", album.getId());
 		return persistenceServices.executeQuery(query);
+	}
+
+	@Override
+	public void uploadThumbnail(Album album, ImageCompositionFactory factory,  Image thumbnailToAdd, String thumbnailLocation) {
+		ImageComposition composition = factory.newImageComposition(album, thumbnailToAdd);
+		thumbnailToAdd.setOwner(album.getOwner());
+		thumbnailToAdd.setLocation(thumbnailLocation);
+		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
+		getImageRepository().uploadThumbnail(composition, options);
 	}
 }

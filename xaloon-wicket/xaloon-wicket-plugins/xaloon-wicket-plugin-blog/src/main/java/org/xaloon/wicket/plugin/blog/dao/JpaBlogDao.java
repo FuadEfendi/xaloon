@@ -28,14 +28,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
-import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
-import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntry;
@@ -60,9 +58,6 @@ public class JpaBlogDao implements BlogDao {
 	
 	@Inject
 	private UserFacade userFacade;
-	
-	@Inject
-	private ClassifierItemDao classifierItemDao;
 	
 	@Inject
 	@Named("persistenceServices")

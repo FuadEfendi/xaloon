@@ -17,24 +17,34 @@
 package org.xaloon.core.api.image;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
+import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.persistence.PersistenceServices;
+import org.xaloon.core.api.storage.DefaultInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.storage.FileStorageService;
+import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.util.DefaultKeyValue;
 
 public abstract class AbstractImageRepository implements ImageRepository {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractImageRepository.class);
 
@@ -43,6 +53,35 @@ public abstract class AbstractImageRepository implements ImageRepository {
 
 	@Inject
 	private FileDescriptorDao fileDescriptorDao;
+
+	@Inject
+	@Named("imageResizer")
+	private ImageResizer imageResizer;
+
+	@Override
+	public Album uploadThumbnail(ImageComposition composition, ImageOptions options) {
+		if (options.getImageSize() == null) {
+			throw new IllegalArgumentException("Thumbnail size was not provided!");
+		}
+		Image image = composition.getImage();
+		try {
+			InputStreamContainer resizedInputStreamContainer = resize(options);
+			options.setImageInputStreamContainer(resizedInputStreamContainer);
+			storeOriginalFile(image, options);
+
+			composition.getObject().setThumbnail(image);
+			return persistenceServices.edit(composition.getObject());
+		} catch (Exception e) {
+			LOGGER.error("Could not store image. Trying alternative repository ", e);
+			if (getAlternativeImageRepository() != null) {
+				return getAlternativeImageRepository().uploadThumbnail(composition, options);
+			}
+		} finally {
+			options.getImageInputStreamContainer().close();
+		}
+		LOGGER.warn("Could not store image using any provider. Giving up.");
+		return null;
+	}
 
 	@Override
 	public ImageComposition uploadImage(ImageComposition composition, ImageOptions options) {
@@ -79,7 +118,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 			// composition.setObject(persistenceServices.createOrEdit(composition.getObject()));
 			return persistenceServices.edit(composition);
 		} catch (Exception e) {
-			LOGGER.error("Could not store image using picasa service", e);
+			LOGGER.error("Could not store image. Trying alternative repository ", e);
 			if (getAlternativeImageRepository() != null) {
 				return getAlternativeImageRepository().uploadImage(composition, options);
 			}
@@ -117,6 +156,14 @@ public abstract class AbstractImageRepository implements ImageRepository {
 		fd.setName(options.getImageSize().getFullTitle());
 		fd.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(fd, options.isGenerateUuid(), ""));
 		return fd;
+	}
+
+	protected InputStreamContainer resize(ImageOptions options) throws IOException {
+		InputStreamContainer imageInputStreamContainer = options.getImageInputStreamContainer();
+		ImageSize imageSize = options.getImageSize();
+		InputStream is = imageResizer.resize(imageInputStreamContainer.getInputStream(), imageSize.getWidth(), imageSize.getHeight(), true);
+
+		return new DefaultInputStreamContainer(is);
 	}
 
 	protected abstract KeyValue<String, String> storeFile(Image image, ImageOptions options) throws IOException;

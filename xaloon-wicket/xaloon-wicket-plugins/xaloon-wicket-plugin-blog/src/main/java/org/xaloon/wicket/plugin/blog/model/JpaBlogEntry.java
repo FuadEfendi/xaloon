@@ -60,7 +60,7 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "XAL_BLOG_ENTRY_TAGS", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
 	private List<JpaBlogEntryTag> tags = new ArrayList<JpaBlogEntryTag>();
 
