@@ -64,11 +64,11 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	@Column(name = "DESCRIPTION", length=255)
 	private String description;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
 	private JpaUser owner;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "XAL_IMAGE_RESIZED", joinColumns = { @JoinColumn(name = "IMAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "FD_ID") })
 	private List<JpaFileDescriptor> additionalSizes = new ArrayList<JpaFileDescriptor>();
 
