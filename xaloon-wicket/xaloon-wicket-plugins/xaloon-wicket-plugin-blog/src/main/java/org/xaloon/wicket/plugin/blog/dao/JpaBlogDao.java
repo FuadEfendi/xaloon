@@ -28,9 +28,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
-import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileDescriptorDao;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
@@ -120,6 +120,7 @@ public class JpaBlogDao implements BlogDao {
 		return result;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void createNewTransientBlogEntry(List<BlogEntry> blogEntries, Object[] item) {
 		JpaBlogEntry result = new JpaBlogEntry();
 		result.setId((Long)item[0]);
@@ -140,7 +141,9 @@ public class JpaBlogDao implements BlogDao {
 		if (thumbnailId != null) {
 			result.setThumbnail(fileDescriptorDao.getFileDescriptorById(thumbnailId));
 		} else if (imagesCount > 0 ){
-			result.setThumbnail(getImageThumbnailForBlogEntry(result.getId()));
+			List temporaryList = new ArrayList<ImageComposition>();
+			temporaryList.add(getImageThumbnailForBlogEntry(result.getId()));
+			result.getImages().addAll(temporaryList);
 		}
 		
 		result.setCreateDate((Date)item[8]);
@@ -148,13 +151,13 @@ public class JpaBlogDao implements BlogDao {
 		blogEntries.add(result);
 	}
 	
-	private FileDescriptor getImageThumbnailForBlogEntry(Long id) {
-		QueryBuilder query = new QueryBuilder("select th from " + JpaBlogEntryImageComposition.class.getSimpleName() + " comp inner join comp.image image inner join image.thumbnail th");
-		query.addParameter("comp.object.id", "_ID", id);
+	private JpaBlogEntryImageComposition getImageThumbnailForBlogEntry(Long id) {
+		QueryBuilder query = new QueryBuilder("select i from " + JpaBlogEntry.class.getSimpleName() + " e inner join e.images i inner join i.image image inner join image.thumbnail th");
+		query.addParameter("e.id", "_ID", id);
 		query.addOrderBy("image.customOrder asc, image.updateDate desc");
 		
 		query.setCount(1);
-		List<FileDescriptor> result = persistenceServices.executeQuery(query);
+		List<JpaBlogEntryImageComposition> result = persistenceServices.executeQuery(query);
 		return !result.isEmpty()?result.get(0):null;
 	}
 

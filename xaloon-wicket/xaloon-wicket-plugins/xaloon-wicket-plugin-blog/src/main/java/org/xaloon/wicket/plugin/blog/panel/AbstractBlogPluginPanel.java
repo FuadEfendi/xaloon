@@ -31,6 +31,7 @@ import org.xaloon.core.api.date.DateService;
 import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
 import org.xaloon.core.api.plugin.comment.CommentDao;
+import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.classifier.panel.ClassifierConstants;
 import org.xaloon.wicket.component.navigation.BookmarkablePagingNavigator;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
@@ -41,6 +42,7 @@ import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
+import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryImageComposition;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryTag;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListByBloggerPage;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListByCategoryPage;
@@ -199,4 +201,16 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		}
 		return authorLink;
 	}
+	
+	protected FileDescriptor getBlogEntryThumbnail(BlogEntry blogEntry) {
+		if (blogEntry.getThumbnail() != null) {
+			return blogEntry.getThumbnail();
+		}
+		List<JpaBlogEntryImageComposition> albumImages = blogEntry.getImages();
+		if (!albumImages.isEmpty()) {
+			return albumImages.get(0).getImage().getThumbnail();
+		}
+		return null;
+	}
+
 }

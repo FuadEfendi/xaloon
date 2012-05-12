@@ -2,7 +2,6 @@ package org.xaloon.wicket.plugin.blog.panel;
 
 import java.text.DateFormat;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -17,7 +16,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
@@ -205,18 +203,6 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 	 */
 	protected String getModifiedPath(String path) {
 		return path;
-	}
-
-
-	protected FileDescriptor getBlogEntryThumbnail(BlogEntry blogEntry) {
-		if (blogEntry.getThumbnail() != null) {
-			return blogEntry.getThumbnail();
-		}
-		List<Image> albumImages = albumFacade.getImagesByAlbum(blogEntry);
-		if (!albumImages.isEmpty()) {
-			return albumImages.get(0).getThumbnail();
-		}
-		return null;
 	}
 
 	protected IDataProvider<BlogEntry> getBlogEntryDataProvider() {

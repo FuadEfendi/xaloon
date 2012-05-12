@@ -1,7 +1,5 @@
 package org.xaloon.wicket.plugin.blog.panel;
 
-import java.util.List;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -9,7 +7,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.resource.ImageLink;
@@ -83,16 +80,5 @@ public class BlogEntryListTitlesPanel extends AbstractBlogPluginPanel {
 		});
 		
 		
-	}
-	
-	protected FileDescriptor getBlogEntryThumbnail(BlogEntry blogEntry) {
-		if (blogEntry.getThumbnail() != null) {
-			return blogEntry.getThumbnail();
-		}
-		List<Image> albumImages = albumFacade.getImagesByAlbum(blogEntry);
-		if (!albumImages.isEmpty()) {
-			return albumImages.get(0).getThumbnail();
-		}
-		return null;
 	}
 }
