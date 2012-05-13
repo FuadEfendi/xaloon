@@ -135,7 +135,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 		if (!image.isExternal()) {
 			originalImageUid = getFileStorageService().storeFile(image, options.getImageInputStreamContainer());
 		} else {
-			originalImageUid = new DefaultKeyValue<String, String>(image.getPath(), null);
+			originalImageUid = new DefaultKeyValue<String, String>(image.getPath(), image.getPath());
 		}
 		image.setIdentifier(originalImageUid.getValue());
 		image.setPath(originalImageUid.getKey());

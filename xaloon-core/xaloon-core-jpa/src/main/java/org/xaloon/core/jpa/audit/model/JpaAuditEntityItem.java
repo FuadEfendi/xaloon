@@ -41,7 +41,7 @@ public class JpaAuditEntityItem extends AbstractEntity implements AuditEntityIte
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "AUDIT_ENTITY_ID", referencedColumnName = "ID")
 	private JpaAuditEntity auditEntity;
 

@@ -15,6 +15,7 @@ import org.xaloon.core.api.image.ImageRepository;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileStorageService;
+import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.util.DefaultKeyValue;
 import org.xaloon.wicket.plugin.google.storage.util.GoogleImagePathUtil;
 
@@ -50,6 +51,14 @@ public class PicasaImageRepository extends AbstractImageRepository {
 
 	@Override
 	protected KeyValue<String, String> storeFile(Image image, ImageOptions options) throws IOException {
+		if (GoogleImagePathUtil.isPicasaImage(image.getPath())) {
+			return createPicasaDescriptor(image, options);
+		}
+		InputStreamContainer resizedInputStreamContainer = resize(options);
+		return getFileStorageService().storeFile(image, resizedInputStreamContainer);
+	}
+
+	private KeyValue<String, String> createPicasaDescriptor(Image image, ImageOptions options) {
 		KeyValue<String, String> uniqueIdentifier = new DefaultKeyValue<String, String>();
 		uniqueIdentifier.setKey(GoogleImagePathUtil.getGoogleResizedPath(image.getPath(), options.getImageSize().getWidth()));
 		uniqueIdentifier.setValue(uniqueIdentifier.getKey());

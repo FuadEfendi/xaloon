@@ -41,4 +41,8 @@ public class GoogleImagePathUtil implements Serializable{
 		String width = path.substring(1);
 		return StringUtils.isNumeric(width);
 	}
+
+	public static boolean isPicasaImage(String path) {
+		return !StringUtils.isEmpty(path) && path.contains("google");
+	}
 }

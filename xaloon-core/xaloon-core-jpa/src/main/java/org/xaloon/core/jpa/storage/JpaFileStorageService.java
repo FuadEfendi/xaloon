@@ -89,7 +89,7 @@ public class JpaFileStorageService implements FileStorageService {
 
 	@Override
 	public boolean delete(String uniqueIdentifier) {
-		if (StringUtils.isEmpty(uniqueIdentifier)) {
+		if (StringUtils.isEmpty(uniqueIdentifier) || !StringUtils.isNumeric(uniqueIdentifier)) {
 			return false;
 		}
 		JpaFileStorage jfs = persistenceServices.find(JpaFileStorage.class, Long.valueOf(uniqueIdentifier));// TODO fix save convert

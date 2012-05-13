@@ -25,6 +25,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +38,7 @@ import org.xaloon.core.api.audit.annotation.Auditable;
 import org.xaloon.core.api.audit.model.AuditEntity;
 import org.xaloon.core.api.audit.model.AuditEntityItem;
 import org.xaloon.core.api.audit.model.AuditState;
+import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
 import org.xaloon.core.api.util.ClassUtil;
 import org.xaloon.core.api.util.UrlUtil;
@@ -60,6 +62,9 @@ public class JpaAuditFacade implements AuditFacade {
 	private static final Log logger = LogFactory.getLog(JpaAuditFacade.class);
 
 	private transient EntityManager em;
+
+	@Inject
+	private PersistenceServices persistenceServices;
 
 	/**
 	 * @param em
@@ -131,13 +136,12 @@ public class JpaAuditFacade implements AuditFacade {
 		createAuditDetails(ae, auditObject, parentClass.getSuperclass());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<AuditEntity> search(List<String> auditableEntityNames, int first, int count) {
-		return em.createQuery("select a from " + JpaAuditEntity.class.getSimpleName() + " a order by a.createDate desc")
-			.setFirstResult(first)
-			.setMaxResults(count)
-			.getResultList();
+		QueryBuilder query = new QueryBuilder("select a from " + JpaAuditEntity.class.getSimpleName() + " a order by a.createDate desc");
+		query.setFirstRow(first);
+		query.setCount(count);
+		return persistenceServices.executeQuery(query);
 	}
 
 	private QueryBuilder createQuery(String selectQuery, List<String> objectNames) {
