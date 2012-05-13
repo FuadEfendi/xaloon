@@ -105,8 +105,7 @@ public class JpaBlogFacade implements BlogFacade {
 		entry = blogDao.save(entry);
 		
 		if (thumbnailToAdd != null) {
-			ImageCompositionFactory compositionFactory =  new BlogImageCompositionFactory();
-			albumFacade.uploadThumbnail(entry, compositionFactory, thumbnailToAdd, getImageLocationResolver().resolveThumbnailLocation(entry));
+			entry = albumFacade.uploadThumbnail(entry, thumbnailToAdd, getImageLocationResolver().resolveThumbnailLocation(entry));
 		}
 		//entry = blogDao.save(entry);
 		

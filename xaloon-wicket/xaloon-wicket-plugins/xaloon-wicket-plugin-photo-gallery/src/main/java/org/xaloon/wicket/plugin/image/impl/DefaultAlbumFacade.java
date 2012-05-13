@@ -230,11 +230,10 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void uploadThumbnail(Album album, ImageCompositionFactory factory,  Image thumbnailToAdd, String thumbnailLocation) {
-		ImageComposition composition = factory.newImageComposition(album, thumbnailToAdd);
+	public <T extends Album> T uploadThumbnail(T album, Image thumbnailToAdd, String thumbnailLocation) {
 		thumbnailToAdd.setOwner(album.getOwner());
 		thumbnailToAdd.setLocation(thumbnailLocation);
 		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
-		getImageRepository().uploadThumbnail(composition, options);
+		return getImageRepository().uploadThumbnail(album, thumbnailToAdd, options);
 	}
 }
