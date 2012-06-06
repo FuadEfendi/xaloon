@@ -94,7 +94,7 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 		PluginEntity pluginEntity = findPluginEntity(plugin);
 		Configuration.get().getResourceRepositoryListeners().onBeforeSaveProperty(plugin, PLUGIN_DATA, pluginBeanValue);
 		if (pluginEntity == null) {
-			createNewEntity(plugin, pluginBeanValue);
+			pluginEntity = createNewEntity(plugin, pluginBeanValue);
 		} else {
 			pluginEntity.setPluginData(pluginBeanValue);
 			persistenceServices.createOrEdit(pluginEntity);
@@ -103,19 +103,20 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 		putPluginEntityToCache(pluginEntity.getPluginKey(), pluginBean);
 	}
 
-	private void createNewEntity(Plugin plugin, String pluginBeanValue) {
+	private PluginEntity createNewEntity(Plugin plugin, String pluginBeanValue) {
 		try {
 			PluginEntity pluginEntity = new PluginEntity();
 			pluginEntity.setPluginKey(plugin.getId());
 			pluginEntity.setEnabled(Boolean.TRUE);
 			pluginEntity.setPluginData(pluginBeanValue);
-			persistenceServices.createOrEdit(pluginEntity);
+			return persistenceServices.createOrEdit(pluginEntity);
 		} catch (Exception e) {
 			LOGGER.error("Could not create plugin entity. Is it already existing?", e);
 			PluginEntity found = findPluginEntity(plugin);
 			if (found != null) {
 				LOGGER.info(String.format("Plugin entity already registered: %s", plugin.getId()));
 			}
+			return found;
 		}
 	}
 
