@@ -236,4 +236,12 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
 		return getImageRepository().uploadThumbnail(album, thumbnailToAdd, options);
 	}
+	
+	@Override
+	public <T extends Image> T uploadThumbnail(T image, Image thumbnailToAdd, String thumbnailLocation) {
+		thumbnailToAdd.setOwner(image.getOwner());
+		thumbnailToAdd.setLocation(thumbnailLocation);
+		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
+		return getImageRepository().uploadThumbnail(image, thumbnailToAdd, options);
+	}
 }

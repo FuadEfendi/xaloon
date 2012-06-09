@@ -33,4 +33,6 @@ public interface ImageRepository extends Serializable {
 	ImageRepository getAlternativeImageRepository();
 
 	<T extends Album> T uploadThumbnail(T album, Image image, ImageOptions options);
+
+	<T extends Image> T uploadThumbnail(T Image, Image image, ImageOptions options);
 }

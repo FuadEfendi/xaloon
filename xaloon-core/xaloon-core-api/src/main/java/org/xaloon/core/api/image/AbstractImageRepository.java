@@ -59,6 +59,29 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	private ImageResizer imageResizer;
 
 	@Override
+	public <T extends Image> T uploadThumbnail(T image, Image thumbnailImage, ImageOptions options) {
+		if (options.getImageSize() == null) {
+			throw new IllegalArgumentException("Thumbnail size was not provided!");
+		}
+
+		try {
+			FileDescriptor thumbnail = uploadFileDescriptor(thumbnailImage, options);
+			image.setThumbnail(thumbnail);
+
+			return persistenceServices.edit(image);
+		} catch (Exception e) {
+			LOGGER.error("Could not store image. Trying alternative repository ", e);
+			if (getAlternativeImageRepository() != null) {
+				return getAlternativeImageRepository().uploadThumbnail(image, thumbnailImage, options);
+			}
+		} finally {
+			options.getImageInputStreamContainer().close();
+		}
+		LOGGER.warn("Could not store image using any provider. Giving up.");
+		return null;
+	}
+
+	@Override
 	public <T extends Album> T uploadThumbnail(T album, Image image, ImageOptions options) {
 		if (options.getImageSize() == null) {
 			throw new IllegalArgumentException("Thumbnail size was not provided!");
