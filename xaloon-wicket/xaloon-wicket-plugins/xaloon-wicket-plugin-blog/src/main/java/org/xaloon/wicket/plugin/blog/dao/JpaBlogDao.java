@@ -103,7 +103,7 @@ public class JpaBlogDao implements BlogDao {
 
 		queryBuilder.setFirstRow(first);
 		queryBuilder.setCount(count);
-		queryBuilder.addGroup("be.id, be.customPath, be.path, cat.id, be.blogEntryPathType, o.username, be.description, th.id, be.createDate, be.title");
+		queryBuilder.addGroup("be.id, be.customPath, be.path, cat.id, be.blogEntryPathType, o.username, be.description, th.id, be.createDate, be.title, be.sticky, be.updateDate");
 		queryBuilder.addOrderBy("be.sticky desc, be.updateDate desc");
 		List<Object[]> result = persistenceServices.executeQuery(queryBuilder);
 		return transformBlogEntries(result);
