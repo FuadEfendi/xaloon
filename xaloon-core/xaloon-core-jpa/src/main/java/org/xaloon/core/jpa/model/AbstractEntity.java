@@ -49,11 +49,11 @@ public abstract class AbstractEntity implements Persistable {
 
 	@Column(name = "CREATE_DATE", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate = new Date();
+	private Date createDate;
 
 	@Column(name = "UPDATE_DATE", updatable = true)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updateDate = new Date();
+	private Date updateDate;
 
 	/**
 	 * @return unique identifier of entity
@@ -112,8 +112,9 @@ public abstract class AbstractEntity implements Persistable {
 	@PrePersist
 	protected void beforeCreate() {
 		if (getCreateDate() == null) {
-			setCreateDate(new Date());
-			setUpdateDate(new Date());
+			Date cd = new Date();
+			setCreateDate(cd);
+			setUpdateDate(cd);
 		}
 	}
 }
