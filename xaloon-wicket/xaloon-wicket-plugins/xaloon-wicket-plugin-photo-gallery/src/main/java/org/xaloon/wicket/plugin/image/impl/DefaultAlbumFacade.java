@@ -214,7 +214,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 */
 	public ImageRepository getImageRepository() {
 		if (imageRepository == null) {
-			imageRepository = ServiceLocator.get().getInstance(ImageRepository.class);
+			imageRepository = ServiceLocator.get().getInstance(ImageRepository.class, "picasaImageRepository");
 		}
 		return imageRepository;
 	}
@@ -226,6 +226,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		}
 		QueryBuilder query = new QueryBuilder("select i from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
 		query.addParameter("a.id", "_ID", album.getId());
+		query.addOrderBy("i.customOrder asc");
 		return persistenceServices.executeQuery(query);
 	}
 
