@@ -19,4 +19,11 @@ public class BlogImageCompositionFactory implements ImageCompositionFactory {
 		result.setImage(image);
 		return result;
 	}
+
+	@Override
+	public ImageComposition newImageComposition(Image image) {
+		ImageComposition result = new JpaBlogEntryImageComposition();
+		result.setImage(image);
+		return result;
+	}
 }

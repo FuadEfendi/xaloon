@@ -16,7 +16,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.counting.CounterFacade;
-import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.wicket.application.page.LayoutWebPage;
@@ -100,7 +100,7 @@ public class BlogEntryPanel extends AbstractBlogPluginPanel {
 		// Add image
 		String imageLinkPath = (blogEntry.getThumbnail() != null) ? blogEntry.getThumbnail().getPath() : null;
 
-		List<Image> albumImages = albumFacade.getImagesByAlbum(blogEntry);
+		List<ImageComposition> albumImages = albumFacade.getImagesByAlbum(blogEntry);
 		final boolean imageVisible = !StringUtils.isEmpty(imageLinkPath) && albumImages.isEmpty();
 		ImageLink imageLink = new ImageLink("image", imageLinkPath);
 		imageLink.setVisible(imageVisible);

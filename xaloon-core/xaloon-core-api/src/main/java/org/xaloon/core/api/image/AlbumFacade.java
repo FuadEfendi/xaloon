@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.user.model.User;
 
@@ -66,7 +67,7 @@ public interface AlbumFacade extends Serializable {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	void addNewImagesToAlbum(Album album, ImageCompositionFactory factory, List<Image> imagesToAdd, String imageLocation, String thumbnailLocation);
+	void addNewImagesToAlbum(Album album, List<ImageComposition> imagesToAdd, String imageLocation, String thumbnailLocation);
 
 	/**
 	 * Delete image physical files from storage
@@ -76,7 +77,7 @@ public interface AlbumFacade extends Serializable {
 	 * @param imagesToDelete
 	 *            list of images to be deleted
 	 */
-	void deleteImages(Album album, List<Image> imagesToDelete);
+	void deleteImages(Album album, List<ImageComposition> imagesToDelete);
 
 	/**
 	 * Deletes selected album and it's photos from file repository
@@ -132,7 +133,7 @@ public interface AlbumFacade extends Serializable {
 	 */
 	void deleteAlbumsByUsername(User userToBeDeleted);
 
-	List<Image> getImagesByAlbum(Album album);
+	List<ImageComposition> getImagesByAlbum(Album album);
 
 	<T extends Album> T uploadThumbnail(T album, Image thumbnailToAdd, String resolveThumbnailLocation);
 

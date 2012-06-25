@@ -26,4 +26,6 @@ public interface ImageCompositionFactory extends Serializable {
 
 	ImageComposition newImageComposition(Album album, Image image);
 
+	ImageComposition newImageComposition(Image image);
+
 }

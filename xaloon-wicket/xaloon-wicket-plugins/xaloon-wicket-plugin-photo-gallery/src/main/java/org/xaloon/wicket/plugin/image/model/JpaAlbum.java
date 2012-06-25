@@ -24,11 +24,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.util.UrlUtil;
 

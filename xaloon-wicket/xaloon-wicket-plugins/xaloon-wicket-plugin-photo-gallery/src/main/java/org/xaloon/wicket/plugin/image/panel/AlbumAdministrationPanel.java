@@ -26,7 +26,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.xaloon.core.api.image.AlbumFacade;
-import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.ImageCompositionFactory;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.image.plugin.GalleryPlugin;
 import org.xaloon.wicket.plugin.image.plugin.GalleryPluginBean;
@@ -44,15 +45,17 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	private int maxImagesAllowed = 999;
 	
 	// The list of images to be deleted
-	private List<Image> imagesToDelete = new ArrayList<Image>();
+	private List<ImageComposition> imagesToDelete = new ArrayList<ImageComposition>();
 
 	// The list of images to be persisted
-	private List<Image> imagesToAdd = new ArrayList<Image>();
+	private List<ImageComposition> imagesToAdd = new ArrayList<ImageComposition>();
 
 	private int imageThumbnailWidth = 200;
 
 	private int imageThumbnailHeight = 100;
 
+	private ImageCompositionFactory imageCompositionFactory;
+	
 	@Inject
 	private AlbumFacade albumFacade;
 
@@ -62,7 +65,7 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	 * @param id
 	 * @param albumImages
 	 */
-	public AlbumAdministrationPanel(String id, List<Image> albumImages) {
+	public AlbumAdministrationPanel(String id, List<ImageComposition> albumImages) {
 		super(id, Model.ofList(albumImages));
 		setOutputMarkupId(true);
 	}
@@ -72,17 +75,17 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-		final List<Image> images = (List<Image>)AlbumAdministrationPanel.this.getDefaultModelObject();
-		ListView<Image> view = new ListView<Image>("images", new ArrayList<Image>(images)) {
+		final List<ImageComposition> images = (List<ImageComposition>)AlbumAdministrationPanel.this.getDefaultModelObject();
+		ListView<ImageComposition> view = new ListView<ImageComposition>("images", new ArrayList<ImageComposition>(images)) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<Image> item) {
-				ImagePanel imagePanel = new ImagePanel("single-image-panel", new Model<Image>(item.getModelObject())) {
+			protected void populateItem(ListItem<ImageComposition> item) {
+				ImagePanel imagePanel = new ImagePanel("single-image-panel", new Model<ImageComposition>(item.getModelObject())) {
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					protected void deleteFileDescriptor(Image imageToDelete) {
+					protected void deleteFileDescriptor(ImageComposition imageToDelete) {
 						images.remove(imageToDelete);
 						// Delete only persisted images
 						if (imageToDelete.getId() != null) {
@@ -108,18 +111,23 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 		add(view);
 
 		boolean visibleAddNewImageButtons = maxImagesAllowed < 1 || (maxImagesAllowed > 0 && images.size() < maxImagesAllowed);
+		
+		
 		// Add link to upload new image
-		addOrReplace(new NewImagePanel("image-upload", new Model<Image>(albumFacade.newImage())) {
+		addOrReplace(new NewImagePanel("image-upload", new Model<org.xaloon.core.api.image.model.Image>(albumFacade.newImage())) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onImageUpload(Image imageUploaded) {
-				List<Image> images = (List<Image>)AlbumAdministrationPanel.this.getDefaultModelObject();
+			protected void onImageUpload(org.xaloon.core.api.image.model.Image imageUploaded) {
+				List<ImageComposition> images = (List<ImageComposition>)AlbumAdministrationPanel.this.getDefaultModelObject();
+				
+				ImageComposition imageComposition = imageCompositionFactory.newImageComposition(imageUploaded);
+				
 				// Add to be displayed
-				images.add(imageUploaded);
+				images.add(imageComposition);
 
 				// Add to be persisted
-				imagesToAdd.add(imageUploaded);
+				imagesToAdd.add(imageComposition);
 			}
 
 			@Override
@@ -134,7 +142,7 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	 * 
 	 * @return list of images to be deleted in single transaction
 	 */
-	public List<Image> getImagesToDelete() {
+	public List<ImageComposition> getImagesToDelete() {
 		return imagesToDelete;
 	}
 
@@ -143,7 +151,7 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	 * 
 	 * @return imagesToAdd
 	 */
-	public List<Image> getImagesToAdd() {
+	public List<ImageComposition> getImagesToAdd() {
 		return imagesToAdd;
 	}
 
@@ -194,4 +202,14 @@ public class AlbumAdministrationPanel extends AbstractPluginPanel<GalleryPluginB
 	public void setImageThumbnailHeight(int imageThumbnailHeight) {
 		this.imageThumbnailHeight = imageThumbnailHeight;
 	}
+
+	/**
+	 * @param imageCompositionFactory the imageCompositionFactory to set
+	 */
+	public AlbumAdministrationPanel setImageCompositionFactory(ImageCompositionFactory imageCompositionFactory) {
+		this.imageCompositionFactory = imageCompositionFactory;
+		return this;
+	}
+	
+	
 }

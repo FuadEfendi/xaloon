@@ -27,10 +27,11 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.ByteArrayAsInputStreamContainer;
 import org.xaloon.core.api.storage.FileDescriptor;
@@ -43,7 +44,7 @@ import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
 /**
  * @author vytautas r.
  */
-public class ImagePanel extends Panel {
+public class ImagePanel extends GenericPanel<ImageComposition> {
 
 	/**
 	 * 
@@ -69,7 +70,7 @@ public class ImagePanel extends Panel {
 	 * @param id
 	 * @param model
 	 */
-	public ImagePanel(String id, IModel<org.xaloon.core.api.image.model.Image> model) {
+	public ImagePanel(String id, IModel<ImageComposition> model) {
 		super(id, model);
 		setOutputMarkupId(true);
 	}
@@ -78,12 +79,12 @@ public class ImagePanel extends Panel {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		removeAll();
-		final org.xaloon.core.api.image.model.Image image = (org.xaloon.core.api.image.model.Image) getDefaultModelObject();
+		final ImageComposition image = getModelObject();
 
 		// Add show temporary image
-		FileDescriptor temporaryFiledeDescriptor = image.getThumbnail();
+		FileDescriptor temporaryFiledeDescriptor = image.getImage().getThumbnail();
 		if (temporaryFiledeDescriptor == null) {
-			temporaryFiledeDescriptor = image;
+			temporaryFiledeDescriptor = image.getImage();
 		}
 		if (temporaryFiledeDescriptor != null && temporaryFiledeDescriptor.getImageInputStreamContainer() == null) {
 			if (temporaryFiledeDescriptor.isExternal()) {
@@ -134,7 +135,7 @@ public class ImagePanel extends Panel {
 				components.add(ImagePanel.this);
 			};
 		};
-		imageInformationModalWindow.setContent(new ImageDescriptionPanel(imageInformationModalWindow.getContentId(), new Model<org.xaloon.core.api.image.model.Image>(image)) {
+		imageInformationModalWindow.setContent(new ImageDescriptionPanel(imageInformationModalWindow.getContentId(), new Model<org.xaloon.core.api.image.model.Image>(image.getImage())) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -169,7 +170,7 @@ public class ImagePanel extends Panel {
 	 * 
 	 * @param imageToDelete
 	 */
-	protected void deleteFileDescriptor(org.xaloon.core.api.image.model.Image imageToDelete) {
+	protected void deleteFileDescriptor(ImageComposition imageToDelete) {
 
 	}
 

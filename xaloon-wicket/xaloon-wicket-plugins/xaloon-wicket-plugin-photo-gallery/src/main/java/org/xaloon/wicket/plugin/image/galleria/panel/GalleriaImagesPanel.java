@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.image.galleria.GalleriaOptions;
@@ -51,7 +52,7 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 	 * @param id
 	 * @param images
 	 */
-	public GalleriaImagesPanel(String id, List<Image> images) {
+	public GalleriaImagesPanel(String id, List<ImageComposition> images) {
 		super(id, Model.of(images));
 
 	}
@@ -65,7 +66,7 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 		// galleria.add(new GalleriaBehavior(new  GalleriaOptions().height(pluginBean.getHeight())));//TODO check why it's not working anymore
 
 		// Add images
-		ListView<Image> imagesView = new ListView<Image>("images", (IModel<? extends List<? extends Image>>) getDefaultModel()) {
+		ListView<ImageComposition> imagesView = new ListView<ImageComposition>("images", (IModel<? extends List<? extends ImageComposition>>) getDefaultModel()) {
 
 			/**
 			 * 
@@ -73,8 +74,8 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<Image> item) {
-				Image image = item.getModelObject();
+			protected void populateItem(ListItem<ImageComposition> item) {
+				Image image = item.getModelObject().getImage();
 
 				WebMarkupContainer container = new WebMarkupContainer("link");
 				String url = UrlUtils.toAbsoluteImagePath(ImageLink.IMAGE_RESOURCE, image.getPath());

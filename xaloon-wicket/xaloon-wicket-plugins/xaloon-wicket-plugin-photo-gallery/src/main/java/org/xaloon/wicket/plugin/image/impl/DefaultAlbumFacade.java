@@ -95,33 +95,34 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void addNewImagesToAlbum(Album album, ImageCompositionFactory factory, List<Image> imagesToAdd, final String imageLocation, final String thumbnailLocation) {
+	public void addNewImagesToAlbum(Album album, List<ImageComposition> imagesToAdd, final String imageLocation, final String thumbnailLocation) {
 		if (imagesToAdd == null || imagesToAdd.isEmpty()) {
 			throw new IllegalArgumentException("Missing arguments!");
 		}
-		for (final Image image : imagesToAdd) {
+		for (final ImageComposition image : imagesToAdd) {
 			if (image.getId() == null) {
-				createImage(album, factory, image, imageLocation, thumbnailLocation);
+				createImage(album, image, imageLocation, thumbnailLocation);
 			}
 		}
 	}
 
 	@Override
-	public void deleteImages(Album album, List<Image> imagesToDelete) {
+	public void deleteImages(Album album, List<ImageComposition> imagesToDelete) {
 		deleteImages(album, imagesToDelete, false);
 	}
 
-	private void deleteImages(Album album, List<Image> imagesToDelete, boolean deleteAlbum) {
+	private void deleteImages(Album album, List<ImageComposition> imagesToDelete, boolean deleteAlbum) {
 		if (album == null || imagesToDelete == null || imagesToDelete.isEmpty()) {
 			return;
 		}
-		for (Image image : imagesToDelete) {
-			FileDescriptor thumbnailFileDescriptor = image.getThumbnail();
+		for (ImageComposition image : imagesToDelete) {
+			FileDescriptor thumbnailFileDescriptor = image.getImage().getThumbnail();
 
 			if (thumbnailFileDescriptor != null) {
 				fileRepositoryFacade.deleteFile(thumbnailFileDescriptor);
 			}
-			fileRepositoryFacade.deleteFile(image);
+			fileRepositoryFacade.deleteFile(image.getImage());
+			album.getImages().remove(image);
 			persistenceServices.remove(image);
 		}
 	}
@@ -131,7 +132,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		if (imageAlbum == null) {
 			return;
 		}
-		List<Image> toDelete = new ArrayList<Image>(getImagesByAlbum(imageAlbum));
+		List<ImageComposition> toDelete = new ArrayList<ImageComposition>(getImagesByAlbum(imageAlbum));
 		deleteImages(imageAlbum, toDelete, true);
 		//TODO remove album
 	}
@@ -162,15 +163,16 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	public void createImage(Album album, ImageCompositionFactory factory, Image newImage, String imageLocation, String thumbnailLocation) {
-		ImageComposition composition = factory.newImageComposition(album, newImage);
-		newImage.setOwner(album.getOwner());
+	public void createImage(Album album, ImageComposition newImage, String imageLocation, String thumbnailLocation) {
+		newImage.setObject(album);
+		newImage.getImage().setOwner(album.getOwner());
+		
 		
 		// Threats image as original file descriptor and modifies required properties
-		newImage.setLocation(imageLocation);
+		newImage.getImage().setLocation(imageLocation);
 
-		ImageOptions options = newImageOptions(newImage, thumbnailLocation);
-		getImageRepository().uploadImage(composition, options);
+		ImageOptions options = newImageOptions(newImage.getImage(), thumbnailLocation);
+		getImageRepository().uploadImage(newImage, options);
 	}
 
 	private ImageOptions newImageOptions(Image newImage, String thumbnailLocation) {
@@ -220,11 +222,11 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public List<Image> getImagesByAlbum(Album album) {
+	public List<ImageComposition> getImagesByAlbum(Album album) {
 		if (album.getId() == null) {
-			return new ArrayList<Image>();
+			return new ArrayList<ImageComposition>();
 		}
-		QueryBuilder query = new QueryBuilder("select i from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
+		QueryBuilder query = new QueryBuilder("select composition from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
 		query.addParameter("a.id", "_ID", album.getId());
 		query.addOrderBy("i.customOrder asc");
 		return persistenceServices.executeQuery(query);

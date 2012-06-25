@@ -21,6 +21,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrimaryKeyJoinColumn;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.image.model.ImageComposition;
@@ -72,5 +75,45 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 	@Override
 	public void setImage(Image image) {
 		this.image = (JpaImage)image;
+	}
+	
+	/**
+	 * Sorting current menu item by provided order property
+	 * <p>
+	 * If order property id is not provided then order by name
+	 */
+	public int compareTo(JpaImageComposition o) {
+		if (o == null) {
+			return 1;
+		}
+		if (getObject() == null) {
+			return 1;
+		}
+		CompareToBuilder compareToBuilder = new CompareToBuilder();
+		compareToBuilder.append(getObject().getId(), o.getObject().getId());
+
+		return compareToBuilder.toComparison();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getObject() == null || !(obj instanceof JpaImageComposition)) {
+			return false;
+		}
+		JpaImageComposition item = (JpaImageComposition)obj;
+
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(getObject().getId(), item.getObject().getId());
+		return equalsBuilder.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		if (getObject() == null) {
+			return 1;
+		}
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(getObject().getId());
+		return hashCodeBuilder.hashCode();
 	}
 }
