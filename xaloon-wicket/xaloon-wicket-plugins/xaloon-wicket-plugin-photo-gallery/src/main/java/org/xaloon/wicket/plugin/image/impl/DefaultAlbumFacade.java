@@ -216,7 +216,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 */
 	public ImageRepository getImageRepository() {
 		if (imageRepository == null) {
-			imageRepository = ServiceLocator.get().getInstance(ImageRepository.class, "picasaImageRepository");
+			imageRepository = ServiceLocator.get().getInstance(ImageRepository.class);
 		}
 		return imageRepository;
 	}
