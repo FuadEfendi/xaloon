@@ -76,6 +76,32 @@ public class ServiceLocator implements Serializable {
 	}
 
 	/**
+	 * Simple method to load class instance using {@link BeanLocatorAdapter} class.
+	 * <p>
+	 * First entry will be taken if several implementations is found.
+	 * 
+	 * @param <T>
+	 *            class type to load
+	 * @param classForInstance
+	 *            class to be loaded
+	 * @param customPropertyName
+	 *            custom property name to lookup
+	 * @return instance loaded by {@link BeanLocatorAdapter}
+	 */
+	public <T> T getInstanceByCustomProperty(Class<T> classForInstance, String customPropertyName) {
+		String beanName = getServiceProviderName(customPropertyName);
+		if (!StringUtils.isEmpty(beanName)) {
+			// Found custom configuration, so we will load it from CDI
+			return getInstance(classForInstance, beanName);
+		}
+		// Could not find custom configuration, try to load from service loader
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("[%s] Could not find custom configuration. Loading by class instance only", classForInstance.getName()));
+		}
+		return getInstance(classForInstance, null);
+	}
+
+	/**
 	 * Returns a list off all instances for provided class
 	 * 
 	 * @param <T>
@@ -161,9 +187,22 @@ public class ServiceLocator implements Serializable {
 			throw new IllegalArgumentException("Argument is missing.");
 		}
 		String classForInstanceName = classForInstance.getName();
+		return getServiceProviderName(classForInstanceName);
+	}
+
+	/**
+	 * Tries to load bean name if it is configured in properties. <br/>
+	 * Returns null if it is not found in property file
+	 * 
+	 * @param <T>
+	 *            the type of the class modeled by this {@code Class} object.
+	 * @param customPropertyName
+	 * @return value for {@link Named} if found in property file
+	 */
+	public <T> String getServiceProviderName(String customPropertyName) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(String.format("[%s] Looking for bean name", classForInstanceName));
+			LOGGER.debug(String.format("[%s] Looking for bean name", customPropertyName));
 		}
-		return getProperties().getProperty(classForInstanceName);
+		return getProperties().getProperty(customPropertyName);
 	}
 }

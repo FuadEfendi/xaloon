@@ -162,6 +162,7 @@ public class JpaBlogFacade implements BlogFacade {
 		if (entry.getId() != null) {
 			entry = blogDao.save(entry);
 		}
+		fileRepositoryFacade.getFileDescriptorByPath(thumbnail.getPath());
 		if (thumbnail != null) {
 			fileRepositoryFacade.delete(thumbnail);
 		}
