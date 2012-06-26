@@ -99,7 +99,7 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 		response.renderJavaScriptReference(GalleriaOptions.GALLERIA_JS_MIN);
 		response.renderCSSReference(GalleriaOptions.GALLERIA_CSS_THEME);
 		response.renderJavaScriptReference(GalleriaOptions.GALLERIA_JS_THEME);
-		response.renderJavaScript("$(document).ready(function(){$(\"#galleria\").galleria({height:" + getPluginBean().getHeight() + "});});", null);
+		response.renderJavaScript("$(document).ready(function(){$(\"#galleria\").galleria({extend:function() {this.attachKeyboard({left: this.prev,right: this.next}); },height:" + getPluginBean().getHeight() + "});});", null);
 
 	}
 }
