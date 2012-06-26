@@ -91,8 +91,7 @@ public class JpaBlogFacade implements BlogFacade {
 		albumFacade.deleteImages(entry, imagesToDelete);
 
 		if (deleteThumbnail) {
-			fileRepositoryFacade.delete(entry.getThumbnail());
-			entry.setThumbnail(null);
+			entry = deleteThumbnailFromBlogEntry(entry);	
 		}
 		// Set author of blog entry
 		entry.setOwner(securityFacade.getCurrentUser());
@@ -106,7 +105,7 @@ public class JpaBlogFacade implements BlogFacade {
 		entry = blogDao.save(entry);
 		
 		if (thumbnailToAdd != null) {
-			entry = albumFacade.uploadThumbnail(entry, thumbnailToAdd.getImage(), getImageLocationResolver().resolveThumbnailLocation(entry));
+			albumFacade.uploadThumbnail(entry, thumbnailToAdd.getImage(), getImageLocationResolver().resolveThumbnailLocation(entry));
 		}
 		//entry = blogDao.save(entry);
 		
@@ -154,18 +153,19 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#deleteThumbnailFromBlogEntry(BlogEntry)
 	 */
 	@Override
-	public void deleteThumbnailFromBlogEntry(BlogEntry entry) {
+	public BlogEntry deleteThumbnailFromBlogEntry(BlogEntry entry) {
 		FileDescriptor thumbnail = entry.getThumbnail();
 		if (thumbnail == null) {
-			return;
+			return entry;
 		}
 		entry.setThumbnail(null);
 		if (entry.getId() != null) {
-			blogDao.save(entry);
+			entry = blogDao.save(entry);
 		}
 		if (thumbnail != null) {
-			fileRepositoryFacade.delete(entry.getThumbnail());
+			fileRepositoryFacade.delete(thumbnail);
 		}
+		return entry;
 	}
 
 	/**
@@ -179,7 +179,10 @@ public class JpaBlogFacade implements BlogFacade {
 		}
 		fileRepositoryFacade.delete(blogEntry.getThumbnail());
 		albumFacade.deleteAlbum(blogEntry);
-		blogDao.deleteBlogEntry(blogEntry);
+		blogEntry = blogDao.findEntryByPath(username, blogEntryPath);
+		if (blogEntry != null) {
+			blogDao.deleteBlogEntry(blogEntry);
+		}
 	}
 
 	/**

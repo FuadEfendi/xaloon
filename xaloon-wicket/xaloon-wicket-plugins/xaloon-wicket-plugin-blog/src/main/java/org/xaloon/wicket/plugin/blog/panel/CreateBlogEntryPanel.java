@@ -183,6 +183,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			FileDescriptor thumbnail = getModelObject().getThumbnail();
 			if (thumbnail != null) {
 				ImageComposition composition = blogFacade.newComposition();
+				composition.setId(9999L);
 				Image image = blogFacade.newImage();
 				image.setId(thumbnail.getId());
 				image.setPath(thumbnail.getPath());

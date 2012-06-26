@@ -60,7 +60,7 @@ public interface BlogFacade extends Serializable {
 	/**
 	 * @param entry
 	 */
-	void deleteThumbnailFromBlogEntry(BlogEntry entry);
+	BlogEntry deleteThumbnailFromBlogEntry(BlogEntry entry);
 
 	/**
 	 * @param username

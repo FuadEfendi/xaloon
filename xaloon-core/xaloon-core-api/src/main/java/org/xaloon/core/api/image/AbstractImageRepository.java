@@ -59,7 +59,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	private ImageResizer imageResizer;
 
 	@Override
-	public <T extends Image> T uploadThumbnail(T image, Image thumbnailImage, ImageOptions options) {
+	public <T extends Image> void uploadThumbnail(T image, Image thumbnailImage, ImageOptions options) {
 		if (options.getImageSize() == null) {
 			throw new IllegalArgumentException("Thumbnail size was not provided!");
 		}
@@ -68,21 +68,20 @@ public abstract class AbstractImageRepository implements ImageRepository {
 			FileDescriptor thumbnail = uploadFileDescriptor(thumbnailImage, options);
 			image.setThumbnail(thumbnail);
 
-			return persistenceServices.edit(image);
+			persistenceServices.edit(image);
 		} catch (Exception e) {
 			LOGGER.error("Could not store image. Trying alternative repository ", e);
 			if (getAlternativeImageRepository() != null) {
-				return getAlternativeImageRepository().uploadThumbnail(image, thumbnailImage, options);
+				getAlternativeImageRepository().uploadThumbnail(image, thumbnailImage, options);
 			}
 		} finally {
 			options.getImageInputStreamContainer().close();
 		}
 		LOGGER.warn("Could not store image using any provider. Giving up.");
-		return null;
 	}
 
 	@Override
-	public <T extends Album> T uploadThumbnail(T album, Image image, ImageOptions options) {
+	public <T extends Album> void uploadThumbnail(T album, Image image, ImageOptions options) {
 		if (options.getImageSize() == null) {
 			throw new IllegalArgumentException("Thumbnail size was not provided!");
 		}
@@ -91,21 +90,20 @@ public abstract class AbstractImageRepository implements ImageRepository {
 			FileDescriptor thumbnail = uploadFileDescriptor(image, options);
 			album.setThumbnail(thumbnail);
 
-			return persistenceServices.edit(album);
+			persistenceServices.edit(album);
 		} catch (Exception e) {
 			LOGGER.error("Could not store image. Trying alternative repository ", e);
 			if (getAlternativeImageRepository() != null) {
-				return getAlternativeImageRepository().uploadThumbnail(album, image, options);
+				getAlternativeImageRepository().uploadThumbnail(album, image, options);
 			}
 		} finally {
 			options.getImageInputStreamContainer().close();
 		}
 		LOGGER.warn("Could not store image using any provider. Giving up.");
-		return null;
 	}
 
 	@Override
-	public ImageComposition uploadImage(ImageComposition composition, ImageOptions options) {
+	public void uploadImage(ImageComposition composition, ImageOptions options) {
 		Image image = composition.getImage();
 		try {
 			// Create image
@@ -137,17 +135,16 @@ public abstract class AbstractImageRepository implements ImageRepository {
 			}
 			// composition.setImage(persistenceServices.createOrEdit(composition.getImage()));
 			// composition.setObject(persistenceServices.createOrEdit(composition.getObject()));
-			return persistenceServices.edit(composition);
+			persistenceServices.edit(composition);
 		} catch (Exception e) {
 			LOGGER.error("Could not store image. Trying alternative repository ", e);
 			if (getAlternativeImageRepository() != null) {
-				return getAlternativeImageRepository().uploadImage(composition, options);
+				getAlternativeImageRepository().uploadImage(composition, options);
 			}
 		} finally {
 			options.getImageInputStreamContainer().close();
 		}
 		LOGGER.warn("Could not store image using any provider. Giving up.");
-		return null;
 	}
 
 	private void storeOriginalFile(Image image, ImageOptions options) {

@@ -28,11 +28,11 @@ import org.xaloon.core.api.image.model.ImageComposition;
  * @author vytautas r.
  */
 public interface ImageRepository extends Serializable {
-	ImageComposition uploadImage(ImageComposition composition, ImageOptions options);
+	void uploadImage(ImageComposition composition, ImageOptions options);
 
 	ImageRepository getAlternativeImageRepository();
 
-	<T extends Album> T uploadThumbnail(T album, Image image, ImageOptions options);
+	<T extends Album> void uploadThumbnail(T album, Image image, ImageOptions options);
 
-	<T extends Image> T uploadThumbnail(T Image, Image image, ImageOptions options);
+	<T extends Image> void uploadThumbnail(T Image, Image image, ImageOptions options);
 }
