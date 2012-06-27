@@ -68,7 +68,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	@Inject
 	private SecurityFacade securityFacade;
-	
+
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
@@ -138,7 +138,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		}
 		List<ImageComposition> toDelete = new ArrayList<ImageComposition>(getImagesByAlbum(imageAlbum));
 		deleteImages(imageAlbum, toDelete, true);
-		//TODO remove album
+		// TODO remove album
 	}
 
 	@Override
@@ -170,9 +170,9 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	public void createImage(Album album, ImageComposition newImage, String imageLocation, String thumbnailLocation) {
 		newImage.setObject(album);
 		newImage.getImage().setOwner(album.getOwner());
-		
-		
-		// Threats image as original file descriptor and modifies required properties
+
+		// Threats image as original file descriptor and modifies required
+		// properties
 		newImage.getImage().setLocation(imageLocation);
 
 		ImageOptions options = newImageOptions(newImage.getImage(), thumbnailLocation);
@@ -194,7 +194,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			newImage.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(newImage, true, ""));
 		}
 		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_EMAIL, securityFacade.getCurrentUserEmail());
-		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_TOKEN, Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
+		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_TOKEN,
+				Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
 		return options;
 	}
 
@@ -232,7 +233,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		if (album.getId() == null) {
 			return new ArrayList<ImageComposition>();
 		}
-		QueryBuilder query = new QueryBuilder("select composition from " + album.getClass().getSimpleName() + " a inner join a.images composition inner join composition.image i");
+		QueryBuilder query = new QueryBuilder("select composition from " + album.getClass().getSimpleName()
+				+ " a inner join a.images composition inner join composition.image i");
 		query.addParameter("a.id", "_ID", album.getId());
 		query.addOrderBy("i.customOrder asc");
 		return persistenceServices.executeQuery(query);
@@ -245,7 +247,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
 		getImageRepository().uploadThumbnail(album, thumbnailToAdd, options);
 	}
-	
+
 	@Override
 	public <T extends Image> void uploadThumbnail(T image, Image thumbnailToAdd, String thumbnailLocation) {
 		thumbnailToAdd.setOwner(image.getOwner());
