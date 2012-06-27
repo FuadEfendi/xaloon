@@ -18,7 +18,9 @@ package org.xaloon.core.api.image;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xaloon.core.api.storage.InputStreamContainer;
 
@@ -40,6 +42,8 @@ public class ImageOptions implements Serializable {
 	private String pathPrefix;
 
 	private InputStreamContainer imageInputStreamContainer;
+
+	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	/**
 	 * Construct.
@@ -156,4 +160,10 @@ public class ImageOptions implements Serializable {
 	public void setPathPrefix(String pathPrefix) {
 		this.pathPrefix = pathPrefix;
 	}
+
+	public Map<String, Object> getAdditionalProperties() {
+		return additionalProperties;
+	}
+
+
 }

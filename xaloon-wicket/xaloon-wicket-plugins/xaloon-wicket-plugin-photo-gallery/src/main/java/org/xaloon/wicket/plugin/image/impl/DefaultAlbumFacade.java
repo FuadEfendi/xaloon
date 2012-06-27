@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.image.AlbumFacade;
-import org.xaloon.core.api.image.ImageCompositionFactory;
 import org.xaloon.core.api.image.ImageOptions;
 import org.xaloon.core.api.image.ImageRepository;
 import org.xaloon.core.api.image.ImageSize;
@@ -42,8 +41,10 @@ import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
@@ -65,6 +66,9 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlbumFacade.class);
 
+	@Inject
+	private SecurityFacade securityFacade;
+	
 	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
@@ -189,6 +193,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 			options.setModifyPath(true);
 			newImage.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(newImage, true, ""));
 		}
+		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_EMAIL, securityFacade.getCurrentUserEmail());
+		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_TOKEN, Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
 		return options;
 	}
 

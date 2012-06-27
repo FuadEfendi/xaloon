@@ -55,7 +55,7 @@ public class PicasaImageRepository extends AbstractImageRepository {
 			return createPicasaDescriptor(image, options);
 		}
 		InputStreamContainer resizedInputStreamContainer = resize(options);
-		return getFileStorageService().storeFile(image, resizedInputStreamContainer);
+		return getFileStorageService().storeFile(image, resizedInputStreamContainer, options.getAdditionalProperties());
 	}
 
 	private KeyValue<String, String> createPicasaDescriptor(Image image, ImageOptions options) {

@@ -69,6 +69,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 			image.setThumbnail(thumbnail);
 
 			persistenceServices.edit(image);
+			return;
 		} catch (Exception e) {
 			LOGGER.error("Could not store image. Trying alternative repository ", e);
 			if (getAlternativeImageRepository() != null) {
@@ -151,7 +152,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 		KeyValue<String, String> originalImageUid = null;
 		// store physical file only if it ir from local file system
 		if (!image.isExternal()) {
-			originalImageUid = getFileStorageService().storeFile(image, options.getImageInputStreamContainer());
+			originalImageUid = getFileStorageService().storeFile(image, options.getImageInputStreamContainer(), options.getAdditionalProperties());
 		} else {
 			originalImageUid = new DefaultKeyValue<String, String>(image.getPath(), image.getPath());
 		}
