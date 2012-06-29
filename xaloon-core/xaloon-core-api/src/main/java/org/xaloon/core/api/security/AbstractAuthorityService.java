@@ -55,8 +55,9 @@ public interface AbstractAuthorityService<T extends SecurityEntity, K extends Se
 	 * 
 	 * @param authority
 	 *            security item to save
+	 * @return
 	 */
-	void save(T authority);
+	T save(T authority);
 
 	/**
 	 * Returns existing security item or creates new one if there is no exising

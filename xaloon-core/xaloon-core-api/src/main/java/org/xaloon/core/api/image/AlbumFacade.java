@@ -138,4 +138,6 @@ public interface AlbumFacade extends Serializable {
 	<T extends Album> void uploadThumbnail(T album, Image thumbnailToAdd, String resolveThumbnailLocation);
 
 	<T extends Image> void uploadThumbnail(T image, Image thumbnailToAdd, String resolveThumbnailLocation);
+
+	Image getImageByPath(String path);
 }

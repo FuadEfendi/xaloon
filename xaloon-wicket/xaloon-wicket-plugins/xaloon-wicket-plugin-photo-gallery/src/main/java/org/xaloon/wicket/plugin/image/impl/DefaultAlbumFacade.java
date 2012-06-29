@@ -255,4 +255,11 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
 		getImageRepository().uploadThumbnail(image, thumbnailToAdd, options);
 	}
+
+	@Override
+	public Image getImageByPath(String path) {
+		QueryBuilder query = new QueryBuilder("select i from JpaImage i");
+		query.addParameter("i.path", "_PATH", path);
+		return persistenceServices.executeQuerySingle(query);
+	}
 }

@@ -16,6 +16,7 @@
  */
 package org.xaloon.core.jpa.security;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -166,21 +167,22 @@ public class JpaRoleService implements RoleService {
 	}
 
 	@Override
-	public void save(SecurityRole authority) {
+	public SecurityRole save(SecurityRole authority) {
 		if (authority == null) {
-			return;
+			return null;
 		}
 		if (StringUtils.isEmpty(authority.getPath())) {
 			authority.setPath(UrlUtil.encode(authority.getName()));
 		}
-		persistenceServices.createOrEdit(authority);
+		return persistenceServices.createOrEdit(authority);
 	}
 
 	private SecurityRole createNewRole(String name) {
 		SecurityRole role = newAuthority();
+		role.setCreateDate(new Date());
+		role.setUpdateDate(new Date());
 		role.setName(name);
-		save(role);
-		return role;
+		return save(role);
 	}
 
 	@Override

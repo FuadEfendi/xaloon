@@ -66,7 +66,7 @@ public class JpaAuthorityService implements AuthorityService {
 		if (authority == null) {
 			authority = newAuthority();
 			authority.setName(permission);
-			save(authority);
+			authority = save(authority);
 		}
 		return authority;
 	}
@@ -77,11 +77,11 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public void save(Authority entity) {
+	public Authority save(Authority entity) {
 		if (StringUtils.isEmpty(entity.getPath())) {
 			entity.setPath(UrlUtil.encode(entity.getName()));
 		}
-		persistenceServices.create(entity);
+		return persistenceServices.createOrEdit(entity);
 	}
 
 	@Override
