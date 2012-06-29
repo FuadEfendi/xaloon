@@ -17,6 +17,7 @@
 package org.xaloon.core.jpa.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,9 +126,11 @@ public class JpaFileStorageService implements FileStorageService {
 	@Override
 	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer,
 		Map<String, Object> additionalProperties) {
+		InputStream in = null;
 		try {
+			in = inputStreamContainer.getInputStream();
 			JpaFileStorage jpaFileStorage = new JpaFileStorage();
-			jpaFileStorage.setFile(IOUtils.toByteArray(inputStreamContainer.getInputStream()));
+			jpaFileStorage.setFile(IOUtils.toByteArray(in));
 			jpaFileStorage = persistenceServices.create(jpaFileStorage);
 			String id = String.valueOf(jpaFileStorage.getId());
 			String path = Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(fileDescriptor, true, "");
@@ -136,6 +139,9 @@ public class JpaFileStorageService implements FileStorageService {
 			LOGGER.error("Could not convert input into byte array", e);
 		} finally {
 			// inputStreamContainer.close();
+			if (in != null) {
+				IOUtils.closeQuietly(in);
+			}
 		}
 		return null;
 	}

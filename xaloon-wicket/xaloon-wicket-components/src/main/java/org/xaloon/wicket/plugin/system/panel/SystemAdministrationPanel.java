@@ -46,5 +46,6 @@ public class SystemAdministrationPanel extends AbstractPluginAdministrationPanel
 		add(new CheckBox("userRegistrationEnabled"));
 		add(new RequiredTextField<String>("shortDateFormat"));
 		add(new RequiredTextField<String>("longDateFormat"));
+		add(new RequiredTextField<String>("temporaryFileLocation"));
 	}
 }

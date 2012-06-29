@@ -16,10 +16,15 @@
  */
 package org.xaloon.wicket.plugin.image.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -28,6 +33,7 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
@@ -41,8 +47,10 @@ import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FilePathInputStreamContainer;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
 import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
@@ -50,6 +58,8 @@ import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.image.model.JpaAlbum;
 import org.xaloon.wicket.plugin.image.model.JpaImage;
+import org.xaloon.wicket.plugin.system.SystemPlugin;
+import org.xaloon.wicket.plugin.system.SystemPluginBean;
 
 /**
  * @author vytautas r.
@@ -75,6 +85,9 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
+
+	@Inject
+	private PluginRegistry pluginRegistry;
 
 	private ImageRepository imageRepository;
 
@@ -185,7 +198,13 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		if (newImage.isExternal()) {
 			inputStreamContainer = new UrlInputStreamContainer(newImage.getPath());
 		} else {
-			inputStreamContainer = newImage.getImageInputStreamContainer();
+			try {
+				inputStreamContainer = copyToFileSystem(newImage);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// inputStreamContainer = newImage.getImageInputStreamContainer();
 		}
 		ImageOptions options = new ImageOptions(inputStreamContainer, thumbnailSize);
 		if (!newImage.isExternal()) {
@@ -197,6 +216,26 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_TOKEN,
 				Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
 		return options;
+	}
+
+	private InputStreamContainer copyToFileSystem(Image newImage) throws IOException {
+		SystemPluginBean systemPluginBean = pluginRegistry.getPluginBean(SystemPlugin.class);
+
+		StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
+		fileName.append('-');
+		fileName.append(newImage.getName());
+		File outputFile = new File(new File(systemPluginBean.getTemporaryFileLocation()), fileName.toString());
+
+		InputStream in = newImage.getImageInputStreamContainer().getInputStream();
+		OutputStream out = new FileOutputStream(outputFile);
+
+		try {
+			IOUtils.copy(in, out);
+			return new FilePathInputStreamContainer(outputFile.getAbsolutePath());
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
+		}
 	}
 
 	@Override

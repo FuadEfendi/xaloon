@@ -36,6 +36,27 @@ public class SystemPluginBean extends AbstractPluginBean {
 
 	private String longDateFormat = DEFAULT_LONG_DATE_FORMAT;
 
+	private String temporaryFileLocation = "/tmp/";
+
+	/**
+	 * Gets temporaryFileLocation.
+	 * 
+	 * @return temporaryFileLocation
+	 */
+	public String getTemporaryFileLocation() {
+		return temporaryFileLocation;
+	}
+
+	/**
+	 * Sets temporaryFileLocation.
+	 * 
+	 * @param temporaryFileLocation
+	 *            temporaryFileLocation
+	 */
+	public void setTemporaryFileLocation(String temporaryFileLocation) {
+		this.temporaryFileLocation = temporaryFileLocation;
+	}
+
 	/**
 	 * @return true if user registration is enabled
 	 */
@@ -50,18 +71,30 @@ public class SystemPluginBean extends AbstractPluginBean {
 		this.userRegistrationEnabled = userRegistrationEnabled;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getShortDateFormat() {
 		return shortDateFormat;
 	}
 
+	/**
+	 * @param shortDateFormat
+	 */
 	public void setShortDateFormat(String shortDateFormat) {
 		this.shortDateFormat = shortDateFormat;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getLongDateFormat() {
 		return longDateFormat;
 	}
 
+	/**
+	 * @param longDateFormat
+	 */
 	public void setLongDateFormat(String longDateFormat) {
 		this.longDateFormat = longDateFormat;
 	}

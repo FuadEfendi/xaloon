@@ -61,7 +61,7 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public Authority findOrCreateAuthority(String permission) {
+	public synchronized Authority findOrCreateAuthority(String permission) {
 		Authority authority = getAuthorityByName(permission);
 		if (authority == null) {
 			authority = newAuthority();
