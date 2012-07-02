@@ -95,7 +95,11 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 	@Override
 	public <T extends ClassifierItem> List<T> find(ClassifierItemSearchRequest classifierItemSearchRequest) {
 		QueryBuilder queryBuilder = createQueryBuilder("select cli ", classifierItemSearchRequest);
-		queryBuilder.addOrderBy("cli.name asc");
+		if (StringUtils.isEmpty(classifierItemSearchRequest.getOrderBy())) {
+			queryBuilder.addOrderBy("cli.name asc");
+		} else {
+			queryBuilder.addOrderBy(classifierItemSearchRequest.getOrderBy());
+		}
 		return persistenceServices.executeQuery(queryBuilder);
 	}
 

@@ -39,6 +39,27 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 
 	private boolean ignoreParentCode;
 
+	private String orderBy;
+
+	/**
+	 * Gets orderBy.
+	 * 
+	 * @return orderBy
+	 */
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	/**
+	 * Sets orderBy.
+	 * 
+	 * @param orderBy
+	 *            orderBy
+	 */
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
 	/**
 	 * Gets ignoreParentCode.
 	 * 
