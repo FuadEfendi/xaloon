@@ -53,7 +53,7 @@ public class JpaAuthorityService implements AuthorityService {
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public void registerPermissions(Plugin plugin) {
+	public synchronized void registerPermissions(Plugin plugin) {
 		List<Authority> authorities = plugin.getSupportedAuthorities();
 		for (Authority authority : authorities) {
 			findOrCreateAuthority(authority.getName());

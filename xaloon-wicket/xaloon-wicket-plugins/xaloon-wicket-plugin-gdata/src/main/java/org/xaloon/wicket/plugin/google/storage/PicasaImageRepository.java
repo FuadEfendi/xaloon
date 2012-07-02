@@ -20,7 +20,7 @@ import org.xaloon.core.api.util.DefaultKeyValue;
 import org.xaloon.wicket.plugin.google.storage.util.GoogleImagePathUtil;
 
 @Named("picasaImageRepository")
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class PicasaImageRepository extends AbstractImageRepository {
 
