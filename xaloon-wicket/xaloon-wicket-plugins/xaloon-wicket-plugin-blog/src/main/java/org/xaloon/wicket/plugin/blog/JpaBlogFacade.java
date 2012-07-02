@@ -111,6 +111,7 @@ public class JpaBlogFacade implements BlogFacade {
 		
 		// Check and store images for this blog entry
 		storeImagesToBlogEntry(pluginBean, entry, imagesToAdd);
+		blogDao.save(entry);
 		// entry.setThumbnail(null);
 		
 	}
