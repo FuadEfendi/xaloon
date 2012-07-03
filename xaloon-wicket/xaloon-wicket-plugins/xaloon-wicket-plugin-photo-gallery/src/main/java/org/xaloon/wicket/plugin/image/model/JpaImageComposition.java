@@ -43,7 +43,7 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 		setObject(album);
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	@PrimaryKeyJoinColumn(name = "OBJECT_ID", referencedColumnName = "ID")
 	private T object;
 
