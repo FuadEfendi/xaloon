@@ -53,7 +53,7 @@ public class JpaAuthorityService implements AuthorityService {
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public void registerPermissions(Plugin plugin) {
+	public synchronized void registerPermissions(Plugin plugin) {
 		List<Authority> authorities = plugin.getSupportedAuthorities();
 		for (Authority authority : authorities) {
 			findOrCreateAuthority(authority.getName());
@@ -61,12 +61,12 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public Authority findOrCreateAuthority(String permission) {
+	public synchronized Authority findOrCreateAuthority(String permission) {
 		Authority authority = getAuthorityByName(permission);
 		if (authority == null) {
 			authority = newAuthority();
 			authority.setName(permission);
-			save(authority);
+			authority = save(authority);
 		}
 		return authority;
 	}
@@ -77,11 +77,11 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public void save(Authority entity) {
+	public Authority save(Authority entity) {
 		if (StringUtils.isEmpty(entity.getPath())) {
 			entity.setPath(UrlUtil.encode(entity.getName()));
 		}
-		persistenceServices.create(entity);
+		return persistenceServices.createOrEdit(entity);
 	}
 
 	@Override

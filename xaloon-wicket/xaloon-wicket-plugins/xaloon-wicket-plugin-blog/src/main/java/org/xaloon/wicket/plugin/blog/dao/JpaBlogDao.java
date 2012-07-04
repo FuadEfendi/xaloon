@@ -16,6 +16,8 @@
  */
 package org.xaloon.wicket.plugin.blog.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -26,12 +28,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
+import org.xaloon.core.api.storage.FileDescriptorDao;
+import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntry;
+import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryImageComposition;
+import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 
 /**
  * @author vytautas r.
@@ -47,11 +54,18 @@ public class JpaBlogDao implements BlogDao {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
+	private FileDescriptorDao fileDescriptorDao;
+	
+	@Inject
+	private UserFacade userFacade;
+	
+	@Inject
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
 	
-	public void save(BlogEntry blogEntry) {
-		persistenceServices.edit(blogEntry);
+	public BlogEntry save(BlogEntry blogEntry) {
+		blogEntry = persistenceServices.edit(blogEntry);
+		return blogEntry;
 	}
 
 	public boolean deleteBlogEntry(BlogEntry blogEntry) {
@@ -85,19 +99,72 @@ public class JpaBlogDao implements BlogDao {
 
 	@Override
 	public List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, int first, int count) {
-		QueryBuilder queryBuilder = createQueryBuilder("select be ", blogEntrySearchRequest);
+		QueryBuilder queryBuilder = createQueryBuilder("select be.id, be.customPath, be.path, cat.id, be.blogEntryPathType, o.username, be.description, th.id, be.createDate, be.title, count(img) ", blogEntrySearchRequest);
 
 		queryBuilder.setFirstRow(first);
 		queryBuilder.setCount(count);
+		queryBuilder.addGroup("be.id, be.customPath, be.path, cat.id, be.blogEntryPathType, o.username, be.description, th.id, be.createDate, be.title, be.sticky, be.updateDate");
 		queryBuilder.addOrderBy("be.sticky desc, be.updateDate desc");
-		List<BlogEntry> result = persistenceServices.executeQuery(queryBuilder);
+		List<Object[]> result = persistenceServices.executeQuery(queryBuilder);
+		return transformBlogEntries(result);
+	}
+
+	private List<BlogEntry> transformBlogEntries(List<Object[]> searchResult) {
+		List<BlogEntry> result = new ArrayList<BlogEntry>();
+		if (searchResult == null || searchResult.isEmpty()) {
+			return result;
+		}
+		for (Object[] item : searchResult) {
+			createNewTransientBlogEntry(result, item);
+		}
 		return result;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void createNewTransientBlogEntry(List<BlogEntry> blogEntries, Object[] item) {
+		JpaBlogEntry result = new JpaBlogEntry();
+		result.setId((Long)item[0]);
+		result.setCustomPath((String)item[1]);
+		result.setPath((String)item[2]);
+		Long categoryId = (Long)item[3];
+		if (categoryId != null) {
+			//result.setCategory((JpaClassifierItem)classifierItemDao.loadClassifierItemById(categoryId));
+		}
+		result.setBlogEntryPathType((BlogEntryPathTypeEnum)item[4]);
+		String username = (String)item[5];
+		if (!StringUtils.isEmpty(username)) {
+			result.setOwner(userFacade.getUserByUsername(username));
+		}
+		result.setDescription((String)item[6]);
+		Long thumbnailId = (Long)item[7];
+		Long imagesCount = (Long)item[10];
+		if (thumbnailId != null) {
+			result.setThumbnail(fileDescriptorDao.getFileDescriptorById(thumbnailId));
+		} else if (imagesCount > 0 ){
+			List temporaryList = new ArrayList<ImageComposition>();
+			temporaryList.add(getImageThumbnailForBlogEntry(result.getId()));
+			result.getImages().addAll(temporaryList);
+		}
+		
+		result.setCreateDate((Date)item[8]);
+		result.setTitle((String)item[9]);
+		blogEntries.add(result);
+	}
+	
+	private JpaBlogEntryImageComposition getImageThumbnailForBlogEntry(Long id) {
+		QueryBuilder query = new QueryBuilder("select i from " + JpaBlogEntry.class.getSimpleName() + " e inner join e.images i inner join i.image image inner join image.thumbnail th");
+		query.addParameter("e.id", "_ID", id);
+		query.addOrderBy("image.customOrder asc, image.updateDate desc");
+		
+		query.setCount(1);
+		List<JpaBlogEntryImageComposition> result = persistenceServices.executeQuery(query);
+		return !result.isEmpty()?result.get(0):null;
+	}
+
 	private QueryBuilder createQueryBuilder(String selectString, BlogEntrySearchRequest blogEntrySearchRequest) {
-		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be");
+		QueryBuilder queryBuilder = new QueryBuilder(selectString + " from " + JpaBlogEntry.class.getSimpleName() + " be left join be.images img left join be.category cat left join be.owner o left join be.thumbnail th");
 		if (!StringUtils.isEmpty(blogEntrySearchRequest.getUsername())) {
-			queryBuilder.addParameter("be.owner.username", "USERNAME", blogEntrySearchRequest.getUsername());
+			queryBuilder.addParameter("o.username", "USERNAME", blogEntrySearchRequest.getUsername());
 		}
 
 		if (!StringUtils.isEmpty(blogEntrySearchRequest.getCategory())) {

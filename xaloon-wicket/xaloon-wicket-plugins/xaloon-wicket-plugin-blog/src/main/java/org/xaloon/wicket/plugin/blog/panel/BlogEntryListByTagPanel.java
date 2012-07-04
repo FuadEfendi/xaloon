@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.blog.ldm.BlogEntryDetachableModel;
@@ -28,6 +29,7 @@ import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListPage;
 import org.xaloon.wicket.util.Link;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * @author vytautas r.
@@ -56,16 +58,13 @@ public class BlogEntryListByTagPanel extends BlogEntryListPanel {
 
 	@Override
 	protected IDataProvider<BlogEntry> getBlogEntryDataProvider() {
+		String url = UrlUtils.generateFullvalue(BlogEntryListPage.class);
 		if (getPageRequestParameters().isEmpty()) {
-			setVisible(false);
-			setResponsePage(BlogEntryListPage.class);
-			return null;
+			throw new RedirectToUrlException(url);
 		}
 		String tagPath = getPageRequestParameters().get(TagCloudPanel.QUERY_BY_TAG).toString();
 		if (StringUtils.isEmpty(tagPath)) {
-			setVisible(false);
-			setResponsePage(BlogEntryListPage.class);
-			return null;
+			throw new RedirectToUrlException(url);
 		}
 		return new JpaBlogEntryDataByTagProvider(tagPath);
 	}

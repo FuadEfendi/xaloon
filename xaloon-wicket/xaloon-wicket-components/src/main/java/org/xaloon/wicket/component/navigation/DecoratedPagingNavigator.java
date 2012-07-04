@@ -191,11 +191,15 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 
 	private void refreshLastNextComponents(WebMarkupContainer currentNavigator, Form<Void> form, int currentPage, int pageCount) {
 		Component nextPage = currentNavigator.get("next");
-		currentNavigator.remove("next");
-		form.add(nextPage);
+		if (nextPage != null) {
+			currentNavigator.remove("next");
+			form.add(nextPage);
+		}
 		Component lastPage = currentNavigator.get("last");
-		currentNavigator.remove("last");
-		form.add(lastPage);
+		if (lastPage != null) {
+			currentNavigator.remove("last");
+			form.add(lastPage);
+		}
 		if ((nextPage != null) && (lastPage != null)) {
 			if (pageCount == 0 || currentPage == pageCount - 1) {
 				nextPage.setVisible(false);
@@ -209,11 +213,16 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 
 	private void refreshFirstPreviousComponents(WebMarkupContainer currentNavigator, Form<Void> form, int currentPage) {
 		Component previousPage = currentNavigator.get("prev");
-		currentNavigator.remove("prev");
-		form.add(previousPage);
+		if (previousPage != null) {
+			currentNavigator.remove("prev");
+			form.add(previousPage);
+		}
+
 		Component firstPage = currentNavigator.get("first");
-		currentNavigator.remove("first");
-		form.add(firstPage);
+		if (firstPage != null) {
+			currentNavigator.remove("first");
+			form.add(firstPage);
+		}
 		if ((previousPage != null) && (firstPage != null)) {
 			if (currentPage == 0) {
 				previousPage.setVisible(false);

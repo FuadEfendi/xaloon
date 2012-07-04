@@ -39,7 +39,7 @@ public class NewImagePanel extends Panel {
 	 * @param id
 	 * @param model
 	 */
-	public NewImagePanel(String id, IModel<Image> model) {
+	public NewImagePanel(String id, IModel<org.xaloon.core.api.image.model.Image> model) {
 		super(id, model);
 	}
 

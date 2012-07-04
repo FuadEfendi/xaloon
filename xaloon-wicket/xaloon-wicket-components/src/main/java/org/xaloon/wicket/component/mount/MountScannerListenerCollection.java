@@ -17,6 +17,7 @@
 package org.xaloon.wicket.component.mount;
 
 import java.util.List;
+import java.util.Map;
 
 import org.xaloon.core.api.config.ListenerCollection;
 
@@ -34,6 +35,14 @@ public class MountScannerListenerCollection extends ListenerCollection<MountScan
 		notify(new Notifier<MountScannerListener>() {
 			public void notify(MountScannerListener listener) {
 				listener.onMount(classesToMount);
+			}
+		});
+	}
+
+	public void onMount(final Map<String, Class<?>> mountPages) {
+		notify(new Notifier<MountScannerListener>() {
+			public void notify(MountScannerListener listener) {
+				listener.onMount(mountPages);
 			}
 		});
 	}

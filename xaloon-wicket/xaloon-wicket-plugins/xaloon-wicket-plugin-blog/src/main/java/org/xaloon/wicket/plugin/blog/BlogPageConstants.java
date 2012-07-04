@@ -46,7 +46,4 @@ public interface BlogPageConstants extends Serializable {
 	 * The blog entry day
 	 */
 	String BLOG_DAY = "blog_day";
-	
-	/** the category code as a parameter */
-	String CATEGORY_CODE = "CATEGORY_CODE";
 }

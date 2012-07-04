@@ -75,11 +75,6 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 	 */
 	private SchedulerServices schedulerServices;
 
-	/**
-	 * Manually injected service. This allows custom injection.
-	 */
-	private FileStorageService fileStorageService;
-
 	@Override
 	public FileDescriptor storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer) {
 		// Get file storage service provider
@@ -165,14 +160,11 @@ public class DefaultFileRepositoryFacade implements FileRepositoryFacade {
 	}
 
 	private FileStorageService getFileStorageService(String fileStorageServiceProvider) {
-		if (fileStorageService == null) {
-			if (StringUtils.isEmpty(fileStorageServiceProvider)) {
-				fileStorageService = ServiceLocator.get().getInstance(FileStorageService.class);
-			} else {
-				fileStorageService = ServiceLocator.get().getInstance(FileStorageService.class, fileStorageServiceProvider);
-			}
+		if (StringUtils.isEmpty(fileStorageServiceProvider)) {
+			return ServiceLocator.get().getInstance(FileStorageService.class);
+		} else {
+			return ServiceLocator.get().getInstance(FileStorageService.class, fileStorageServiceProvider);
 		}
-		return fileStorageService;
 	}
 
 	@Override

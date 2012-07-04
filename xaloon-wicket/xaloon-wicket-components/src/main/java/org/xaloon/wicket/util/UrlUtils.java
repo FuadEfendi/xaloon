@@ -160,7 +160,7 @@ public class UrlUtils {
 			PageParameters params = new PageParameters();
 			params.set(0, absoluteImagePath);
 			HttpServletRequest req = (HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest();
-			url = RequestCycle.get().getUrlRenderer().renderFullUrl(RequestCycle.get().mapUrlFor(imageResource, params));
+			url = RequestCycle.get().getUrlRenderer().renderUrl(RequestCycle.get().mapUrlFor(imageResource, params));
 		}
 		return url;
 	}

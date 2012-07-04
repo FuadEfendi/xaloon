@@ -19,6 +19,7 @@ package org.xaloon.core.api.config;
 import org.xaloon.core.api.cache.Cache;
 import org.xaloon.core.api.inject.BeanLocatorAdapter;
 import org.xaloon.core.api.path.AbsolutePathStrategy;
+import org.xaloon.core.api.plugin.AbstractPluginBean;
 import org.xaloon.core.api.plugin.PluginBeanSerializer;
 import org.xaloon.core.api.plugin.PluginRegistry;
 import org.xaloon.core.api.plugin.PluginRegistryListenerCollection;
@@ -44,6 +45,9 @@ public class Configuration {
 
 	private final PluginRegistryListenerCollection pluginRegistryListenerCollection = new PluginRegistryListenerCollection();
 
+	/** cache of {@link AbstractPluginBean} items **/
+	private Cache pluginResourceCache;
+
 	private final UserListenerCollection userListenerCollection = new UserListenerCollection();
 
 	private PluginBeanSerializer pluginBeanSerializer = new DefaultPluginBeanSerializer();
@@ -57,6 +61,7 @@ public class Configuration {
 	private AbsolutePathStrategy<FileDescriptor> fileDescriptorAbsolutePathStrategy;
 
 	private OauthSecurityTokenProvider oauthSecurityTokenProvider;
+
 
 	private Configuration() {
 	}
@@ -175,6 +180,9 @@ public class Configuration {
 		this.fileDescriptorAbsolutePathStrategy = fileDescriptorAbsolutePathStrategy;
 	}
 
+	/**
+	 * @return external authentication security token provider
+	 */
 	public OauthSecurityTokenProvider getOauthSecurityTokenProvider() {
 		if (oauthSecurityTokenProvider == null) {
 			throw new IllegalArgumentException("Application is not properly configured! Instance of OauthSecurityTokenProvider is not provided!");
@@ -182,6 +190,9 @@ public class Configuration {
 		return oauthSecurityTokenProvider;
 	}
 
+	/**
+	 * @param oauthSecurityTokenProvider
+	 */
 	public void setOauthSecurityTokenProvider(OauthSecurityTokenProvider oauthSecurityTokenProvider) {
 		this.oauthSecurityTokenProvider = oauthSecurityTokenProvider;
 	}
@@ -193,5 +204,24 @@ public class Configuration {
 	 */
 	public UserListenerCollection getUserListenerCollection() {
 		return userListenerCollection;
+	}
+
+	/**
+	 * Gets pluginResourceCache.
+	 * 
+	 * @return pluginResourceCache
+	 */
+	public Cache getPluginResourceCache() {
+		return pluginResourceCache;
+	}
+
+	/**
+	 * Sets pluginResourceCache for {@link AbstractPluginBean} items. Not cached if there is no cache provided.
+	 * 
+	 * @param pluginResourceCache
+	 *            pluginResourceCache
+	 */
+	public void setPluginResourceCache(Cache pluginResourceCache) {
+		this.pluginResourceCache = pluginResourceCache;
 	}
 }

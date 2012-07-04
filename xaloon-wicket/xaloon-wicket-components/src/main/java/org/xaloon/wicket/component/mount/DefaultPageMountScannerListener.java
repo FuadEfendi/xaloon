@@ -16,6 +16,8 @@
  */
 package org.xaloon.wicket.component.mount;
 
+import java.util.Map.Entry;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -38,5 +40,11 @@ public class DefaultPageMountScannerListener extends AbstractPageMountScannerLis
 			throw new RuntimeException("Could not mount class: " + pageClass);
 		}
 		return new MountedMapper(value, pageClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected IRequestMapper getMountedMapper(Entry<String, Class<?>> item) {
+		return new MountedMapper(item.getKey(), (Class<? extends IRequestablePage>)item.getValue());
 	}
 }

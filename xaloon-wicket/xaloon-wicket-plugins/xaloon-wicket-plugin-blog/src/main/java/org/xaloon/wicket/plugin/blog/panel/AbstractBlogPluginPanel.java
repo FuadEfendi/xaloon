@@ -28,8 +28,11 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.date.DateService;
+import org.xaloon.core.api.image.AlbumFacade;
 import org.xaloon.core.api.keyvalue.KeyValueDao;
 import org.xaloon.core.api.plugin.comment.CommentDao;
+import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.wicket.component.classifier.panel.ClassifierConstants;
 import org.xaloon.wicket.component.navigation.BookmarkablePagingNavigator;
 import org.xaloon.wicket.component.tag.TagCloudPanel;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
@@ -39,6 +42,7 @@ import org.xaloon.wicket.plugin.blog.BlogPageConstants;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
+import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryImageComposition;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryTag;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListByBloggerPage;
 import org.xaloon.wicket.plugin.blog.page.BlogEntryListByCategoryPage;
@@ -68,7 +72,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_MONTH);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_DAY);
 		AVAILABLE_PARAMETERS.add(BlogPageConstants.BLOG_PATH);
-		AVAILABLE_PARAMETERS.add(BlogPageConstants.CATEGORY_CODE);
+		AVAILABLE_PARAMETERS.add(ClassifierConstants.PARENT_ITEM);
 		AVAILABLE_PARAMETERS.add(TagCloudPanel.QUERY_BY_TAG);
 		AVAILABLE_PARAMETERS.add(BookmarkablePagingNavigator.PAGE_QUERY_ID);
 	}
@@ -85,6 +89,9 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 
 	@Inject
 	protected DateService dateService;
+	
+	@Inject
+	protected AlbumFacade albumFacade;
 	
 	/**
 	 * Construct.
@@ -175,7 +182,7 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		PageParameters categoryPageParameters = new PageParameters();
 		BookmarkablePageLink<Void> categoryLink = new BookmarkablePageLink<Void>("link-category", getBlogCategoryPageClass(), categoryPageParameters);
 		if (blogEntry.getCategory() != null) {
-			categoryPageParameters.set(BlogPageConstants.CATEGORY_CODE, blogEntry.getCategory().getCode());
+			categoryPageParameters.set(ClassifierConstants.PARENT_ITEM, blogEntry.getCategory().getCode());
 			categoryLink.add(new Label("label-category", new Model<String>(blogEntry.getCategory().getName())));
 		} else {
 			categoryLink.setVisible(false);
@@ -194,4 +201,16 @@ public abstract class AbstractBlogPluginPanel extends AbstractPluginPanel<BlogPl
 		}
 		return authorLink;
 	}
+	
+	protected FileDescriptor getBlogEntryThumbnail(BlogEntry blogEntry) {
+		if (blogEntry.getThumbnail() != null) {
+			return blogEntry.getThumbnail();
+		}
+		List<JpaBlogEntryImageComposition> albumImages = blogEntry.getImages();
+		if (!albumImages.isEmpty()) {
+			return albumImages.get(0).getImage().getThumbnail();
+		}
+		return null;
+	}
+
 }

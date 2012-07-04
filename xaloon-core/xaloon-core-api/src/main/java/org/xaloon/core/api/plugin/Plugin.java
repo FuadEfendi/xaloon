@@ -158,4 +158,17 @@ public interface Plugin extends Serializable, Comparable<Plugin> {
 	 * @return list of {@link Authority} as a representation of permissions
 	 */
 	List<Authority> getSupportedAuthorities();
+
+	/**
+	 * Plugin configuration, which cannot be changed on runtime, for example, custom blog page link pages
+	 * 
+	 * @return plugin implementation of {@link PluginConfigEntry}
+	 */
+	<T extends PluginConfigEntry> T getTechnicalConfiguration();
+
+	/**
+	 * @param technicalConfiguration
+	 *            sets custom plugin configuration to be used for the application
+	 */
+	<T extends PluginConfigEntry> void setTechnicalConfiguration(T technicalConfiguration);
 }

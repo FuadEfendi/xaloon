@@ -83,4 +83,8 @@ public class DefaultEmailFacade implements EmailFacade {
 		return emailService.isEnabled();
 	}
 
+	@Override
+	public String getSystemEmail() {
+		return emailService.getSystemEmail();
+	}
 }

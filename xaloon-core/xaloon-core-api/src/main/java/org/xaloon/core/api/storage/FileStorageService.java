@@ -76,4 +76,11 @@ public interface FileStorageService extends Serializable {
 	 */
 	boolean delete(String uniqueIdentifier);
 
+	/**
+	 * Returns the name of implementation class, the same as in @Named() attribute
+	 * 
+	 * @return
+	 */
+	String getName();
+
 }

@@ -18,9 +18,11 @@ package org.xaloon.wicket.component.mount;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.xaloon.wicket.component.mount.annotation.MountPage;
+import org.xaloon.wicket.component.security.AuthenticatedWebApplication;
 
 /**
  * Abstract mounting class to scan packages for {@link MountPage} annotation
@@ -48,7 +50,18 @@ public abstract class MountScanner<T extends WebApplication> implements Serializ
 	 *            Package name to be scanned for annotation
 	 * @return list of mounted web page classes for further usage
 	 */
+	@Deprecated
 	public abstract List<Class<?>> mountPackage(T application, String packageName);
+
+	/**
+	 * Mount page using {@link MountPage} annotation
+	 * 
+	 * @param application
+	 *            Web application is used to mount Web pages
+	 * @param mountPages
+	 *            Map of page path and page class to be mapped
+	 */
+	public abstract void mountPackage(AuthenticatedWebApplication application, Map<String, Class<?>> mountPages);
 
 	/**
 	 * @param mountScannerListener

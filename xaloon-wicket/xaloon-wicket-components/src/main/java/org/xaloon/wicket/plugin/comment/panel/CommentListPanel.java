@@ -108,7 +108,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 
 				item.add(new ImageLink("image-link", (authorPhoto != null) ? authorPhoto.getPath() : null).setVisible(authorPhoto != null));
 				externalLink.add(new Label("displayName", new Model<String>(comment.getFromUser().getDisplayName())));
-				item.add(new Label("message", new Model<String>(TextUtil.prepareStringForHTML(comment.getMessage()))));
+				item.add(new Label("message", new Model<String>(TextUtil.prepareStringForHTML(comment.getMessage()))).setEscapeModelStrings(false));
 				item.add(new Label("comment-timestamp", new Model<String>(dateService.formatWithLongDate(comment.getCreateDate()))));
 
 				// Delete comment link

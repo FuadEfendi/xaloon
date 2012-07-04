@@ -93,14 +93,14 @@ public class JpaGroupService implements GroupService {
 	}
 
 	@Override
-	public void save(SecurityGroup authority) {
+	public SecurityGroup save(SecurityGroup authority) {
 		if (authority == null) {
-			return;
+			return null;
 		}
 		if (StringUtils.isEmpty(authority.getPath())) {
 			authority.setPath(UrlUtil.encode(authority.getName()));
 		}
-		persistenceServices.createOrEdit(authority);
+		return persistenceServices.createOrEdit(authority);
 	}
 
 	@Override

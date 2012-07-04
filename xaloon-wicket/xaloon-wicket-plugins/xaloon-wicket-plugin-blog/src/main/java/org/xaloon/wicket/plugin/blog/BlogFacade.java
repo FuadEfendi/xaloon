@@ -24,6 +24,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.wicket.plugin.blog.dao.BlogDao;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
@@ -34,11 +35,6 @@ import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
  * @author vytautas r.
  */
 public interface BlogFacade extends Serializable {
-	/**
-	 * Default location where to store blog thumbnails
-	 */
-	String BLOG_THUMBNAILS = "blog-thumbnails";
-
 	/**
 	 * Default location where to store blog images
 	 */
@@ -53,8 +49,8 @@ public interface BlogFacade extends Serializable {
 	 * @param imagesToAdd
 	 * @throws IOException
 	 */
-	void storeBlogEntry(BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
-		List<Image> imagesToAdd) throws IOException;
+	void storeBlogEntry(BlogEntry entry, ImageComposition thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<ImageComposition> imagesToDelete,
+		List<ImageComposition> imagesToAdd) throws IOException;
 
 	/**
 	 * @return list of blog categories
@@ -64,7 +60,7 @@ public interface BlogFacade extends Serializable {
 	/**
 	 * @param entry
 	 */
-	void deleteThumbnailFromBlogEntry(BlogEntry entry);
+	BlogEntry deleteThumbnailFromBlogEntry(BlogEntry entry);
 
 	/**
 	 * @param username
@@ -130,4 +126,6 @@ public interface BlogFacade extends Serializable {
 	 * @return new Image instance
 	 */
 	Image newImage();
+
+	ImageComposition newComposition();
 }

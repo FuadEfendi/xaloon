@@ -18,7 +18,6 @@ package org.xaloon.wicket.plugin.addthis.panel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
@@ -39,7 +38,6 @@ public class AddThisPanel extends AbstractPluginPanel<AddThisPluginBean, AddThis
 
 	private static final String ADD_THIS_JAVASCRIPT_END_TAG = "\"></script>";
 	private static final String ADD_THIS_JAVA_SCRIPT = "<script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#username=";
-	private static final String ADD_THIS_URL = "http://www.addthis.com/bookmark.php?v=250&amp;username=";
 
 	/**
 	 * Construct.
@@ -69,9 +67,6 @@ public class AddThisPanel extends AbstractPluginPanel<AddThisPluginBean, AddThis
 
 	@Override
 	protected void onInitialize(AddThisPlugin plugin, AddThisPluginBean pluginBean) {
-		String url = ADD_THIS_URL + pluginBean.getUsername();
-		ExternalLink link = new ExternalLink("share-link-1", url);
-		add(link);
 	}
 
 	@Override

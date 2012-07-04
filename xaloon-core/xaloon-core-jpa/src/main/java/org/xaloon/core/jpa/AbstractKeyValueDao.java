@@ -63,7 +63,7 @@ public abstract class AbstractKeyValueDao<R extends KeyValue<String, String>> im
 	public R findInStorage(String key, String parsedValue) {
 		QueryBuilder query = new QueryBuilder("select kv from " + getImplementationClass().getSimpleName() + " kv");
 		query.addParameter("kv.key", "KEY", key);
-		query.addParameter("kv.value", "VALUE", parsedValue);
+		query.addParameter("kv.value", "VALUE", parsedValue, false, true);
 		return (R)persistenceServices.executeQuerySingle(query);
 	}
 

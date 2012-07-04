@@ -16,15 +16,17 @@
  */
 package org.xaloon.wicket.plugin.blog.path;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.util.DefaultKeyValue;
+import org.xaloon.wicket.plugin.blog.BlogConfigElement;
 import org.xaloon.wicket.plugin.blog.BlogPageConstants;
+import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
-import org.xaloon.wicket.plugin.blog.page.BlogEntryNoUserPage;
 
 /**
  * @author vytautas r.
@@ -37,10 +39,15 @@ public class CustomBlogEntryPathResolver implements BlogEntryPathResolver {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Inject
+	protected BlogPlugin blogPlugin;
+	
 	@Override
 	public KeyValue<Class<? extends Page>, PageParameters> getBlogEntryLink(BlogEntry blogEntry) {
+		BlogConfigElement cfg = blogPlugin.getTechnicalConfiguration();
+		
 		KeyValue<Class<? extends Page>, PageParameters> result = new DefaultKeyValue<Class<? extends Page>, PageParameters>(
-			BlogEntryNoUserPage.class, new PageParameters());
+			cfg.getBlogEntryNoUserPage(), new PageParameters());
 		// Use custom path
 		result.getValue().set(BlogPageConstants.BLOG_PATH, blogEntry.getCustomPath());
 		return result;

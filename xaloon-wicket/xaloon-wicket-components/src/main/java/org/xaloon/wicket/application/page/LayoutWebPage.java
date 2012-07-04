@@ -131,4 +131,15 @@ public abstract class LayoutWebPage extends WebPage {
 			addOrReplace(new MetaTagWebContainer(new Model<KeyValue<String, String>>(new DefaultKeyValue<String, String>(name, value))));
 		}
 	}
+
+	/**
+	 * This might be used for custom implementation of sidebars
+	 * 
+	 * @param panelId
+	 *            Id of component
+	 * @return sidebar panel instance if exists
+	 */
+	public Panel getSidebarPanel(String panelId) {
+		return null;
+	}
 }

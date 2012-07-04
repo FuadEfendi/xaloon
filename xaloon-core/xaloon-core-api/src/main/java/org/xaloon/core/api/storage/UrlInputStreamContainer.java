@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -52,7 +54,21 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 	 */
 	public UrlInputStreamContainer(String url, InputStreamContainerOptions options) {
 		super(options);
-		this.url = url;
+		this.url = validateAndFix(url);
+	}
+
+	private String validateAndFix(String url2) {
+		// Check if link is from youtube
+		Pattern rex = Pattern.compile("(?:videos\\/|v=)([\\w-]+)");
+		Matcher m = rex.matcher(url2);
+		if (m.find()) {
+			String YouTubeVideoID = m.group(1);
+			if (!StringUtils.isEmpty(YouTubeVideoID)) {
+				return "http://img.youtube.com/vi/" + YouTubeVideoID + "/1.jpg";
+			}
+		}
+
+		return url2;
 	}
 
 	@Override
@@ -62,6 +78,15 @@ public class UrlInputStreamContainer extends AbstractInputStreamContainer {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Could not create url", e);
 		}
+	}
+
+	/**
+	 * Gets url.
+	 * 
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
 	}
 
 	@Override

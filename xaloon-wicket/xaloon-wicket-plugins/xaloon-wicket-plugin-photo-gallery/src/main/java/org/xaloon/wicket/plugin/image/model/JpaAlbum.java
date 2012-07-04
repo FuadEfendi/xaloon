@@ -20,15 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.util.UrlUtil;
 
 /**
@@ -44,16 +43,26 @@ public class JpaAlbum extends AbstractAlbum {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "XAL_ALBUM_IMAGES", joinColumns = { @JoinColumn(name = "ALBUM_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
-	private List<JpaImage> images = new ArrayList<JpaImage>();
-
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="object", orphanRemoval = true)
+	private List<JpaAlbumImageComposition> images = new ArrayList<JpaAlbumImageComposition>();
+	
+	@Override
+	protected void beforeCreate() {
+		super.beforeCreate();
+		setPath(UrlUtil.encode(getTitle()));
+	}
+	
+	@Override
+	public Long getTrackingCategoryId() {
+		return 9000L;// TODO FIX return CommentComponentContainer.COMPONENT_BLOG_ENTRY;
+	}
+	
 	/**
 	 * @see org.xaloon.core.api.image.model.Album#getImages()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<? extends Image> getImages() {
+	public List<? extends ImageComposition> getImages() {
 		return images;
 	}
 
@@ -62,20 +71,14 @@ public class JpaAlbum extends AbstractAlbum {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setImages(List<? extends Image> images) {
+	public void setImages(List<? extends ImageComposition> images) {
 		/**
 		 * assume that if at first element failed then all elements should fail. Of cource it is possible to switch values, but why somebody should do
 		 * this?
 		 */
-		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaImage)) {
+		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaAlbumImageComposition)) {
 			throw new IllegalArgumentException("Wrong type for provided argument!");
 		}
-		this.images = (List<JpaImage>)images;
-	}
-
-	@Override
-	protected void beforeCreate() {
-		super.beforeCreate();
-		setPath(UrlUtil.encode(getTitle()));
+		this.images = (List<JpaAlbumImageComposition>)images;
 	}
 }

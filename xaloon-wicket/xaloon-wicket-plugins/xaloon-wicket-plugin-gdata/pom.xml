@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.xaloon.plugins</groupId>
 		<artifactId>xaloon-wicket-plugins-parent</artifactId>
-		<version>1.5.2-SNAPSHOT</version>
+		<version>1.5.2</version>
 	</parent>
 	<artifactId>xaloon-wicket-plugin-gdata</artifactId>
 	<packaging>jar</packaging>
@@ -31,6 +31,13 @@
 		<dependency>
 			<groupId>com.google.gdata</groupId>
 			<artifactId>gdata-photos-2.0</artifactId>
+		</dependency>
+		
+		<!-- Junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

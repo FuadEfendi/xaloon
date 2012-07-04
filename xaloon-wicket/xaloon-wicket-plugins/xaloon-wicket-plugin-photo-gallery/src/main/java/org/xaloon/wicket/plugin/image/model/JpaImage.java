@@ -25,6 +25,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -48,13 +50,13 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "THUMBNAIL_ID", referencedColumnName = "ID")
 	private JpaFileDescriptor thumbnail;
-
-	@Column(name = "IS_STICKY")
-	private boolean sticky;
+	
+	@Column(name = "CUSTOM_ORDER")
+	private int customOrder = 9999;
 	
 	@Column(name = "TITLE")
 	private String title;
@@ -62,30 +64,16 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	@Column(name = "DESCRIPTION", length=255)
 	private String description;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
 	private JpaUser owner;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "XAL_IMAGE_RESIZED", joinColumns = { @JoinColumn(name = "IMAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "FD_ID") })
+	private List<JpaFileDescriptor> additionalSizes = new ArrayList<JpaFileDescriptor>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "image", orphanRemoval = true)
 	private List<JpaImageTag> tags = new ArrayList<JpaImageTag>();
-
-	/**
-	 * Transient fields
-	 */
-
-	/** The image width */
-	private transient int width;
-
-	/** The image height */
-	private transient int height;
-
-	private transient boolean resize;
-
-	private transient boolean modifyPath;
-
-	private transient boolean generateUuid;
-
-	private transient String pathPrefix;
 
 	/**
 	 * @see org.xaloon.core.api.image.model.Image#getThumbnail()
@@ -182,130 +170,38 @@ public class JpaImage extends JpaFileDescriptor implements Image {
 	}
 
 	/**
-	 * Gets width.
-	 * 
-	 * @return width
+	 * @return the customOrder
 	 */
-	public int getWidth() {
-		return width;
+	public int getCustomOrder() {
+		return customOrder;
 	}
 
 	/**
-	 * Sets width.
-	 * 
-	 * @param width
-	 *            width
+	 * @param customOrder the customOrder to set
 	 */
-	public void setWidth(int width) {
-		this.width = width;
+	public void setCustomOrder(int customOrder) {
+		this.customOrder = customOrder;
 	}
 
 	/**
-	 * Gets height.
-	 * 
-	 * @return height
+	 * @return the additionalSizes
 	 */
-	public int getHeight() {
-		return height;
+	public List<JpaFileDescriptor> getAdditionalSizes() {
+		return additionalSizes;
 	}
 
 	/**
-	 * Sets height.
-	 * 
-	 * @param height
-	 *            height
+	 * @param additionalSizes the additionalSizes to set
 	 */
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	/**
-	 * Gets resize.
-	 * 
-	 * @return resize
-	 */
-	public boolean isResize() {
-		return resize;
-	}
-
-	/**
-	 * Sets resize.
-	 * 
-	 * @param resize
-	 *            resize
-	 */
-	public void setResize(boolean resize) {
-		this.resize = resize;
-	}
-
-	/**
-	 * Gets modifyPath.
-	 * 
-	 * @return modifyPath
-	 */
-	public boolean isModifyPath() {
-		return modifyPath;
-	}
-
-	/**
-	 * Sets modifyPath.
-	 * 
-	 * @param modifyPath
-	 *            modifyPath
-	 */
-	public void setModifyPath(boolean modifyPath) {
-		this.modifyPath = modifyPath;
-	}
-
-	/**
-	 * Gets generateUuid.
-	 * 
-	 * @return generateUuid
-	 */
-	public boolean isGenerateUuid() {
-		return generateUuid;
-	}
-
-	/**
-	 * Sets generateUuid.
-	 * 
-	 * @param generateUuid
-	 *            generateUuid
-	 */
-	public void setGenerateUuid(boolean generateUuid) {
-		this.generateUuid = generateUuid;
-	}
-
-	/**
-	 * Gets pathPrefix.
-	 * 
-	 * @return pathPrefix
-	 */
-	public String getPathPrefix() {
-		return pathPrefix;
-	}
-
-	/**
-	 * Sets pathPrefix.
-	 * 
-	 * @param pathPrefix
-	 *            pathPrefix
-	 */
-	public void setPathPrefix(String pathPrefix) {
-		this.pathPrefix = pathPrefix;
-	}
-
-	/**
-	 * @return the sticky
-	 */
-	public boolean isSticky() {
-		return sticky;
-	}
-
-	/**
-	 * @param sticky the sticky to set
-	 */
-	public void setSticky(boolean sticky) {
-		this.sticky = sticky;
+	@SuppressWarnings("unchecked")
+	public void setAdditionalSizes(List<? extends FileDescriptor> additionalSizes) {
+		/**
+		 * assume that if at first element failed then all elements should fail. Of cource it is possible to switch values, but why somebody should do
+		 * this?
+		 */
+		if (additionalSizes != null && !additionalSizes.isEmpty() && !(additionalSizes.get(0) instanceof JpaFileDescriptor)) {
+			throw new IllegalArgumentException("Wrong type for provided argument!");
+		}
+		this.additionalSizes = (List<JpaFileDescriptor>)additionalSizes;
 	}
 }

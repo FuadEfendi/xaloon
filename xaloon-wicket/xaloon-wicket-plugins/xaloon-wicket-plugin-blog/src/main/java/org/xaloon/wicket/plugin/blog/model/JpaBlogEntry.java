@@ -31,17 +31,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
-import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.core.jpa.classifier.model.JpaClassifierItem;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.model.AbstractAlbum;
-import org.xaloon.wicket.plugin.image.model.JpaImage;
 
 /**
  * @author vytautas r.
@@ -62,7 +60,7 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@JoinColumn(name = "BLOG_CATEGORY_ID", referencedColumnName = "ID")
 	private JpaClassifierItem category;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "XAL_BLOG_ENTRY_TAGS", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
 	private List<JpaBlogEntryTag> tags = new ArrayList<JpaBlogEntryTag>();
 
@@ -77,11 +75,9 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	@Lob
 	private String content;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("sticky desc")
-	@JoinTable(name = "XAL_BLOG_ENTRY_IMAGES", joinColumns = { @JoinColumn(name = "BLOG_ID") }, inverseJoinColumns = { @JoinColumn(name = "IMAGE_ID") })
-	private List<JpaImage> images = new ArrayList<JpaImage>();
-
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="object", orphanRemoval = true)
+	private List<JpaBlogEntryImageComposition> images = new ArrayList<JpaBlogEntryImageComposition>();
+	
 	public JpaClassifierItem getCategory() {
 		return category;
 	}
@@ -188,13 +184,13 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * @see org.xaloon.core.api.image.model.Album#getImages()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<? extends Image> getImages() {
+	public List<? extends ImageComposition> getImages() {
 		return images;
 	}
 
@@ -203,15 +199,15 @@ public class JpaBlogEntry extends AbstractAlbum implements BlogEntry {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setImages(List<? extends Image> images) {
+	public void setImages(List<? extends ImageComposition> images) {
 		/**
 		 * assume that if at first element failed then all elements should fail. Of cource it is possible to switch values, but why somebody should do
 		 * this?
 		 */
-		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaImage)) {
+		if (images != null && !images.isEmpty() && !(images.get(0) instanceof JpaBlogEntryImageComposition)) {
 			throw new IllegalArgumentException("Wrong type for provided argument!");
 		}
-		this.images = (List<JpaImage>)images;
+		this.images = (List<JpaBlogEntryImageComposition>)images;
 	}
 
 	@Override

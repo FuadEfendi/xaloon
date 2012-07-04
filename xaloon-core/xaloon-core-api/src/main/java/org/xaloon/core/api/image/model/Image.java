@@ -28,14 +28,6 @@ import org.xaloon.core.api.user.model.User;
  * @author vytautas r.
  */
 public interface Image extends FileDescriptor {
-
-	/**
-	 * Returns true if image should be selected as first image
-	 * 
-	 * @return true if image should be selected as first image, false - otherwise
-	 */
-	boolean isSticky();
-
 	/**
 	 * Gets thumbnail.
 	 * 
@@ -111,94 +103,13 @@ public interface Image extends FileDescriptor {
 	 */
 	void setTags(List<? extends KeyValue<String, String>> tags);
 
-	/**
-	 * Gets width.
-	 * 
-	 * @return width
-	 */
-	int getWidth();
 
 	/**
-	 * Sets width.
+	 * Add additional resized file descriptors if necessary
 	 * 
-	 * @param width
-	 *            width
+	 * @return
 	 */
-	void setWidth(int width);
+	List<? extends FileDescriptor> getAdditionalSizes();
 
-	/**
-	 * Gets height.
-	 * 
-	 * @return height
-	 */
-	int getHeight();
-
-	/**
-	 * Sets height.
-	 * 
-	 * @param height
-	 *            height
-	 */
-	void setHeight(int height);
-
-	/**
-	 * Gets resize.
-	 * 
-	 * @return resize
-	 */
-	boolean isResize();
-
-	/**
-	 * Sets resize.
-	 * 
-	 * @param resize
-	 *            resize
-	 */
-	void setResize(boolean resize);
-
-	/**
-	 * Gets modifyPath.
-	 * 
-	 * @return modifyPath
-	 */
-	boolean isModifyPath();
-
-	/**
-	 * Sets modifyPath.
-	 * 
-	 * @param modifyPath
-	 *            modifyPath
-	 */
-	void setModifyPath(boolean modifyPath);
-
-	/**
-	 * Gets generateUuid.
-	 * 
-	 * @return generateUuid
-	 */
-	boolean isGenerateUuid();
-
-	/**
-	 * Sets generateUuid.
-	 * 
-	 * @param generateUuid
-	 *            generateUuid
-	 */
-	void setGenerateUuid(boolean generateUuid);
-
-	/**
-	 * Sets path prefix
-	 * 
-	 * @param prefix
-	 *            prefix to set
-	 */
-	void setPathPrefix(String prefix);
-
-	/**
-	 * Returns path prefix. Transient field
-	 * 
-	 * @return path prefix for the image
-	 */
-	String getPathPrefix();
-
+	void setAdditionalSizes(List<? extends FileDescriptor> items);
 }

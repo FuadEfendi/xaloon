@@ -12,23 +12,26 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator.MaximumLengthValidator;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.exception.CreateClassInstanceException;
-import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.classifier.ClassifierDropDownChoice;
 import org.xaloon.wicket.component.tag.StringTokensPanel;
 import org.xaloon.wicket.plugin.blog.BlogEntryParameters;
+import org.xaloon.wicket.plugin.blog.BlogImageCompositionFactory;
 import org.xaloon.wicket.plugin.blog.BlogPlugin;
 import org.xaloon.wicket.plugin.blog.BlogPluginBean;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.panel.AlbumAdministrationPanel;
 import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
+import org.xaloon.wicket.util.UrlUtils;
 
 import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
 import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
@@ -163,27 +166,32 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			BlogEntry entry = getModelObject();
 			try {
 				boolean deleteThumbnail = !thumbnailManagementPanel.getImagesToDelete().isEmpty();
-				Image thumbnailToAdd = (!thumbnailManagementPanel.getImagesToAdd().isEmpty()) ? thumbnailManagementPanel.getImagesToAdd().get(0)
+				ImageComposition thumbnailToAdd = (!thumbnailManagementPanel.getImagesToAdd().isEmpty()) ? thumbnailManagementPanel.getImagesToAdd().get(0)
 					: null;
 				blogFacade.storeBlogEntry(entry, thumbnailToAdd, deleteThumbnail, getPluginBean(), albumAdministrationPanel.getImagesToDelete(),
 					albumAdministrationPanel.getImagesToAdd());
-				setResponsePage(getBlogEntryListPageClass());
 			} catch (Exception e) {
 				e.printStackTrace();
 				error("Could not save data.please, try again: " + e.getMessage());
 			}
+			String url = UrlUtils.generateFullvalue(getBlogEntryListPageClass());
+			throw new RedirectToUrlException(url);
 		}
 
 		private void addBlogEntryImagePanel() {
-			List<Image> thumbnailImages = new ArrayList<Image>();
+			List<ImageComposition> thumbnailImages = new ArrayList<ImageComposition>();
 			FileDescriptor thumbnail = getModelObject().getThumbnail();
 			if (thumbnail != null) {
+				ImageComposition composition = blogFacade.newComposition();
+				composition.setId(9999L);
 				Image image = blogFacade.newImage();
 				image.setId(thumbnail.getId());
 				image.setPath(thumbnail.getPath());
-				thumbnailImages.add(image);
+				composition.setImage(image);
+				composition.setObject(getModelObject());
+				thumbnailImages.add(composition);
 			}
-			thumbnailManagementPanel = new AlbumAdministrationPanel("image-administration-panel", thumbnailImages);
+			thumbnailManagementPanel = new AlbumAdministrationPanel("image-administration-panel", thumbnailImages).setImageCompositionFactory(new BlogImageCompositionFactory());
 			thumbnailManagementPanel.setMaxImagesAllowed(1);
 			thumbnailManagementPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
 			thumbnailManagementPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
@@ -191,13 +199,10 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			add(thumbnailManagementPanel);
 		}
 
-		private AlbumAdministrationPanel addImageAlbumManagementPanel(Album album) {
-			List<Image> destination = new ArrayList<Image>();
-			if (album != null && !album.getImages().isEmpty()) {
-				destination.addAll(album.getImages());
-			}
+		private AlbumAdministrationPanel addImageAlbumManagementPanel(BlogEntry album) {
+			List<ImageComposition> albumImages = albumFacade.getImagesByAlbum(album);
 
-			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", destination);
+			AlbumAdministrationPanel albumAdministrationPanel = new AlbumAdministrationPanel("images-administration", albumImages).setImageCompositionFactory(new BlogImageCompositionFactory());
 			albumAdministrationPanel.setImageThumbnailWidth(getPluginBean().getBlogImageWidth());
 			albumAdministrationPanel.setImageThumbnailHeight(getPluginBean().getBlogImageHeight());
 			albumAdministrationPanel.setVisible(securityFacade.hasAny(GallerySecurityAuthorities.IMAGE_EDIT));

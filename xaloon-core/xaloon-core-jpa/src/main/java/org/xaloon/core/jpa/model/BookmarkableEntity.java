@@ -19,6 +19,7 @@ package org.xaloon.core.jpa.model;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.xaloon.core.api.audit.annotation.Auditable;
 import org.xaloon.core.api.bookmark.Bookmarkable;
 
 /**
@@ -35,6 +36,7 @@ public abstract class BookmarkableEntity extends AbstractEntity implements Bookm
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "PATH", nullable = false)
+	@Auditable
 	private String path;
 
 	/**

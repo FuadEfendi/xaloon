@@ -16,12 +16,15 @@
  */
 package org.xaloon.wicket.plugin.image.impl;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -31,24 +34,32 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.ImageOptions;
+import org.xaloon.core.api.image.ImageRepository;
+import org.xaloon.core.api.image.ImageSize;
 import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
+import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
-import org.xaloon.core.api.storage.DefaultInputStreamContainer;
+import org.xaloon.core.api.plugin.PluginRegistry;
+import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
+import org.xaloon.core.api.storage.FilePathInputStreamContainer;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
+import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
-import org.xaloon.core.api.storage.InputStreamContainerOptions;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
 import org.xaloon.wicket.plugin.image.model.JpaAlbum;
 import org.xaloon.wicket.plugin.image.model.JpaImage;
+import org.xaloon.wicket.plugin.system.SystemPlugin;
+import org.xaloon.wicket.plugin.system.SystemPluginBean;
 
 /**
  * @author vytautas r.
@@ -63,8 +74,10 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(DefaultAlbumFacade.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlbumFacade.class);
+
+	@Inject
+	private SecurityFacade securityFacade;
 
 	@Inject
 	@Named("persistenceServices")
@@ -72,6 +85,11 @@ public class DefaultAlbumFacade implements AlbumFacade {
 
 	@Inject
 	private FileRepositoryFacade fileRepositoryFacade;
+
+	@Inject
+	private PluginRegistry pluginRegistry;
+
+	private ImageRepository imageRepository;
 
 	public Album newAlbum() {
 		return new JpaAlbum();
@@ -83,8 +101,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public Album createNewAlbum(User owner, String title, String description,
-			Album parent) {
+	public Album createNewAlbum(User owner, String title, String description, Album parent) {
 		Album album = newAlbum();
 		album.setOwner(owner);
 		album.setTitle(title);
@@ -95,12 +112,11 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void addNewImagesToAlbum(final Album album, List<Image> imagesToAdd,
-			final String imageLocation, final String thumbnailLocation) {
-		if (album == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
+	public void addNewImagesToAlbum(Album album, List<ImageComposition> imagesToAdd, final String imageLocation, final String thumbnailLocation) {
+		if (imagesToAdd == null || imagesToAdd.isEmpty()) {
 			throw new IllegalArgumentException("Missing arguments!");
 		}
-		for (final Image image : imagesToAdd) {
+		for (final ImageComposition image : imagesToAdd) {
 			if (image.getId() == null) {
 				createImage(album, image, imageLocation, thumbnailLocation);
 			}
@@ -108,25 +124,23 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	}
 
 	@Override
-	public void deleteImages(Album album, List<Image> imagesToDelete) {
+	public void deleteImages(Album album, List<ImageComposition> imagesToDelete) {
 		deleteImages(album, imagesToDelete, false);
 	}
 
-	private void deleteImages(Album album, List<Image> imagesToDelete,
-			boolean deleteAlbum) {
+	private void deleteImages(Album album, List<ImageComposition> imagesToDelete, boolean deleteAlbum) {
 		if (album == null || imagesToDelete == null || imagesToDelete.isEmpty()) {
 			return;
 		}
-		for (Image image : imagesToDelete) {
-			FileDescriptor thumbnailFileDescriptor = image.getThumbnail();
+		for (ImageComposition image : imagesToDelete) {
+			FileDescriptor thumbnailFileDescriptor = image.getImage().getThumbnail();
 
 			if (thumbnailFileDescriptor != null) {
 				fileRepositoryFacade.deleteFile(thumbnailFileDescriptor);
 			}
-			fileRepositoryFacade.deleteFile(image);
-
-			// Just remove image from album image list
+			fileRepositoryFacade.deleteFile(image.getImage());
 			album.getImages().remove(image);
+			persistenceServices.remove(image);
 		}
 	}
 
@@ -135,13 +149,13 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		if (imageAlbum == null) {
 			return;
 		}
-		List<Image> toDelete = new ArrayList<Image>(imageAlbum.getImages());
+		List<ImageComposition> toDelete = new ArrayList<ImageComposition>(getImagesByAlbum(imageAlbum));
 		deleteImages(imageAlbum, toDelete, true);
+		// TODO remove album
 	}
 
 	@Override
-	public FileDescriptor createPhysicalFile(Image temporaryImage)
-			throws MalformedURLException, IOException {
+	public FileDescriptor createPhysicalFile(Image temporaryImage) throws MalformedURLException, IOException {
 		return createPhysicalFile(temporaryImage, null);
 	}
 
@@ -156,60 +170,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	public FileDescriptor createPhysicalFile(Image temporaryImage,
-			FileDescriptor existingToUpdate) throws MalformedURLException,
-			IOException {
-		FileDescriptor result = fileRepositoryFacade.newFileDescriptor();
-		temporaryImage.setGenerateUuid(temporaryImage.isGenerateUuid()
-				|| result != null);
-		if (existingToUpdate != null) {
-			result = existingToUpdate;
-		}
-		updateFileDescriptor(temporaryImage, result);
-
-		if (temporaryImage.isExternal() && !temporaryImage.isResize()) {
-			return result;
-		}
-		InputStreamContainer inputStreamContainer = null;
-		InputStreamContainerOptions options = new InputStreamContainerOptions()
-				.setHeight(temporaryImage.getHeight())
-				.setWidth(temporaryImage.getWidth())
-				.setResize(temporaryImage.isResize());
-
-		if (temporaryImage.isExternal()) {
-			inputStreamContainer = new UrlInputStreamContainer(temporaryImage.getPath());
-		} else {
-			inputStreamContainer = temporaryImage.getImageInputStreamContainer();
-		}
-		inputStreamContainer.setOptions(options);
-		if (inputStreamContainer != null && !inputStreamContainer.isEmpty()) {
-			return fileRepositoryFacade.storeFile(result, inputStreamContainer);
-		}
-		return result;
-	}
-
-	private void updateFileDescriptor(Image temporaryImage,
-			FileDescriptor result) {
-
-		result.setSize(temporaryImage.getSize());
-		result.setMimeType(temporaryImage.getMimeType());
-		result.setName(temporaryImage.getName());
-		if (StringUtils.isEmpty(result.getLocation())) {
-			result.setLocation(temporaryImage.getLocation());
-		}
-		if (StringUtils.isEmpty(result.getName())) {
-			result.setName(temporaryImage.getPath());
-		}
-		if (temporaryImage.isModifyPath()) {
-			result.setPath(Configuration
-					.get()
-					.getFileDescriptorAbsolutePathStrategy()
-					.generateAbsolutePath(result,
-							temporaryImage.isGenerateUuid(),
-							temporaryImage.getPathPrefix()));
-		} else {
-			result.setPath(temporaryImage.getPath());
-		}
+	public FileDescriptor createPhysicalFile(Image temporaryImage, FileDescriptor existingToUpdate) throws MalformedURLException, IOException {
+		return null;
 	}
 
 	/**
@@ -218,49 +180,62 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @param imageLocation
 	 * @param thumbnailLocation
 	 */
-	public void createImage(Album album, Image newImage, String imageLocation,
-			String thumbnailLocation) {
-		newImage.setOwner(album.getOwner());
-		album.getImages().add(newImage);
-		try {
-			if (!newImage.isExternal()) {
-				newImage.setGenerateUuid(true);
-				newImage.setModifyPath(true);
-			}
-			// Make a copy of input stream for thumbnail processing
-			InputStream copy = new ByteArrayInputStream(
-					IOUtils.toByteArray(newImage.getImageInputStreamContainer()
-							.getInputStream()));
-			InputStreamContainer inputStreamContainer = new DefaultInputStreamContainer(
-					copy);
+	public void createImage(Album album, ImageComposition newImage, String imageLocation, String thumbnailLocation) {
+		newImage.setObject(album);
+		newImage.getImage().setOwner(album.getOwner());
 
-			// Threats image as original file descriptor and modifies required
-			// properties
-			newImage.setLocation(imageLocation);
-			createPhysicalFile(newImage, newImage);
+		// Threats image as original file descriptor and modifies required
+		// properties
+		newImage.getImage().setLocation(imageLocation);
 
-			// Always create thumbnail
-			createThumbnail(newImage, thumbnailLocation, inputStreamContainer);
-		} catch (MalformedURLException e) {
-			LOGGER.error(
-					String.format("URL exception: %s", newImage.getPath()), e);
-		} catch (IOException e) {
-			LOGGER.error("Could not store file.", e);
-		}
+		ImageOptions options = newImageOptions(newImage.getImage(), thumbnailLocation);
+		getImageRepository().uploadImage(newImage, options);
 	}
 
-	private void createThumbnail(Image newImage, String thumbnailLocation,
-			InputStreamContainer thumbnailInputStreamContainer)
-			throws MalformedURLException, IOException {
-		FileDescriptor fileDescriptor = fileRepositoryFacade
-				.newFileDescriptor();
-		fileDescriptor.setLocation(thumbnailLocation);
-		newImage.setResize(true);
-		newImage.setModifyPath(true);
-		newImage.setWidth(158);
-		newImage.setHeight(82);
-		newImage.setImageInputStreamContainer(thumbnailInputStreamContainer);
-		newImage.setThumbnail(createPhysicalFile(newImage, fileDescriptor));
+	private ImageOptions newImageOptions(Image newImage, String thumbnailLocation) {
+		ImageSize thumbnailSize = new ImageSize(158).setHeight(82).location(thumbnailLocation).title(newImage.getName());
+		InputStreamContainer inputStreamContainer = null;
+		if (newImage.isExternal()) {
+			inputStreamContainer = new UrlInputStreamContainer(newImage.getPath());
+		} else {
+			try {
+				inputStreamContainer = copyToFileSystem(newImage);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// inputStreamContainer = newImage.getImageInputStreamContainer();
+		}
+		ImageOptions options = new ImageOptions(inputStreamContainer, thumbnailSize);
+		if (!newImage.isExternal()) {
+			options.setGenerateUuid(true);
+			options.setModifyPath(true);
+			newImage.setPath(Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(newImage, true, ""));
+		}
+		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_EMAIL, securityFacade.getCurrentUserEmail());
+		options.getAdditionalProperties().put(FileStorageService.PARAMETER_USER_TOKEN,
+				Configuration.get().getOauthSecurityTokenProvider().getSecurityToken());
+		return options;
+	}
+
+	private InputStreamContainer copyToFileSystem(Image newImage) throws IOException {
+		SystemPluginBean systemPluginBean = pluginRegistry.getPluginBean(SystemPlugin.class);
+
+		StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
+		fileName.append('-');
+		fileName.append(newImage.getName());
+		File outputFile = new File(new File(systemPluginBean.getTemporaryFileLocation()), fileName.toString());
+
+		InputStream in = newImage.getImageInputStreamContainer().getInputStream();
+		OutputStream out = new FileOutputStream(outputFile);
+
+		try {
+			IOUtils.copy(in, out);
+			return new FilePathInputStreamContainer(outputFile.getAbsolutePath());
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
+		}
 	}
 
 	@Override
@@ -280,5 +255,50 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		QueryBuilder update = new QueryBuilder("delete from " + JpaAlbum.class.getSimpleName() + " a");
 		update.addParameter("a.owner", "_USER", userToBeDeleted);
 		persistenceServices.executeUpdate(update);
+	}
+
+	/**
+	 * @return the imageRepository
+	 */
+	public ImageRepository getImageRepository() {
+		if (imageRepository == null) {
+			imageRepository = ServiceLocator.get().getInstance(ImageRepository.class);
+		}
+		return imageRepository;
+	}
+
+	@Override
+	public List<ImageComposition> getImagesByAlbum(Album album) {
+		if (album.getId() == null) {
+			return new ArrayList<ImageComposition>();
+		}
+		QueryBuilder query = new QueryBuilder("select composition from " + album.getClass().getSimpleName()
+				+ " a inner join a.images composition inner join composition.image i");
+		query.addParameter("a.id", "_ID", album.getId());
+		query.addOrderBy("i.customOrder asc");
+		return persistenceServices.executeQuery(query);
+	}
+
+	@Override
+	public <T extends Album> void uploadThumbnail(T album, Image thumbnailToAdd, String thumbnailLocation) {
+		thumbnailToAdd.setOwner(album.getOwner());
+		thumbnailToAdd.setLocation(thumbnailLocation);
+		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
+		getImageRepository().uploadThumbnail(album, thumbnailToAdd, options);
+	}
+
+	@Override
+	public <T extends Image> void uploadThumbnail(T image, Image thumbnailToAdd, String thumbnailLocation) {
+		thumbnailToAdd.setOwner(image.getOwner());
+		thumbnailToAdd.setLocation(thumbnailLocation);
+		ImageOptions options = newImageOptions(thumbnailToAdd, thumbnailLocation);
+		getImageRepository().uploadThumbnail(image, thumbnailToAdd, options);
+	}
+
+	@Override
+	public Image getImageByPath(String path) {
+		QueryBuilder query = new QueryBuilder("select i from JpaImage i");
+		query.addParameter("i.path", "_PATH", path);
+		return persistenceServices.executeQuerySingle(query);
 	}
 }

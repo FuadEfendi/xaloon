@@ -62,7 +62,7 @@ public interface BlogDao extends Serializable {
 	 * @param blogEntry
 	 *            blog entry object to store
 	 */
-	void save(BlogEntry blogEntry);
+	BlogEntry save(BlogEntry blogEntry);
 
 	/**
 	 * Deletes existing blog entry from repository

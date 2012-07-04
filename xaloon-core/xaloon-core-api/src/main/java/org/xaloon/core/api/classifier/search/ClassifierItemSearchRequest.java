@@ -33,7 +33,51 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 
 	private String classifierItemCode;
 
+	private String classifierItemName;
+
 	private String parentClassifierItemCode;
+
+	private boolean ignoreParentCode;
+
+	private String orderBy;
+
+	/**
+	 * Gets orderBy.
+	 * 
+	 * @return orderBy
+	 */
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	/**
+	 * Sets orderBy.
+	 * 
+	 * @param orderBy
+	 *            orderBy
+	 */
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	/**
+	 * Gets ignoreParentCode.
+	 * 
+	 * @return ignoreParentCode
+	 */
+	public boolean isIgnoreParentCode() {
+		return ignoreParentCode;
+	}
+
+	/**
+	 * Sets ignoreParentCode.
+	 * 
+	 * @param ignoreParentCode
+	 *            ignoreParentCode
+	 */
+	public void setIgnoreParentCode(boolean ignoreParentCode) {
+		this.ignoreParentCode = ignoreParentCode;
+	}
 
 	/**
 	 * @return classifier type
@@ -88,5 +132,24 @@ public class ClassifierItemSearchRequest extends SearchRequest {
 	 */
 	public boolean isParentSelection() {
 		return StringUtils.isEmpty(parentClassifierItemCode) && StringUtils.isEmpty(classifierItemCode);
+	}
+
+	/**
+	 * Gets classifierItemName.
+	 * 
+	 * @return classifierItemName
+	 */
+	public String getClassifierItemName() {
+		return classifierItemName;
+	}
+
+	/**
+	 * Sets classifierItemName.
+	 * 
+	 * @param classifierItemName
+	 *            classifierItemName
+	 */
+	public void setClassifierItemName(String classifierItemName) {
+		this.classifierItemName = classifierItemName;
 	}
 }

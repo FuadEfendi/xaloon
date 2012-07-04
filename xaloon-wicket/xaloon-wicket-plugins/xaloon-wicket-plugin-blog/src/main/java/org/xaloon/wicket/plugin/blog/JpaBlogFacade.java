@@ -33,18 +33,20 @@ import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.classifier.dao.ClassifierItemDao;
 import org.xaloon.core.api.classifier.search.ClassifierItemSearchRequest;
 import org.xaloon.core.api.image.AlbumFacade;
+import org.xaloon.core.api.image.ImageLocationResolver;
 import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.core.api.inject.ServiceLocator;
 import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.path.DelimiterEnum;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.storage.FileRepositoryFacade;
-import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.wicket.plugin.blog.dao.BlogDao;
 import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest;
 import org.xaloon.wicket.plugin.blog.model.JpaBlogEntry;
+import org.xaloon.wicket.plugin.blog.model.JpaBlogEntryImageComposition;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathResolver;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.util.UrlUtils;
@@ -75,20 +77,21 @@ public class JpaBlogFacade implements BlogFacade {
 
 	@Inject
 	private AlbumFacade albumFacade;
+	
+	private ImageLocationResolver<BlogEntry> imageLocationResolver;
 
 	/**
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#storeBlogEntry(BlogEntry, BlogPluginBean, List, List)
 	 */
 	@Override
-	public void storeBlogEntry(final BlogEntry entry, Image thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<Image> imagesToDelete,
-		List<Image> imagesToAdd) throws IOException {
+	public void storeBlogEntry(BlogEntry entry, ImageComposition thumbnailToAdd, boolean deleteThumbnail, BlogPluginBean pluginBean, List<ImageComposition> imagesToDelete,
+		List<ImageComposition> imagesToAdd) throws IOException {
 
 		// Delete images if any
 		albumFacade.deleteImages(entry, imagesToDelete);
 
 		if (deleteThumbnail) {
-			fileRepositoryFacade.delete(entry.getThumbnail());
-			entry.setThumbnail(null);
+			entry = deleteThumbnailFromBlogEntry(entry);	
 		}
 		// Set author of blog entry
 		entry.setOwner(securityFacade.getCurrentUser());
@@ -99,26 +102,25 @@ public class JpaBlogFacade implements BlogFacade {
 		// Set short description of blog entry
 		entry.setDescription(createDescription(entry, pluginBean));
 
+		entry = blogDao.save(entry);
+		
 		if (thumbnailToAdd != null) {
-			thumbnailToAdd.setHeight(pluginBean.getBlogImageHeight());
-			thumbnailToAdd.setWidth(pluginBean.getBlogImageWidth());
-			thumbnailToAdd.setResize(true);
-			thumbnailToAdd.setModifyPath(true);
-			thumbnailToAdd.setLocation(BLOG_THUMBNAILS);
-			FileDescriptor fileDescriptor = albumFacade.createPhysicalFile(thumbnailToAdd);
-			entry.setThumbnail(fileDescriptor);
+			albumFacade.uploadThumbnail(entry, thumbnailToAdd.getImage(), getImageLocationResolver().resolveThumbnailLocation(entry));
 		}
+		//entry = blogDao.save(entry);
+		
 		// Check and store images for this blog entry
 		storeImagesToBlogEntry(pluginBean, entry, imagesToAdd);
-		// entry.setThumbnail(null);
 		blogDao.save(entry);
+		// entry.setThumbnail(null);
+		
 	}
 
-	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, final BlogEntry entry, final List<Image> imagesToAdd) {
+	private void storeImagesToBlogEntry(BlogPluginBean pluginBean, final BlogEntry entry, final List<ImageComposition> imagesToAdd) {
 		if (entry == null || imagesToAdd == null || imagesToAdd.isEmpty()) {
 			return;
 		}
-		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, UrlUtil.encode(entry.getTitle()), BLOG_THUMBNAILS);
+		albumFacade.addNewImagesToAlbum(entry, imagesToAdd, getImageLocationResolver().resolveImageLocation(entry), getImageLocationResolver().resolveThumbnailLocation(entry));
 	}
 
 	private String createDescription(BlogEntry entry, BlogPluginBean pluginBean) {
@@ -152,18 +154,20 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#deleteThumbnailFromBlogEntry(BlogEntry)
 	 */
 	@Override
-	public void deleteThumbnailFromBlogEntry(BlogEntry entry) {
+	public BlogEntry deleteThumbnailFromBlogEntry(BlogEntry entry) {
 		FileDescriptor thumbnail = entry.getThumbnail();
 		if (thumbnail == null) {
-			return;
+			return entry;
 		}
 		entry.setThumbnail(null);
 		if (entry.getId() != null) {
-			blogDao.save(entry);
+			entry = blogDao.save(entry);
 		}
+		fileRepositoryFacade.getFileDescriptorByPath(thumbnail.getPath());
 		if (thumbnail != null) {
-			fileRepositoryFacade.delete(entry.getThumbnail());
+			fileRepositoryFacade.delete(thumbnail);
 		}
+		return entry;
 	}
 
 	/**
@@ -177,7 +181,10 @@ public class JpaBlogFacade implements BlogFacade {
 		}
 		fileRepositoryFacade.delete(blogEntry.getThumbnail());
 		albumFacade.deleteAlbum(blogEntry);
-		blogDao.deleteBlogEntry(blogEntry);
+		blogEntry = blogDao.findEntryByPath(username, blogEntryPath);
+		if (blogEntry != null) {
+			blogDao.deleteBlogEntry(blogEntry);
+		}
 	}
 
 	/**
@@ -257,4 +264,22 @@ public class JpaBlogFacade implements BlogFacade {
 	public Image newImage() {
 		return albumFacade.newImage();
 	}
+
+	/**
+	 * @return the imageLocationResolver
+	 */
+	@SuppressWarnings("unchecked")
+	public ImageLocationResolver<BlogEntry> getImageLocationResolver() {
+		if (imageLocationResolver == null) {
+			imageLocationResolver = ServiceLocator.get().getInstance(ImageLocationResolver.class);
+		}
+		return imageLocationResolver;
+	}
+
+	@Override
+	public ImageComposition newComposition() {
+		return new JpaBlogEntryImageComposition();
+	}
+	
+	
 }

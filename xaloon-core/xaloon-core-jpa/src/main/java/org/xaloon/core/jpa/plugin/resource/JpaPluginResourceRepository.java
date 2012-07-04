@@ -25,6 +25,7 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xaloon.core.api.cache.Cache;
 import org.xaloon.core.api.config.Configuration;
 import org.xaloon.core.api.persistence.PersistenceServices;
 import org.xaloon.core.api.persistence.QueryBuilder;
@@ -58,6 +59,8 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 	@Named("persistenceServices")
 	private PersistenceServices persistenceServices;
 
+	private Cache pluginResourceCache;
+
 	@Override
 	public void delete(Plugin plugin) {
 
@@ -66,9 +69,21 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractPluginBean> T getPluginBean(Plugin plugin) {
-		PluginEntity pluginEntity = findPluginEntity(plugin);
-		if (pluginEntity != null) {
-			return (T)Configuration.get().getPluginBeanSerializer().deserialize(pluginEntity.getPluginData());
+		T data = getPluginDataFromCache(plugin);
+		if (data == null) {
+			PluginEntity pluginEntity = findPluginEntity(plugin);
+			if (pluginEntity != null) {
+				data = (T)Configuration.get().getPluginBeanSerializer().deserialize(pluginEntity.getPluginData());
+				putPluginEntityToCache(plugin.getId(), data);
+			}
+		}
+		return data;
+	}
+
+	private <T extends AbstractPluginBean> T getPluginDataFromCache(Plugin plugin) {
+		Cache cache = getPluginResourceCache();
+		if (cache != null) {
+			return cache.readFromCache(plugin.getId());
 		}
 		return null;
 	}
@@ -79,27 +94,39 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 		PluginEntity pluginEntity = findPluginEntity(plugin);
 		Configuration.get().getResourceRepositoryListeners().onBeforeSaveProperty(plugin, PLUGIN_DATA, pluginBeanValue);
 		if (pluginEntity == null) {
-			createNewEntity(plugin, pluginBeanValue);
+			pluginEntity = createNewEntity(plugin, pluginBeanValue);
 		} else {
 			pluginEntity.setPluginData(pluginBeanValue);
 			persistenceServices.createOrEdit(pluginEntity);
 		}
 		Configuration.get().getResourceRepositoryListeners().onAfterSaveProperty(plugin, PLUGIN_DATA);
+		putPluginEntityToCache(pluginEntity.getPluginKey(), pluginBean);
 	}
 
-	private void createNewEntity(Plugin plugin, String pluginBeanValue) {
+	private PluginEntity createNewEntity(Plugin plugin, String pluginBeanValue) {
 		try {
 			PluginEntity pluginEntity = new PluginEntity();
 			pluginEntity.setPluginKey(plugin.getId());
 			pluginEntity.setEnabled(Boolean.TRUE);
 			pluginEntity.setPluginData(pluginBeanValue);
-			persistenceServices.createOrEdit(pluginEntity);
+			return persistenceServices.createOrEdit(pluginEntity);
 		} catch (Exception e) {
 			LOGGER.error("Could not create plugin entity. Is it already existing?", e);
 			PluginEntity found = findPluginEntity(plugin);
 			if (found != null) {
 				LOGGER.info(String.format("Plugin entity already registered: %s", plugin.getId()));
 			}
+			return found;
+		}
+	}
+
+	private <T extends AbstractPluginBean> void putPluginEntityToCache(String id, T data) {
+		if (data == null) {
+			return;
+		}
+		Cache cache = getPluginResourceCache();
+		if (cache != null) {
+			cache.storeToCache(id, data);
 		}
 	}
 
@@ -124,5 +151,12 @@ public class JpaPluginResourceRepository implements PluginResourceRepository {
 			throw new RuntimeException("Plugin entity not found: " + plugin.getId());
 		}
 		return pluginEntity.isEnabled();
+	}
+
+	private Cache getPluginResourceCache() {
+		if (pluginResourceCache == null) {
+			pluginResourceCache = Configuration.get().getPluginResourceCache();
+		}
+		return pluginResourceCache;
 	}
 }

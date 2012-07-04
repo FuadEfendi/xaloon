@@ -18,7 +18,8 @@
 		<property name="entities">
 			<list>
 				<value>org.xaloon.wicket.plugin.blog.model.JpaBlogEntry</value>		
-				<value>org.xaloon.wicket.plugin.blog.model.JpaBlogEntryTag</value>				
+				<value>org.xaloon.wicket.plugin.blog.model.JpaBlogEntryTag</value>	
+				<value>org.xaloon.wicket.plugin.blog.model.JpaBlogEntryImageComposition</value>				
 			</list>
 		</property>
 	</bean>	

@@ -19,6 +19,7 @@ package org.xaloon.core.api.image.model;
 import java.util.List;
 
 import org.xaloon.core.api.persistence.Persistable;
+import org.xaloon.core.api.plugin.comment.Commentable;
 import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.core.api.user.model.User;
 
@@ -26,7 +27,7 @@ import org.xaloon.core.api.user.model.User;
 /**
  * @author vytautas r.
  */
-public interface Album extends Persistable {
+public interface Album extends Persistable, Commentable {
 
 	/**
 	 * Gets title.
@@ -93,7 +94,7 @@ public interface Album extends Persistable {
 	 * 
 	 * @return images
 	 */
-	<T extends Image> List<T> getImages();
+	<T extends ImageComposition> List<T> getImages();
 
 	/**
 	 * Sets images.
@@ -101,7 +102,7 @@ public interface Album extends Persistable {
 	 * @param images
 	 *            images
 	 */
-	void setImages(List<? extends Image> images);
+	void setImages(List<? extends ImageComposition> images);
 
 	/**
 	 * Gets owner.

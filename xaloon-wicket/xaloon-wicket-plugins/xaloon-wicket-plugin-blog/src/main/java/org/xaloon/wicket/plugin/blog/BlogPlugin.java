@@ -38,7 +38,7 @@ import org.xaloon.wicket.plugin.blog.panel.admin.BlogPluginAdministrationPanel;
 @Named
 public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Blog entry view counter identifier
 	 */
@@ -60,6 +60,7 @@ public class BlogPlugin extends AbstractPlugin<BlogPluginBean> {
 	 */
 	public BlogPlugin() {
 		setCategory(DefaultPluginCategories.PRODUCTS);
+		setTechnicalConfiguration(new BlogConfigElement());
 	}
 
 	@Override

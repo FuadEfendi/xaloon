@@ -61,6 +61,8 @@ public class JcrFileStorageService implements FileStorageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JcrFileStorageService.class);
 
+	private static final String NAME = "jcrFileStorageService";
+	
 	@Inject
 	private RepositoryFacade repositoryFacade;
 
@@ -154,5 +156,10 @@ public class JcrFileStorageService implements FileStorageService {
 			inputStreamContainer.close();
 		}
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return NAME;
 	}
 }

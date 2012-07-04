@@ -97,7 +97,12 @@
 			</section>
 			<section>
 				<title>Photo gallery plugin</title>
-				<para>New plugin added for photo album management. It is based on <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://galleria.aino.se/">jQuery Galleria</link></para>
+				<para>New plugin added for photo album management. It is based on <link
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						xlink:href="http://galleria.aino.se/">jQuery Galleria</link>. Now
+					<link
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						xlink:href="http://www.youtube.com">http://www.youtube.com</link> video files are also supported in the same gallery.</para>
 			</section>
 		</section>
 		<section>

@@ -87,4 +87,9 @@ public class MappableKeyValue extends BookmarkableEntity implements KeyValue<Str
 		hashCodeBuilder.append(getValue());
 		return hashCodeBuilder.hashCode();
 	}
+
+	@Override
+	public String toString() {
+		return "Key: " + getKey() + ", Value: " + getValue();
+	}
 }

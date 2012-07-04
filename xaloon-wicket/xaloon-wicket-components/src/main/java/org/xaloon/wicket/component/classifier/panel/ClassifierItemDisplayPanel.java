@@ -76,7 +76,7 @@ public abstract class ClassifierItemDisplayPanel extends Panel {
 				ClassifierItem classifierItem = item.getModelObject();
 
 				PageParameters pageParameters = new PageParameters();
-
+				pageParameters.add(ClassifierConstants.PARENT_ITEM, classifierItem.getCode());
 				BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("link", getDisplayClassifierItemPageClass(), pageParameters);
 				item.add(link);
 

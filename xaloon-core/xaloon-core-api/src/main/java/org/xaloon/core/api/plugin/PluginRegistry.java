@@ -207,7 +207,7 @@ public abstract class PluginRegistry implements Serializable {
 			Plugin plugin = lookup(pluginClass);
 			return isEnabled(plugin);
 		} catch (PluginNotFoundException e) {
-            LOGGER.error("Plugin exception while trying to check if it is enabled.", e);
+			LOGGER.error("Plugin exception while trying to check if it is enabled.", e);
 
 		}
 		return false;

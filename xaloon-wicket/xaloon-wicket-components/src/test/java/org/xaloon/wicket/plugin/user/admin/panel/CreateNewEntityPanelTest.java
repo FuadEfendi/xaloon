@@ -2,6 +2,8 @@ package org.xaloon.wicket.plugin.user.admin.panel;
 
 import static org.mockito.Mockito.when;
 
+import java.util.Locale;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
@@ -57,6 +59,7 @@ public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 	private WicketTester createLocalTester(final StringBuilder invocationResult) {
 		MockedApplication app = createMockedApplication();
 		WicketTester tester = new WicketTester(app);
+		tester.getSession().setLocale(Locale.ENGLISH);
 
 		// Set security to True by default
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);

@@ -74,8 +74,8 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 	}
 
 	@Override
-	public <T extends ClassifierItem> void createClassifierItem(T item) {
-		persistenceServices.createOrEdit(item);
+	public <T extends ClassifierItem> T createClassifierItem(T item) {
+		return persistenceServices.createOrEdit(item);
 	}
 
 
@@ -95,7 +95,11 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 	@Override
 	public <T extends ClassifierItem> List<T> find(ClassifierItemSearchRequest classifierItemSearchRequest) {
 		QueryBuilder queryBuilder = createQueryBuilder("select cli ", classifierItemSearchRequest);
-		queryBuilder.addOrderBy("cli.name asc");
+		if (StringUtils.isEmpty(classifierItemSearchRequest.getOrderBy())) {
+			queryBuilder.addOrderBy("cli.name asc");
+		} else {
+			queryBuilder.addOrderBy(classifierItemSearchRequest.getOrderBy());
+		}
 		return persistenceServices.executeQuery(queryBuilder);
 	}
 
@@ -115,7 +119,11 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 			queryBuilder.addParameter("cli.code", "ITEM_CODE", classifierItemSearchRequest.getClassifierItemCode().toUpperCase());
 		}
 
-		if (classifierItemSearchRequest.isParentSelection()) {
+		if (!StringUtils.isEmpty(classifierItemSearchRequest.getClassifierItemName())) {
+			queryBuilder.addParameter("cli.name", "ITEM_NAME", classifierItemSearchRequest.getClassifierItemName().toUpperCase(), false, true);
+		}
+
+		if (classifierItemSearchRequest.isParentSelection() && !classifierItemSearchRequest.isIgnoreParentCode()) {
 			queryBuilder.addExpression("cli.parent is null");
 		}
 		queryBuilder.setFirstRow(classifierItemSearchRequest.getFirstRow());

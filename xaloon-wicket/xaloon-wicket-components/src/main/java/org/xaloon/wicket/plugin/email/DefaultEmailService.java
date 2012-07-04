@@ -103,4 +103,9 @@ public class DefaultEmailService implements EmailService {
 	private EmailPluginBean getPluginBean() {
 		return pluginRegistry.getPluginBean(EmailPlugin.class);
 	}
+
+	@Override
+	public String getSystemEmail() {
+		return getPluginBean().getToEmail();
+	}
 }

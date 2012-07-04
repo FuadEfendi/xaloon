@@ -17,6 +17,7 @@
 package org.xaloon.core.jpa.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ import org.xaloon.core.jpa.storage.model.JpaFileStorage;
  * @author vytautas r.
  */
 @Named(FileStorageService.FILE_STORAGE_SERVICE_JPA)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class JpaFileStorageService implements FileStorageService {
 
@@ -89,7 +90,7 @@ public class JpaFileStorageService implements FileStorageService {
 
 	@Override
 	public boolean delete(String uniqueIdentifier) {
-		if (StringUtils.isEmpty(uniqueIdentifier)) {
+		if (StringUtils.isEmpty(uniqueIdentifier) || !StringUtils.isNumeric(uniqueIdentifier)) {
 			return false;
 		}
 		JpaFileStorage jfs = persistenceServices.find(JpaFileStorage.class, Long.valueOf(uniqueIdentifier));// TODO fix save convert
@@ -125,18 +126,29 @@ public class JpaFileStorageService implements FileStorageService {
 	@Override
 	public KeyValue<String, String> storeFile(FileDescriptor fileDescriptor, InputStreamContainer inputStreamContainer,
 		Map<String, Object> additionalProperties) {
+		InputStream in = null;
 		try {
+			in = inputStreamContainer.getInputStream();
 			JpaFileStorage jpaFileStorage = new JpaFileStorage();
-			jpaFileStorage.setFile(IOUtils.toByteArray(inputStreamContainer.getInputStream()));
+			jpaFileStorage.setFile(IOUtils.toByteArray(in));
 			jpaFileStorage = persistenceServices.create(jpaFileStorage);
 			String id = String.valueOf(jpaFileStorage.getId());
-			return new DefaultKeyValue<String, String>(id, id);
+			String path = Configuration.get().getFileDescriptorAbsolutePathStrategy().generateAbsolutePath(fileDescriptor, true, "");
+			return new DefaultKeyValue<String, String>(path, id);
 		} catch (IOException e) {
 			LOGGER.error("Could not convert input into byte array", e);
 		} finally {
-			inputStreamContainer.close();
+			// inputStreamContainer.close();
+			if (in != null) {
+				IOUtils.closeQuietly(in);
+			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return FileStorageService.FILE_STORAGE_SERVICE_JPA;
 	}
 
 }

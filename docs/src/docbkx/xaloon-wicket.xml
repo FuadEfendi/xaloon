@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
 	<title>xaloon wicket</title>
-	<section>
+	<section xml:id="xaloon-profiles">
 		<title>Profiles</title>
 		<para></para>
 	</section>
