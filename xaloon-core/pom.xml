@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>xaloon-parent</artifactId>
 		<groupId>org.xaloon</groupId>
-		<version>1.5.3-SNAPSHOT</version>
+		<version>1.6.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.xaloon.core</groupId>
 	<artifactId>xaloon-core-parent</artifactId>

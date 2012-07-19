@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.xaloon.profiles</groupId>
 		<artifactId>xaloon-wicket-profiles</artifactId>
-		<version>1.5.3-SNAPSHOT</version>
+		<version>1.6.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xaloon-profiles-hibernate-spring</artifactId>
 	<packaging>pom</packaging>
