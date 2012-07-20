@@ -226,12 +226,12 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public int count(Map<String, String> filter) {
+	public Long count(Map<String, String> filter) {
 		return userDao.count(filter);
 	}
 
 	@Override
-	public List<UserSearchResult> findCombinedUsers(Map<String, String> filter, int first, int count) {
+	public List<UserSearchResult> findCombinedUsers(Map<String, String> filter, long first, long count) {
 		List<User> users = userDao.findUsers(filter, first, count);
 		return transform(users);
 	}
@@ -299,7 +299,7 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public List<User> findUsers(Map<String, String> filter, int first, int count) {
+	public List<User> findUsers(Map<String, String> filter, long first, long count) {
 		return userDao.findUsers(filter, first, count);
 	}
 

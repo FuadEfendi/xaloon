@@ -45,7 +45,7 @@ public interface CommentDao extends Serializable {
 	 * @param count
 	 * @return list of comments
 	 */
-	List<Comment> getComments(Commentable commentable, int first, int count);
+	List<Comment> getComments(Commentable commentable, long first, long count);
 
 	/**
 	 * Delete all comments. NOT RECCOMENDED!

@@ -62,7 +62,7 @@ public class UsersPanelTest extends AbstractUserAdminTestCase {
 		WicketTester tester = new WicketTester(app);
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
-		when(app.getUserFacade().count(Matchers.anyMapOf(String.class, String.class))).thenReturn(1);
+		when(app.getUserFacade().count(Matchers.anyMapOf(String.class, String.class))).thenReturn(1L);
 
 		List<UserSearchResult> users = new ArrayList<UserSearchResult>();
 

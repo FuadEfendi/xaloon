@@ -16,7 +16,7 @@
  */
 package org.xaloon.wicket.component.inject.spring;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 import org.springframework.context.ApplicationContext;
 
 /**

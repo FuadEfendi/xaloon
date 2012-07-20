@@ -98,7 +98,7 @@ public class JpaBlogDao implements BlogDao {
 	}
 
 	@Override
-	public List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, int first, int count) {
+	public List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, long first, long count) {
 		QueryBuilder queryBuilder = createQueryBuilder("select be.id, be.customPath, be.path, cat.id, be.blogEntryPathType, o.username, be.description, th.id, be.createDate, be.title, count(img) ", blogEntrySearchRequest);
 
 		queryBuilder.setFirstRow(first);
@@ -184,7 +184,7 @@ public class JpaBlogDao implements BlogDao {
 	}
 
 	@Override
-	public List<BlogEntry> findAvailableBlogEntryList(int first, int count) {
+	public List<BlogEntry> findAvailableBlogEntryList(long first, long count) {
 		return findAvailableBlogEntryList(new BlogEntrySearchRequest(), first, count);
 	}
 

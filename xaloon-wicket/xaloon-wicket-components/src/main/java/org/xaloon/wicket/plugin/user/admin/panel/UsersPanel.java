@@ -196,7 +196,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 		}
 
 		@Override
-		public Iterator<UserSearchResult> iterator(int first, int count) {
+		public Iterator<UserSearchResult> iterator(long first, long count) {
 			return userFacade.findCombinedUsers(getQueryFilter(), first, count).iterator();
 		}
 
@@ -210,7 +210,7 @@ public class UsersPanel extends AbstractAdministrationPanel {
 		}
 
 		@Override
-		public int size() {
+		public long size() {
 			return userFacade.count(getQueryFilter());
 		}
 

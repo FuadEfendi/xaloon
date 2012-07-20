@@ -14,7 +14,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.validation.validator.StringValidator.MaximumLengthValidator;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.xaloon.core.api.classifier.ClassifierItem;
 import org.xaloon.core.api.exception.CreateClassInstanceException;
 import org.xaloon.core.api.image.model.Image;
@@ -93,7 +93,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 
 			// Add blog entry title and error message for it
 			RequiredTextField<String> title = new RequiredTextField<String>("title");
-			title.add(new MaximumLengthValidator(200));
+			title.add(new StringValidator(10, 200));
 			add(title);
 
 			// Add custom path

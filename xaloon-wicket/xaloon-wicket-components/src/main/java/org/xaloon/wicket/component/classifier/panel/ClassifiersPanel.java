@@ -150,14 +150,14 @@ public class ClassifiersPanel extends AbstractClassifiersPanel {
 		}
 
 		@Override
-		public Iterator<Classifier> iterator(int first, int count) {
+		public Iterator<Classifier> iterator(long first, long count) {
 			List<Classifier> items = getClassifierDao().findClassifiers(first, count);
 			return items.iterator();
 		}
 
 		@Override
-		public int size() {
-			return getClassifierDao().getCount().intValue();
+		public long size() {
+			return getClassifierDao().getCount();
 		}
 
 		@Override

@@ -18,7 +18,7 @@ package org.xaloon.wicket.component.inject.j2ee.bm;
 
 import javax.enterprise.inject.spi.BeanManager;
 
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * @author vytautas r.

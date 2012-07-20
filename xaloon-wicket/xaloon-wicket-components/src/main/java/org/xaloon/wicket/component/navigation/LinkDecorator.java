@@ -34,9 +34,9 @@ public class LinkDecorator implements Serializable {
 
 	private LoopItem loopItem;
 
-	private int currentPage;
+	private long currentPage;
 
-	private int startIndex;
+	private long startIndex;
 
 	/**
 	 * @param loopItem
@@ -51,7 +51,7 @@ public class LinkDecorator implements Serializable {
 	 * @param currentPage
 	 * @return this instance
 	 */
-	public LinkDecorator withCurrentPage(int currentPage) {
+	public LinkDecorator withCurrentPage(long currentPage) {
 		this.currentPage = currentPage;
 		return this;
 	}
@@ -60,7 +60,7 @@ public class LinkDecorator implements Serializable {
 	 * @param startIndex
 	 * @return this instance
 	 */
-	public LinkDecorator withStartIndex(int startIndex) {
+	public LinkDecorator withStartIndex(long startIndex) {
 		this.startIndex = startIndex;
 		return this;
 	}
@@ -69,7 +69,7 @@ public class LinkDecorator implements Serializable {
 	 * 
 	 */
 	public void decorate() {
-		final int pageIndex = startIndex + loopItem.getIndex();
+		final long pageIndex = startIndex + loopItem.getIndex();
 
 		Component component = loopItem.get("pageLink");
 		if ((component != null) && (pageIndex == currentPage)) {

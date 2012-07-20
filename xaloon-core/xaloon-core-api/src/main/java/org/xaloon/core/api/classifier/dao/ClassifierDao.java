@@ -39,7 +39,7 @@ public interface ClassifierDao extends Serializable {
 	 *            maximum count of classifiers to return. -1 - return all
 	 * @return list of classifier instances. empty list is returned if no classifiers found.
 	 */
-	<T extends Classifier> List<T> findClassifiers(int first, int count);
+	<T extends Classifier> List<T> findClassifiers(long first, long count);
 
 	/**
 	 * Loads classifier by it's primary key

@@ -53,7 +53,7 @@ public class JpaGroupService implements GroupService {
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public List<SecurityGroup> getAuthorities(int first, int count) {
+	public List<SecurityGroup> getAuthorities(long first, long count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select g from " + JpaGroup.class.getSimpleName() + " g");
 		queryBuilder.setCount(count);
 		queryBuilder.setFirstRow(first);
@@ -61,9 +61,9 @@ public class JpaGroupService implements GroupService {
 	}
 
 	@Override
-	public int getCount() {
+	public Long getCount() {
 		QueryBuilder queryBuilder = new QueryBuilder("select count(g) from " + JpaGroup.class.getSimpleName() + " g");
-		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
+		return (Long)persistenceServices.executeQuerySingle(queryBuilder);
 	}
 
 	@Override

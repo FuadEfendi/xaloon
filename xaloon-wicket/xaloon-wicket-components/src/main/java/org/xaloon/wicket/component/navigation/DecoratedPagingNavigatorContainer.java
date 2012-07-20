@@ -99,9 +99,9 @@ public class DecoratedPagingNavigatorContainer<T> extends WebMarkupContainer {
 		}
 		// Get selected items page from cookie
 		String cookieValue = new CookieUtils().load(DecoratedPagingNavigator.ITEMS_PER_PAGE_COOKIE);
-		int defaultItemsPerPage = DecoratedPagingNavigator.ITEMS_PER_PAGE_COUNT_20;
+		Long defaultItemsPerPage = DecoratedPagingNavigator.ITEMS_PER_PAGE_COUNT_20;
 		if (cookieValue != null && StringUtils.isNumeric(cookieValue)) {
-			defaultItemsPerPage = new Integer(cookieValue);
+			defaultItemsPerPage = new Long(cookieValue);
 		}
 		dataView.setItemsPerPage(defaultItemsPerPage);
 		setVisible(dataView.getItemCount() > 0);

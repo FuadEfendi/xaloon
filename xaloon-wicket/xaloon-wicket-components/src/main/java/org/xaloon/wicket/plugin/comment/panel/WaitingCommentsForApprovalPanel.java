@@ -20,10 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -34,6 +31,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.core.api.plugin.comment.Comment;
 import org.xaloon.core.api.plugin.comment.CommentDao;
 import org.xaloon.core.api.plugin.comment.CommentPluginBean;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.comment.CommentPlugin;
 
@@ -99,7 +97,7 @@ public class WaitingCommentsForApprovalPanel extends AbstractPluginPanel<Comment
 				});
 
 				// Add delete comment link
-				item.add(new AjaxLink<Comment>("delete", item.getModel()) {
+				item.add(new ConfirmationAjaxLink<Comment>("delete", item.getModel()) {
 					private static final long serialVersionUID = 1L;
 
 					@Override
@@ -108,18 +106,6 @@ public class WaitingCommentsForApprovalPanel extends AbstractPluginPanel<Comment
 						commentDao.delete(comment);
 						target.add(WaitingCommentsForApprovalPanel.this);
 					}
-
-					@Override
-					protected IAjaxCallDecorator getAjaxCallDecorator() {
-						return new AjaxCallDecorator() {
-							private static final long serialVersionUID = 1L;
-
-							@Override
-							public CharSequence decorateScript(Component c, CharSequence script) {
-								return "if(!confirm('" + getString(DELETE_CONFIRMATION) + "')) return false;" + script;
-							}
-						};
-					}
 				});
 			}
 		};
@@ -127,25 +113,13 @@ public class WaitingCommentsForApprovalPanel extends AbstractPluginPanel<Comment
 		add(commentListView);
 
 		// Add delete all link
-		add(new AjaxLink<Void>("delete-all") {
+		add(new ConfirmationAjaxLink<Void>("delete-all") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				commentDao.deleteWaitingCommentsForApproval();
 				target.add(WaitingCommentsForApprovalPanel.this);
-			}
-
-			@Override
-			protected IAjaxCallDecorator getAjaxCallDecorator() {
-				return new AjaxCallDecorator() {
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public CharSequence decorateScript(Component c, CharSequence script) {
-						return "if(!confirm('" + getString(DELETE_CONFIRMATION) + "')) return false;" + script;
-					}
-				};
 			}
 		});
 	}

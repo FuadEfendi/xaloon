@@ -191,7 +191,7 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#findAvailableBlogEntryList(int, int)
 	 */
 	@Override
-	public List<BlogEntry> findAvailableBlogEntryList(int first, int count) {
+	public List<BlogEntry> findAvailableBlogEntryList(long first, long count) {
 		return blogDao.findAvailableBlogEntryList(first, count);
 	}
 
@@ -207,7 +207,7 @@ public class JpaBlogFacade implements BlogFacade {
 	 * @see org.xaloon.wicket.plugin.blog.BlogFacade#findAvailableBlogEntryList(org.xaloon.wicket.plugin.blog.model.BlogEntrySearchRequest, int, int)
 	 */
 	@Override
-	public List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, int first, int count) {
+	public List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, long first, long count) {
 		return blogDao.findAvailableBlogEntryList(blogEntrySearchRequest, first, count);
 	}
 

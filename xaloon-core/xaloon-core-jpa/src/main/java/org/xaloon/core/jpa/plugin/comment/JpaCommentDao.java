@@ -61,7 +61,7 @@ public class JpaCommentDao implements CommentDao {
 	}
 
 	@Override
-	public List<Comment> getComments(Commentable commentable, int first, int count) {
+	public List<Comment> getComments(Commentable commentable, long first, long count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select c from " + JpaComment.class.getSimpleName() + " c");
 		queryBuilder.addParameter("c.categoryId", "COMPONENT_ID", commentable.getTrackingCategoryId());
 		queryBuilder.addParameter("c.entityId", "ID", commentable.getId());

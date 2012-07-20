@@ -103,10 +103,10 @@ public abstract class AbstractPersistenceServices implements PersistenceServices
 	private Query prepareJpaQuery(QueryBuilder query) {
 		Query queryToExecute = getEm().createQuery(query.getQuery());
 		if (query.getFirstRow() > 0) {
-			queryToExecute.setFirstResult(query.getFirstRow());
+			queryToExecute.setFirstResult((int)query.getFirstRow());
 		}
 		if (query.getCount() > 0) {
-			queryToExecute.setMaxResults(query.getCount());
+			queryToExecute.setMaxResults((int)query.getCount());
 		}
 		if (query.getParameters() != null) {
 			for (Map.Entry<String, Object> param : query.getParameters().entrySet()) {

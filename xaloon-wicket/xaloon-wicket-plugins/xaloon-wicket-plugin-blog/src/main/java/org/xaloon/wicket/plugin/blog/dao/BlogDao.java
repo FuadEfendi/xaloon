@@ -54,7 +54,7 @@ public interface BlogDao extends Serializable {
 	 *            maximum blog entries to return. -1 - returns all blog entries
 	 * @return list of blog entries, ordered by sticky flag first and then by update date and then by create date
 	 */
-	List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, int first, int maxCount);
+	List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, long first, long maxCount);
 
 	/**
 	 * Creates new blog entry into blog repository
@@ -98,7 +98,7 @@ public interface BlogDao extends Serializable {
 	 *            maximum blog entries to return. -1 - returns all blog entries
 	 * @return list of blog entries
 	 */
-	List<BlogEntry> findAvailableBlogEntryList(int first, int count);
+	List<BlogEntry> findAvailableBlogEntryList(long first, long count);
 
 	/**
 	 * Deletes all blogs created by this user

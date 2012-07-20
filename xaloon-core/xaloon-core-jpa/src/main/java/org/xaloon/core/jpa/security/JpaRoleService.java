@@ -56,7 +56,7 @@ public class JpaRoleService implements RoleService {
 	private PersistenceServices persistenceServices;
 
 	@Override
-	public List<SecurityRole> getAuthorities(int first, int count) {
+	public List<SecurityRole> getAuthorities(long first, long count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select g from " + JpaRole.class.getSimpleName() + " g");
 		queryBuilder.setCount(count);
 		queryBuilder.setFirstRow(first);
@@ -64,9 +64,9 @@ public class JpaRoleService implements RoleService {
 	}
 
 	@Override
-	public int getCount() {
+	public Long getCount() {
 		QueryBuilder queryBuilder = new QueryBuilder("select count(g) from " + JpaRole.class.getSimpleName() + " g");
-		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
+		return (Long)persistenceServices.executeQuerySingle(queryBuilder);
 	}
 
 	@Override

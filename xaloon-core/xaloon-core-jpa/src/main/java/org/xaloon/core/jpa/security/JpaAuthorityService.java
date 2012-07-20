@@ -85,7 +85,7 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public List<Authority> getAuthorities(int first, int count) {
+	public List<Authority> getAuthorities(long first, long count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select a from " + JpaAuthority.class.getSimpleName() + " a");
 		queryBuilder.setCount(count);
 		queryBuilder.setFirstRow(first);
@@ -93,9 +93,9 @@ public class JpaAuthorityService implements AuthorityService {
 	}
 
 	@Override
-	public int getCount() {
+	public Long getCount() {
 		QueryBuilder queryBuilder = new QueryBuilder("select count(a) from " + JpaAuthority.class.getSimpleName() + " a");
-		return ((Long)persistenceServices.executeQuerySingle(queryBuilder)).intValue();
+		return (Long)persistenceServices.executeQuerySingle(queryBuilder);
 	}
 
 	@Override

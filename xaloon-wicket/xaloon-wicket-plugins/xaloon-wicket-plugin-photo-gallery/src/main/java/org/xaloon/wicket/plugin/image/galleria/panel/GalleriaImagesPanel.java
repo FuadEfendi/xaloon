@@ -19,12 +19,16 @@ package org.xaloon.wicket.plugin.image.galleria.panel;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.wicket.component.resource.ImageLink;
@@ -39,7 +43,8 @@ import com.google.code.jqwicket.JQContributionConfig;
 /**
  * @author vytautas r.
  */
-public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, GalleryPlugin> {
+public class GalleriaImagesPanel extends
+		AbstractPluginPanel<GalleryPluginBean, GalleryPlugin> {
 
 	/**
 	 * 
@@ -59,14 +64,19 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void onInitialize(GalleryPlugin plugin, GalleryPluginBean pluginBean) {
+	protected void onInitialize(GalleryPlugin plugin,
+			GalleryPluginBean pluginBean) {
 		// Add Javascript Galleria support.
 		WebMarkupContainer galleria = new WebMarkupContainer("galleria");
 		add(galleria);
-		// galleria.add(new GalleriaBehavior(new  GalleriaOptions().height(pluginBean.getHeight())));//TODO check why it's not working anymore
+		// galleria.add(new GalleriaBehavior(new
+		// GalleriaOptions().height(pluginBean.getHeight())));//TODO check why
+		// it's not working anymore
 
 		// Add images
-		ListView<ImageComposition> imagesView = new ListView<ImageComposition>("images", (IModel<? extends List<? extends ImageComposition>>) getDefaultModel()) {
+		ListView<ImageComposition> imagesView = new ListView<ImageComposition>(
+				"images",
+				(IModel<? extends List<? extends ImageComposition>>) getDefaultModel()) {
 
 			/**
 			 * 
@@ -78,10 +88,13 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 				Image image = item.getModelObject().getImage();
 
 				WebMarkupContainer container = new WebMarkupContainer("link");
-				String url = UrlUtils.toAbsoluteImagePath(ImageLink.IMAGE_RESOURCE, image.getPath());
+				String url = UrlUtils.toAbsoluteImagePath(
+						ImageLink.IMAGE_RESOURCE, image.getPath());
 				container.add(AttributeModifier.replace("href", url));
 				item.add(container);
-				ImageLink imageLink = new ImageLink("image", (image.getThumbnail() != null) ? image.getThumbnail().getPath() : null);
+				ImageLink imageLink = new ImageLink("image",
+						(image.getThumbnail() != null) ? image.getThumbnail()
+								.getPath() : null);
 				imageLink.setAlternativeText(image.getDescription());
 				imageLink.setTitle(image.getTitle());
 				container.add(imageLink);
@@ -94,12 +107,15 @@ public class GalleriaImagesPanel extends AbstractPluginPanel<GalleryPluginBean, 
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 
-		response.renderJavaScriptReference(JQContributionConfig.get().getJqueryCoreJsUrl().toString());
+		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(GalleriaImagesPanel.class, JQContributionConfig.get()
+				.getJqueryCoreJsUrl().toString())));//TODO fixme
 
-		response.renderJavaScriptReference(GalleriaOptions.GALLERIA_JS_MIN);
-		response.renderCSSReference(GalleriaOptions.GALLERIA_CSS_THEME);
-		response.renderJavaScriptReference(GalleriaOptions.GALLERIA_JS_THEME);
-		response.renderJavaScript("$(document).ready(function(){$(\"#galleria\").galleria({extend:function() {this.attachKeyboard({left: this.prev,right: this.next}); },height:" + getPluginBean().getHeight() + "});});", null);
+		response.render(JavaScriptHeaderItem.forReference(GalleriaOptions.GALLERIA_JS_MIN));
+		response.render(CssHeaderItem.forReference(GalleriaOptions.GALLERIA_CSS_THEME));
+		response.render(JavaScriptHeaderItem.forReference(GalleriaOptions.GALLERIA_JS_THEME));
+		response.render(OnDomReadyHeaderItem.forScript(
+				"$(document).ready(function(){$(\"#galleria\").galleria({extend:function() {this.attachKeyboard({left: this.prev,right: this.next}); },height:"
+						+ getPluginBean().getHeight() + "});});"));
 
 	}
 }

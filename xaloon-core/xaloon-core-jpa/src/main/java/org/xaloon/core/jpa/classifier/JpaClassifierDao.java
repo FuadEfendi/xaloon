@@ -54,7 +54,7 @@ public class JpaClassifierDao implements ClassifierDao {
 	}
 
 	@Override
-	public <T extends Classifier> List<T> findClassifiers(int first, int count) {
+	public <T extends Classifier> List<T> findClassifiers(long first, long count) {
 		QueryBuilder queryBuilder = new QueryBuilder("select cl from " + JpaClassifier.class.getSimpleName() + " cl ");
 		queryBuilder.setFirstRow(first);
 		queryBuilder.setCount(count);

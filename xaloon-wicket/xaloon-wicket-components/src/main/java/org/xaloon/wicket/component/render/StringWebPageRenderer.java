@@ -16,10 +16,10 @@
  */
 package org.xaloon.wicket.component.render;
 
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 
 /**

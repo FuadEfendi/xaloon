@@ -225,12 +225,12 @@ public class BlogEntryListPanel extends AbstractBlogPluginPanel {
 		}
 
 		@Override
-		public Iterator<? extends BlogEntry> iterator(int first, int count) {
+		public Iterator<? extends BlogEntry> iterator(long first, long count) {
 			return getBlogFacade().findAvailableBlogEntryList(first, count).iterator();
 		}
 
 		@Override
-		public int size() {
+		public long size() {
 			int totalCount = getBlogFacade().getCount().intValue();
 			int maxBlogEntries = blogListOptions.getMaxBlogEntriesCount();
 			if (maxBlogEntries > 0 && maxBlogEntries < totalCount) {

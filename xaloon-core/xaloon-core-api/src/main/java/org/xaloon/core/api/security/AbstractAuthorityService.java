@@ -37,9 +37,9 @@ public interface AbstractAuthorityService<T extends SecurityEntity, K extends Se
 	 *            max count of security items to fetch
 	 * @return list of found entities
 	 */
-	List<T> getAuthorities(int first, int count);
+	List<T> getAuthorities(long first, long count);
 
-	int getCount();
+	Long getCount();
 
 	/**
 	 * Returns new instance of security item implementation

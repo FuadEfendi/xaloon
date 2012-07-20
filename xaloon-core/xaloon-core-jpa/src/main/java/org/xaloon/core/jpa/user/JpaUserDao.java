@@ -139,14 +139,14 @@ public class JpaUserDao implements UserDao {
 	}
 
 	@Override
-	public int count(Map<String, String> filter) {
+	public Long count(Map<String, String> filter) {
 		QueryBuilder query = createUserQuery("select count(u) from ", filter);
 
-		return ((Long)persistenceServices.executeQuerySingle(query)).intValue();
+		return (Long)persistenceServices.executeQuerySingle(query);
 	}
 
 	@Override
-	public List<User> findUsers(Map<String, String> filter, int first, int count) {
+	public List<User> findUsers(Map<String, String> filter, long first, long count) {
 		QueryBuilder query = createUserQuery("select u from ", filter);
 		query.setFirstRow(first);
 		query.setCount(count);

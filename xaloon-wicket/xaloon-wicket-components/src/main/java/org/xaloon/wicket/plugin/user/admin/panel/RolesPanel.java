@@ -154,12 +154,12 @@ public class RolesPanel extends AbstractAdministrationPanel {
 		}
 
 		@Override
-		public Iterator<SecurityRole> iterator(int first, int count) {
+		public Iterator<SecurityRole> iterator(long first, long count) {
 			return roleService.getAuthorities(first, count).iterator();
 		}
 
 		@Override
-		public int size() {
+		public long size() {
 			return roleService.getCount();
 		}
 

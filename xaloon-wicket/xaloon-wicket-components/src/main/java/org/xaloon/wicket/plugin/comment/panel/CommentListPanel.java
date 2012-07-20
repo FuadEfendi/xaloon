@@ -177,7 +177,7 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 		}
 
 		@Override
-		public Iterator<? extends Comment> iterator(int arg0, int arg1) {
+		public Iterator<? extends Comment> iterator(long arg0, long arg1) {
 			return commentDao.getComments(commentable, arg0, arg1).iterator();
 		}
 
@@ -187,8 +187,8 @@ public abstract class CommentListPanel extends AbstractPluginPanel<CommentPlugin
 		}
 
 		@Override
-		public int size() {
-			return commentDao.count(commentable).intValue();
+		public long size() {
+			return commentDao.count(commentable);
 		}
 
 	}

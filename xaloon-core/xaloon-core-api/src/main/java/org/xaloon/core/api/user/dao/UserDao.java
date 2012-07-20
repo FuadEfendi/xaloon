@@ -86,7 +86,7 @@ public interface UserDao extends Serializable {
 	 *            how many users to fetch
 	 * @return sublist of users starting first and max count
 	 */
-	List<User> findUsers(Map<String, String> filter, int first, int count);
+	List<User> findUsers(Map<String, String> filter, long first, long count);
 
 	/**
 	 * Returns total count of users in the system if no additional filter added
@@ -95,7 +95,7 @@ public interface UserDao extends Serializable {
 	 *            additional properties to search
 	 * @return integer value for total existing users in system
 	 */
-	int count(Map<String, String> filter);
+	Long count(Map<String, String> filter);
 
 	/**
 	 * Removes user from the system

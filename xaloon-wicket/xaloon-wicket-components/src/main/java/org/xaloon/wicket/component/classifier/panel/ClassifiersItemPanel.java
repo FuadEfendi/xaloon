@@ -169,7 +169,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 		}
 
 		@Override
-		public Iterator<? extends ClassifierItem> iterator(int first, int count) {
+		public Iterator<? extends ClassifierItem> iterator(long first, long count) {
 			classifierItemSearchRequest.setFirstRow(first);
 			classifierItemSearchRequest.setMaxRowCount(count);
 			List<ClassifierItem> classifierItems = getClassifierItemDao().find(classifierItemSearchRequest);
@@ -177,8 +177,8 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 		}
 
 		@Override
-		public int size() {
-			return getClassifierItemDao().count(classifierItemSearchRequest).intValue();
+		public long size() {
+			return getClassifierItemDao().count(classifierItemSearchRequest);
 		}
 
 		@Override

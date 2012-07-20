@@ -50,7 +50,7 @@ public class BookmarkablePagingNavigator extends DecoratedPagingNavigator {
 	public static final int START_INDEX_POSITION = 1;
 
 	private Link pageableLink;
-	private int currentPage;
+	private long currentPage;
 
 	/**
 	 * Construct.
@@ -88,7 +88,7 @@ public class BookmarkablePagingNavigator extends DecoratedPagingNavigator {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageIndex) {
+			protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, long pageIndex) {
 				PageParameters params = newPageParameters(pageable, pageIndex);
 				return new BookmarkablePageLink<Void>(id, (Class<? extends Page>)pageableLink.getPageClass(), params);
 			}
@@ -101,16 +101,16 @@ public class BookmarkablePagingNavigator extends DecoratedPagingNavigator {
 		};
 	}
 
-	private int getPageNumber(IPageable pageable, int increment) {
+	private long getPageNumber(IPageable pageable, int increment) {
 		// Determine the page number based on the current
 		// PageableListView page and the increment
-		int idx = currentPage + increment;
+		long idx = currentPage + increment;
 
 		// make sure the index lies between 0 and the last page
 		return Math.max(0, Math.min(pageable.getPageCount() - 1, idx));
 	}
 
-	private PageParameters newPageParameters(IPageable pageable, int pageNumber) {
+	private PageParameters newPageParameters(IPageable pageable, long pageNumber) {
 		PageParameters params = new PageParameters(pageableLink.getPageParameters());
 		if (pageNumber == -1) {
 			params.set(PAGE_QUERY_ID, pageable.getPageCount());

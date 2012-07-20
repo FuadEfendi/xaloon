@@ -61,12 +61,12 @@ public class QueryBuilder {
 	/**
 	 * Row to start from. -1 means start from beginning
 	 */
-	private int firstRow = -1;
+	private long firstRow = -1;
 
 	/**
 	 * How many rows to select. -1 means select all rows
 	 */
-	private int count = -1;
+	private long count = -1;
 
 	/**
 	 * Should cacheable flag be used
@@ -371,7 +371,7 @@ public class QueryBuilder {
 	/**
 	 * @return startPosition position of the first result, numbered from 0
 	 */
-	public int getFirstRow() {
+	public long getFirstRow() {
 		return firstRow;
 	}
 
@@ -380,7 +380,7 @@ public class QueryBuilder {
 	 * @param firstRow
 	 *            startPosition position of the first result, numbered from 0
 	 */
-	public void setFirstRow(int firstRow) {
+	public void setFirstRow(long firstRow) {
 		this.firstRow = firstRow;
 	}
 
@@ -388,7 +388,7 @@ public class QueryBuilder {
 	 * 
 	 * @return maximum number of results to retrieve
 	 */
-	public int getCount() {
+	public long getCount() {
 		return count;
 	}
 
@@ -397,7 +397,7 @@ public class QueryBuilder {
 	 * @param count
 	 *            maximum number of results to retrieve
 	 */
-	public void setCount(int count) {
+	public void setCount(long count) {
 		this.count = count;
 	}
 

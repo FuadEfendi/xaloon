@@ -69,7 +69,7 @@ public class RolesPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Return at least one role
-		when(roleService.getCount()).thenReturn(1);
+		when(roleService.getCount()).thenReturn(1L);
 
 		SecurityRole role = mock(SecurityRole.class);
 		when(role.getPath()).thenReturn("role-name");

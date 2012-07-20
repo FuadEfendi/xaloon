@@ -73,7 +73,7 @@ public interface BlogFacade extends Serializable {
 	 * @param count
 	 * @return list of available blog entries
 	 */
-	List<BlogEntry> findAvailableBlogEntryList(int first, int count);
+	List<BlogEntry> findAvailableBlogEntryList(long first, long count);
 
 	/**
 	 * 
@@ -88,7 +88,7 @@ public interface BlogFacade extends Serializable {
 	 * @param count
 	 * @return list of blog entries found by selected criteria
 	 */
-	List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, int first, int count);
+	List<BlogEntry> findAvailableBlogEntryList(BlogEntrySearchRequest blogEntrySearchRequest, long first, long count);
 
 	/**
 	 * @param blogEntrySearchRequest

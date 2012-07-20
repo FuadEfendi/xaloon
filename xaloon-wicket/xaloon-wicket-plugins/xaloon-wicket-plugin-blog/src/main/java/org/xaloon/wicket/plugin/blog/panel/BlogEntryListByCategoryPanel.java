@@ -87,13 +87,13 @@ public class BlogEntryListByCategoryPanel extends BlogEntryListPanel {
 		}
 
 		@Override
-		public Iterator<? extends BlogEntry> iterator(int first, int count) {
+		public Iterator<? extends BlogEntry> iterator(long first, long count) {
 			return getBlogFacade().findAvailableBlogEntryList(blogEntrySearchRequest, first, count).iterator();
 		}
 
 		@Override
-		public int size() {
-			return getBlogFacade().getCount(blogEntrySearchRequest).intValue();
+		public long size() {
+			return getBlogFacade().getCount(blogEntrySearchRequest);
 		}
 
 		@Override

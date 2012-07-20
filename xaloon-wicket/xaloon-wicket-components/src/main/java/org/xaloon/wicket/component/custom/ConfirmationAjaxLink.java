@@ -17,8 +17,8 @@
 package org.xaloon.wicket.component.custom;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 
@@ -58,14 +58,17 @@ public abstract class ConfirmationAjaxLink<T> extends AjaxLink<T> {
 	}
 
 	@Override
-	protected IAjaxCallDecorator getAjaxCallDecorator() {
-		return new AjaxCallDecorator() {
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+		super.updateAjaxAttributes(attributes);
+
+		AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public CharSequence decorateScript(Component c, CharSequence script) {
-				return "if(!confirm('" + getString(DELETE_CONFIRMATION) + "')) return false;" + script;
+			public CharSequence getBeforeHandler(Component component) {
+				return "if(!confirm('" + getString(DELETE_CONFIRMATION) + "')) return false;";
 			}
 		};
+		attributes.getAjaxCallListeners().add(myAjaxCallListener);
 	}
 }

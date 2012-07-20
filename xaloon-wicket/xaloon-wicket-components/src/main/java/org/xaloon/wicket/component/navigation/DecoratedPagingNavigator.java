@@ -50,26 +50,26 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 	private static final long serialVersionUID = 1L;
 
 	/** show 5 items per page **/
-	public static final Integer ITEMS_PER_PAGE_COUNT_5 = 5;
+	public static final Long ITEMS_PER_PAGE_COUNT_5 = 5L;
 
 	/** show 10 items per page **/
-	public static final Integer ITEMS_PER_PAGE_COUNT_10 = 10;
+	public static final Long ITEMS_PER_PAGE_COUNT_10 = 10L;
 
 	/** show 20 items per page **/
-	public static final Integer ITEMS_PER_PAGE_COUNT_20 = 20;
+	public static final Long ITEMS_PER_PAGE_COUNT_20 = 20L;
 
 	/** show 50 items per page **/
-	public static final Integer ITEMS_PER_PAGE_COUNT_50 = 50;
+	public static final Long ITEMS_PER_PAGE_COUNT_50 = 50L;
 
 	/** show 100 items per page **/
-	public static final Integer ITEMS_PER_PAGE_COUNT_100 = 100;
+	public static final Long ITEMS_PER_PAGE_COUNT_100 = 100L;
 
-	private static final List<Integer> ITEMS_PER_PAGE_LIST = new ArrayList<Integer>();
+	private static final List<Long> ITEMS_PER_PAGE_LIST = new ArrayList<Long>();
 
 	/** cookie containing user selection - how many items per page to show **/
 	public static final String ITEMS_PER_PAGE_COOKIE = "items_per_page";
 
-	private Integer selectedItemsPerPage = ITEMS_PER_PAGE_COUNT_20;
+	private Long selectedItemsPerPage = ITEMS_PER_PAGE_COUNT_20;
 
 	static {
 		ITEMS_PER_PAGE_LIST.add(ITEMS_PER_PAGE_COUNT_5);
@@ -130,21 +130,21 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 	/**
 	 * @return how many items should be shown per page
 	 */
-	public Integer getSelectedItemsPerPage() {
+	public Long getSelectedItemsPerPage() {
 		return selectedItemsPerPage;
 	}
 
 	/**
 	 * @param selectedItemsPerPage
 	 */
-	public void setSelectedItemsPerPage(Integer selectedItemsPerPage) {
+	public void setSelectedItemsPerPage(Long selectedItemsPerPage) {
 		this.selectedItemsPerPage = selectedItemsPerPage;
 	}
 
 	protected void refreshNavigationComponents() {
 		WebMarkupContainer currentNavigator = this;
-		int currentPage = getPageable().getCurrentPage();
-		int pageCount = getPageable().getPageCount();
+		long currentPage = getPageable().getCurrentPage();
+		long pageCount = getPageable().getPageCount();
 
 		if (get(WICKET_ID_SELECT_ITEMS) != null) {
 			remove(WICKET_ID_SELECT_ITEMS);
@@ -177,19 +177,19 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 			form.add(navigation);
 		}
 		if (form.get("items-per-page") == null) {
-			List<Integer> itemsPerPageList = getItemsPerPageAsList();
-			DropDownChoice<Integer> dc = new DropDownChoice<Integer>("items-per-page", new PropertyModel<Integer>(this, "selectedItemsPerPage"),
+			List<Long> itemsPerPageList = getItemsPerPageAsList();
+			DropDownChoice<Long> dc = new DropDownChoice<Long>("items-per-page", new PropertyModel<Long>(this, "selectedItemsPerPage"),
 				itemsPerPageList);
 
 			form.add(dc);
 		}
 	}
 
-	protected List<Integer> getItemsPerPageAsList() {
+	protected List<Long> getItemsPerPageAsList() {
 		return ITEMS_PER_PAGE_LIST;
 	}
 
-	private void refreshLastNextComponents(WebMarkupContainer currentNavigator, Form<Void> form, int currentPage, int pageCount) {
+	private void refreshLastNextComponents(WebMarkupContainer currentNavigator, Form<Void> form, long currentPage, long pageCount) {
 		Component nextPage = currentNavigator.get("next");
 		if (nextPage != null) {
 			currentNavigator.remove("next");
@@ -211,7 +211,7 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 		}
 	}
 
-	private void refreshFirstPreviousComponents(WebMarkupContainer currentNavigator, Form<Void> form, int currentPage) {
+	private void refreshFirstPreviousComponents(WebMarkupContainer currentNavigator, Form<Void> form, long currentPage) {
 		Component previousPage = currentNavigator.get("prev");
 		if (previousPage != null) {
 			currentNavigator.remove("prev");

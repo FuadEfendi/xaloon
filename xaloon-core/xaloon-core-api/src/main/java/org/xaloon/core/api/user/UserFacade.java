@@ -50,5 +50,5 @@ public interface UserFacade extends UserDao, LoginService {
 	 */
 	String sendNewPassword(String email);
 
-	List<UserSearchResult> findCombinedUsers(Map<String, String> filter, int first, int count);
+	List<UserSearchResult> findCombinedUsers(Map<String, String> filter, long first, long count);
 }

@@ -66,7 +66,7 @@ public class GroupsPanelTest extends AbstractUserAdminTestCase {
 		when(app.getSecurityFacade().hasAny(SecurityAuthorities.SYSTEM_ADMINISTRATOR)).thenReturn(true);
 
 		// Return at least one group
-		when(groupService.getCount()).thenReturn(1);
+		when(groupService.getCount()).thenReturn(1L);
 
 		SecurityGroup group = mock(SecurityGroup.class);
 		when(group.getPath()).thenReturn("group-name");

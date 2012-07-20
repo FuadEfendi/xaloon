@@ -153,12 +153,12 @@ public class GroupsPanel extends AbstractAdministrationPanel {
 		}
 
 		@Override
-		public Iterator<? extends SecurityGroup> iterator(int first, int count) {
+		public Iterator<? extends SecurityGroup> iterator(long first, long count) {
 			return groupService.getAuthorities(first, count).iterator();
 		}
 
 		@Override
-		public int size() {
+		public long size() {
 			return groupService.getCount();
 		}
 
