@@ -19,26 +19,20 @@ package org.xaloon.wicket.plugin.image.galleria.panel;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.xaloon.core.api.image.model.Image;
 import org.xaloon.core.api.image.model.ImageComposition;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.plugin.AbstractPluginPanel;
+import org.xaloon.wicket.plugin.image.galleria.GalleriaBehavior;
 import org.xaloon.wicket.plugin.image.galleria.GalleriaOptions;
 import org.xaloon.wicket.plugin.image.plugin.GalleryPlugin;
 import org.xaloon.wicket.plugin.image.plugin.GalleryPluginBean;
 import org.xaloon.wicket.util.UrlUtils;
-
-import com.google.code.jqwicket.JQContributionConfig;
 
 /**
  * @author vytautas r.
@@ -68,11 +62,9 @@ public class GalleriaImagesPanel extends
 			GalleryPluginBean pluginBean) {
 		// Add Javascript Galleria support.
 		WebMarkupContainer galleria = new WebMarkupContainer("galleria");
+		galleria.add(new GalleriaBehavior(new GalleriaOptions().height(pluginBean.getHeight())));
 		add(galleria);
-		// galleria.add(new GalleriaBehavior(new
-		// GalleriaOptions().height(pluginBean.getHeight())));//TODO check why
-		// it's not working anymore
-
+		
 		// Add images
 		ListView<ImageComposition> imagesView = new ListView<ImageComposition>(
 				"images",
@@ -101,21 +93,5 @@ public class GalleriaImagesPanel extends
 			}
 		};
 		galleria.add(imagesView);
-	}
-
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-
-		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(GalleriaImagesPanel.class, JQContributionConfig.get()
-				.getJqueryCoreJsUrl().toString())));//TODO fixme
-
-		response.render(JavaScriptHeaderItem.forReference(GalleriaOptions.GALLERIA_JS_MIN));
-		response.render(CssHeaderItem.forReference(GalleriaOptions.GALLERIA_CSS_THEME));
-		response.render(JavaScriptHeaderItem.forReference(GalleriaOptions.GALLERIA_JS_THEME));
-		response.render(OnDomReadyHeaderItem.forScript(
-				"$(document).ready(function(){$(\"#galleria\").galleria({extend:function() {this.attachKeyboard({left: this.prev,right: this.next}); },height:"
-						+ getPluginBean().getHeight() + "});});"));
-
 	}
 }

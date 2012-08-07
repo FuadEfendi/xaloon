@@ -146,7 +146,8 @@ public class SignInPanel extends Panel {
 		if (!StringUtils.isEmpty(refereUrl)) {
 			throw new RedirectToUrlException(refereUrl);
 		} else {
-			continueToOriginalDestination();// TODO fix me
+			continueToOriginalDestination();
+			throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getApplication().getHomePage(), null));
 		}
 	}
 
@@ -212,7 +213,8 @@ public class SignInPanel extends Panel {
 			AuthenticationToken auth = AuthenticatedWebSession.get().signIn(getUsername(), getPassword());
 			if (auth.isAuthenticated()) {
 				onSignInSucceeded();
-				continueToOriginalDestination();// TODO fix me
+				continueToOriginalDestination();
+				throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getApplication().getHomePage(), null));
 			} else {
 				onSignInFailed(auth.getMessage());
 			}

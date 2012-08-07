@@ -47,11 +47,12 @@
 		</dependency>
 
 		<!-- OFFLINE OR EXTERNAL PROVIDED DEP -->
-		<!-- jqWicket -->
+		<!-- jqWicket 
 		<dependency>
 			<groupId>com.google.code.jqwicket</groupId>
 			<artifactId>jqwicket</artifactId>
 		</dependency>
+		//TODO fixme -->
 
 		<!-- TEST RELATED DEP -->
 		<!-- Add jpa entities for simple test -->
@@ -82,6 +83,12 @@
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.0</version>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.odlabs.wiquery</groupId>
+			<artifactId>wiquery-jquery-ui</artifactId>
+			<version>6.0-SNAPSHOT</version> 
 		</dependency>
 	</dependencies>
 </project>

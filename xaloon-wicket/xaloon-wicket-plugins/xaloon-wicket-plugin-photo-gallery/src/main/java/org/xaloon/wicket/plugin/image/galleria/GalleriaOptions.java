@@ -16,39 +16,42 @@
  */
 package org.xaloon.wicket.plugin.image.galleria;
 
+import java.io.Serializable;
+
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-
-import com.google.code.jqwicket.api.AbstractJQOptions;
+import org.odlabs.wiquery.core.options.Options;
 
 /**
  * @author vytautas r.
  */
-public class GalleriaOptions extends AbstractJQOptions<GalleriaOptions> {
+public class GalleriaOptions implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final JavaScriptResourceReference GALLERIA_JS_MIN = new JavaScriptResourceReference(GalleriaOptions.class,
-			"galleria-1.2.7.min.js");
+	public static final JavaScriptResourceReference GALLERIA_JS_MIN = new JavaScriptResourceReference(
+			GalleriaOptions.class, "galleria-1.2.7.min.js");
 
-	public static final JavaScriptResourceReference GALLERIA_JS_THEME = new JavaScriptResourceReference(GalleriaOptions.class,
-			"themes/classic/galleria.classic.min.js");
+	public static final JavaScriptResourceReference GALLERIA_JS_THEME = new JavaScriptResourceReference(
+			GalleriaOptions.class, "themes/classic/galleria.classic.min.js");
 
-	public static final CssResourceReference GALLERIA_CSS_THEME = new CssResourceReference(GalleriaOptions.class,
-			"themes/classic/galleria.classic.css");
+	public static final CssResourceReference GALLERIA_CSS_THEME = new CssResourceReference(
+			GalleriaOptions.class, "themes/classic/galleria.classic.css");
 
-	/**
-	 * Construct.
-	 */
+	org.odlabs.wiquery.core.options.Options options;
+
 	public GalleriaOptions() {
-		setJsResourceReferences(GALLERIA_JS_MIN, GALLERIA_JS_THEME);
-		setCssResourceReferences(GALLERIA_CSS_THEME);
+		options = new org.odlabs.wiquery.core.options.Options();
+		extended();		
+	}
 
-		/** there is not default width - that means it should be 100% by default */
-		height(500);
+	public GalleriaOptions extended() {
+		options.put("extend", "function() {this.attachKeyboard({left: this.prev,right: this.next}); }");
+		return this;
 	}
 
 	/**
@@ -58,7 +61,8 @@ public class GalleriaOptions extends AbstractJQOptions<GalleriaOptions> {
 	 * @return GalleriaOptions instance
 	 */
 	public GalleriaOptions width(int width) {
-		return super.put("width", width);
+		options.putInteger("width", new Model<Integer>(width));
+		return this;
 	}
 
 	/**
@@ -68,6 +72,11 @@ public class GalleriaOptions extends AbstractJQOptions<GalleriaOptions> {
 	 * @return GalleriaOptions instance
 	 */
 	public GalleriaOptions height(int height) {
-		return super.put("height", height);
+		options.putInteger("height", new Model<Integer>(height));
+		return this;
+	}
+
+	public Options getOptions() {
+		return options;
 	}
 }

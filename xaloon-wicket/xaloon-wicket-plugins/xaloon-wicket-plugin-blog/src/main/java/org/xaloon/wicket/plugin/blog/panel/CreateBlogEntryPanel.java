@@ -31,10 +31,9 @@ import org.xaloon.wicket.plugin.blog.model.BlogEntry;
 import org.xaloon.wicket.plugin.blog.path.BlogEntryPathTypeEnum;
 import org.xaloon.wicket.plugin.image.panel.AlbumAdministrationPanel;
 import org.xaloon.wicket.plugin.image.plugin.GallerySecurityAuthorities;
+import org.xaloon.wicket.plugin.jquery.ckeditor.CkEditorOptions;
+import org.xaloon.wicket.plugin.jquery.ckeditor.CkEditorTextArea;
 import org.xaloon.wicket.util.UrlUtils;
-
-import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
-import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
 
 /**
  * @author vytautas r.
@@ -128,7 +127,7 @@ public class CreateBlogEntryPanel extends AbstractBlogPluginPanel {
 			addBlogEntryImagePanel();
 
 			// Add content
-			add(new CKEditorTextArea<String>("content", new CKEditorOptions()).setRequired(true));
+			add(new CkEditorTextArea<String>("content", new CkEditorOptions()).setRequired(true));
 
 			// Add tags
 			List<KeyValue<String, String>> tags = (List<KeyValue<String, String>>)getModelObject().getTags();

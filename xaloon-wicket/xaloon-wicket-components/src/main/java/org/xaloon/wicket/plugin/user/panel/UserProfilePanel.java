@@ -47,15 +47,13 @@ import org.xaloon.core.api.user.model.User;
 import org.xaloon.core.api.util.KeyFactory;
 import org.xaloon.wicket.component.html.TimezoneDropDownChoice;
 import org.xaloon.wicket.component.image.panel.ThumbnailManagementPanel;
+import org.xaloon.wicket.plugin.jquery.ckeditor.CkEditorTextArea;
 import org.xaloon.wicket.plugin.user.admin.page.UsersPage;
 import org.xaloon.wicket.plugin.user.page.UserRegistrationPage;
 import org.xaloon.wicket.plugin.user.validator.AgreementValidator;
 import org.xaloon.wicket.plugin.user.validator.EmailUsageValidator;
 import org.xaloon.wicket.plugin.user.validator.UsernamePatternValidator;
 import org.xaloon.wicket.plugin.user.validator.UsernameValidator;
-
-import com.google.code.jqwicket.ui.ckeditor.CKEditorOptions;
-import com.google.code.jqwicket.ui.ckeditor.CKEditorTextArea;
 
 /**
  * user profile panel
@@ -194,8 +192,7 @@ public class UserProfilePanel<T extends User> extends Panel {
 
 	private Component createSignatureField() {
 		// Add signature editor
-		return new CKEditorTextArea<String>("signature", new CKEditorOptions().toolbar(new CharSequence[][] {
-				{ "Bold", "Italic", "-", "NumberedList", "BulletedList", "-", "Link", "Unlink" }, { "UIColor" } }));
+		return new CkEditorTextArea<String>("signature");
 	}
 
 	private Component createTimezoneField() {

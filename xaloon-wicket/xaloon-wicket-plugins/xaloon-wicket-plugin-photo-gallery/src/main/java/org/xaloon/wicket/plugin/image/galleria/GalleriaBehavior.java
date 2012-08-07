@@ -16,19 +16,23 @@
  */
 package org.xaloon.wicket.plugin.image.galleria;
 
-import com.google.code.jqwicket.ui.JQComponentBehavior;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.odlabs.wiquery.core.behavior.WiQueryAbstractAjaxBehavior;
+import org.odlabs.wiquery.core.javascript.JsQuery;
 
 /**
  * @author vytautas r.
  */
-public class GalleriaBehavior extends JQComponentBehavior<GalleriaOptions> {
+public class GalleriaBehavior extends WiQueryAbstractAjaxBehavior {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private static final CharSequence JQ_COMPONENT_NAME = "galleria";
 
 	/**
 	 * Construct.
@@ -42,13 +46,22 @@ public class GalleriaBehavior extends JQComponentBehavior<GalleriaOptions> {
 	 * 
 	 * @param options
 	 */
-	public GalleriaBehavior(GalleriaOptions options) {
-		super(options);
+	public GalleriaBehavior(GalleriaOptions opt) {
+		options = opt.getOptions();
 
 	}
 
 	@Override
-	public CharSequence getName() {
-		return JQ_COMPONENT_NAME;
+	public void renderHead(Component arg0, IHeaderResponse response) {
+		super.renderHead(arg0, response);
+		response.render(JavaScriptHeaderItem
+				.forReference(GalleriaOptions.GALLERIA_JS_MIN));
+		response.render(JavaScriptHeaderItem
+				.forReference(GalleriaOptions.GALLERIA_JS_THEME));
+		response.render(CssHeaderItem
+				.forReference(GalleriaOptions.GALLERIA_CSS_THEME));
+		response.render(OnDomReadyHeaderItem.forScript(new JsQuery(
+				getComponent()).$()
+				.chain("galleria", options.getJavaScriptOptions()).render()));
 	}
 }

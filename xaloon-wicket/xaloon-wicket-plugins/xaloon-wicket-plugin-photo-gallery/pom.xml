@@ -40,9 +40,6 @@
 		
 		<!-- OFFLINE OR EXTERNAL PROVIDED DEP -->
 		<!-- jqWicket -->
-		<dependency>
-			<groupId>com.google.code.jqwicket</groupId>
-			<artifactId>jqwicket</artifactId>
-		</dependency>
+		
 	</dependencies>
 </project>
