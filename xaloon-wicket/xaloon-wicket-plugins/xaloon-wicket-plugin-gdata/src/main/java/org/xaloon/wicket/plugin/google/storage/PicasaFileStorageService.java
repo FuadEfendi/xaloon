@@ -117,7 +117,8 @@ public class PicasaFileStorageService implements FileStorageService {
 
 			GphotoEntry album = findOrCreateAlbum(picasawebService, userEmail, UrlUtil.encode(fileDescriptor.getLocation()));
 
-			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId());
+			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId() + "?imgmax=800");
+			
 
 			PhotoEntry myPhoto = new PhotoEntry();
 			String title = fileDescriptor.getPath();
