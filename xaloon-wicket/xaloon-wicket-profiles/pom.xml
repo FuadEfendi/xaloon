@@ -12,6 +12,6 @@
 	<modules>
 		<!-- module>xaloon-profiles-jee</module-->
 		<module>xaloon-profiles-hibernate-spring</module>
-		<module>xaloon-profiles-eclipselink-shiro</module>
+		<!--module>xaloon-profiles-eclipselink-shiro</module-->
 	</modules>
 </project>
