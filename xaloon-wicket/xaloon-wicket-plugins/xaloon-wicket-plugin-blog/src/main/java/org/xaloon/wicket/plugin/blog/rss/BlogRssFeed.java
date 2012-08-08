@@ -22,6 +22,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.xaloon.core.api.image.model.Image;
+import org.xaloon.core.api.storage.FileDescriptor;
 import org.xaloon.wicket.component.resource.ImageLink;
 import org.xaloon.wicket.component.rss.RssFeed;
 import org.xaloon.wicket.component.rss.RssItem;
@@ -79,7 +81,12 @@ public class BlogRssFeed extends RssFeed {
 		StringBuilder result = new StringBuilder();
 		result.append("<![CDATA[");
 		if (blogEntry.getThumbnail() != null) {
-			result.append(getImageLink(blogEntry));
+			result.append(getImageLink(blogEntry, blogEntry.getThumbnail()));
+		} else if (!blogEntry.getImages().isEmpty()) {
+			Image image = blogEntry.getImages().get(0).getImage();
+			if (image != null && image.getThumbnail() != null) {
+				result.append(getImageLink(blogEntry, image.getThumbnail()));
+			}
 		}
 		if (!StringUtils.isEmpty(blogEntry.getDescription())) {
 			result.append(blogEntry.getDescription());
@@ -89,14 +96,14 @@ public class BlogRssFeed extends RssFeed {
 		return result.toString();
 	}
 
-	private String getImageLink(BlogEntry blogEntry) {
+	private String getImageLink(BlogEntry blogEntry, FileDescriptor fileDescriptor) {
 		StringBuilder imageLink = new StringBuilder();
 		imageLink.append("<a href=\"");
 		imageLink.append(blogFacade.resolveLink(blogEntry));
 		imageLink.append("\">");
 
 		imageLink.append("<img border=\"0\" src=\"");
-		imageLink.append(UrlUtils.toAbsoluteImagePath(ImageLink.IMAGE_RESOURCE, blogEntry.getThumbnail().getPath()));
+		imageLink.append(UrlUtils.toAbsoluteImagePath(ImageLink.IMAGE_RESOURCE, fileDescriptor.getPath()));
 		imageLink.append("\"/>");
 		imageLink.append("</a>");
 
