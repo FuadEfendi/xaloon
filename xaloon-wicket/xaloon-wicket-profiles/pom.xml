@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>	
 	<name>xaloon profiles folder</name>
 	<modules>
-		<module>xaloon-profiles-jee</module>
+		<!-- module>xaloon-profiles-jee</module-->
 		<module>xaloon-profiles-hibernate-spring</module>
 		<module>xaloon-profiles-eclipselink-shiro</module>
 	</modules>
