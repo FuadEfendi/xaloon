@@ -15,7 +15,7 @@
 	<url>http://www.xaloon.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wicket.version>6.0.0-beta3</wicket.version>
+		<wicket.version>6.0-SNAPSHOT</wicket.version>
 		<wicketstuff.version>6.0.0-beta1.1</wicketstuff.version>
 		<spring.version>3.1.0.RELEASE</spring.version>
 		<jackrabbit.version>2.3.3</jackrabbit.version>
@@ -574,4 +574,18 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	
+	<!-- Added for wicket snapshots. TODO: Remove before releasing -->
+	<repositories>
+		<repository>
+			<id>Apache Nexus</id>
+			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
