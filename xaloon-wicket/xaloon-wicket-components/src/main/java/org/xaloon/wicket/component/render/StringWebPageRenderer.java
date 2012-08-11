@@ -14,39 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xaloon.wicket.plugin.email.template;
+package org.xaloon.wicket.component.render;
 
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.markup.html.WebPage;
-import org.xaloon.wicket.component.render.StringWebPageRenderer;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.render.WebPageRenderer;
 
 /**
  * @author vytautas r.
  */
-public class EmailContentTemplatePage extends WebPage {
+public class StringWebPageRenderer extends WebPageRenderer {
 
 	/**
+	 * Construct.
 	 * 
+	 * @param renderPageRequestHandler
 	 */
-	private static final long serialVersionUID = 1L;
-
-	private static final String SUBJECT = "SUBJECT";
-
-	/**
-	 * @return subject of email
-	 */
-	public String getSubject() {
-		return getString(SUBJECT);
+	public StringWebPageRenderer(RenderPageRequestHandler renderPageRequestHandler) {
+		super(renderPageRequestHandler);
 	}
 
 	/**
-	 * @return rendered message body
+	 * @param requestCycle
+	 * @return rendered page as html code
 	 */
-	public String getSource() {
-		IPageProvider provider = new PageProvider(this);
-		StringWebPageRenderer pageRenderer = new StringWebPageRenderer(new RenderPageRequestHandler(provider));
-		return pageRenderer.renderToString(getRequestCycle());
+	public String renderToString(RequestCycle requestCycle) {
+		Url currentUrl = requestCycle.getUrlRenderer().getBaseUrl();
+		BufferedWebResponse response = renderPage(currentUrl, requestCycle);
+		return response.toString();
 	}
+
 }
