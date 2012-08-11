@@ -16,11 +16,8 @@
  */
 package org.xaloon.wicket.plugin.email.template;
 
-import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.html.WebPage;
-import org.xaloon.wicket.component.render.StringWebPageRenderer;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
 
 /**
  * @author vytautas r.
@@ -45,8 +42,9 @@ public class EmailContentTemplatePage extends WebPage {
 	 * @return rendered message body
 	 */
 	public String getSource() {
-		IPageProvider provider = new PageProvider(this);
-		StringWebPageRenderer pageRenderer = new StringWebPageRenderer(new RenderPageRequestHandler(provider));
-		return pageRenderer.renderToString(getRequestCycle());
+		BufferedWebResponse bufferedWebResponse = new BufferedWebResponse(null);
+		getRequestCycle().setResponse(bufferedWebResponse);
+		render();
+		return bufferedWebResponse.getText().toString();
 	}
 }
