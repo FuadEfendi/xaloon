@@ -40,7 +40,8 @@ public class FileResource extends DynamicImageResource {
 	protected byte[] getImageData(Attributes attributes) {
 		org.apache.wicket.util.string.StringValue pathId = attributes.getParameters().get(0);
 		if (pathId.isEmpty()) {
-			throw new IllegalArgumentException("Attribute cannot be empty!");
+			logger.error("Attribute cannot be empty!" + attributes.getParameters());
+			return null;
 		}
 		String value = pathId.toString();
 		if (StringUtils.isEmpty(value)) {
