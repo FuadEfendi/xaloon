@@ -208,4 +208,10 @@ public class ShiroSecurityFacade implements SecurityFacade {
 		}
 		return PrincipalResolver.resolvePrincipal(currentUser.getPrincipal(), UserDetails.class);
 	}
+
+	@Override
+	public void removeAlias(KeyValue<String, String> alias) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -171,15 +171,15 @@ public class LocalDatabaseLoginService implements LoginService {
 	}
 
 	@Override
-	public void removeAlias(String username, String loginType) {
-		if (StringUtils.isEmpty(loginType)) {
+	public void removeAlias(String username, KeyValue<String, String> alias) {
+		if (alias == null || StringUtils.isEmpty(alias.getKey())) {
 			return;
 		}
 
 		JpaUserDetails userDetails = (JpaUserDetails)loadUserDetails(username);
 		if (userDetails != null) {
 			for (KeyValue<String, String> keyValue : userDetails.getAliases()) {
-				if (loginType.equals(keyValue.getKey())) {
+				if (alias.getKey().equals(keyValue.getKey())) {
 					userDetails.getAliases().remove(keyValue);
 					persistenceServices.remove(keyValue);
 					persistenceServices.edit(userDetails);

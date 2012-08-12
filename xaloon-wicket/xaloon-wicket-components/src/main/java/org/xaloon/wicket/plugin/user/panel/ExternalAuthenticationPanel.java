@@ -123,7 +123,8 @@ public class ExternalAuthenticationPanel extends Panel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						KeyValue<String, String> keyValue = getModelObject();
-						userFacade.removeAlias(securityFacade.getCurrentUsername(), keyValue.getKey());
+						userFacade.removeAlias(securityFacade.getCurrentUsername(), keyValue);
+						securityFacade.removeAlias(keyValue);
 						setResponsePage(UserProfilePage.class);
 					}
 				};

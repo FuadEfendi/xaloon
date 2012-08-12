@@ -50,7 +50,17 @@ public class EmailAdministrationPanel extends AbstractPluginAdministrationPanel<
 
 		add(new TextField<String>("host"));
 		add(new TextField<String>("username"));
-		add(new PasswordTextField("password"));
+		add(new PasswordTextField("password") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isRequired() {
+				return false;
+			}
+		});
 		add(new TextField<String>("port"));
 		add(new TextField<String>("charset"));
 

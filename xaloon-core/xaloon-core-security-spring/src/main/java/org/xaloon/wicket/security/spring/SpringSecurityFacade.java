@@ -230,4 +230,9 @@ public class SpringSecurityFacade implements SecurityFacade {
 	public void logout() {
 		SecurityContextHolder.getContext().setAuthentication(null);
 	}
+
+	@Override
+	public void removeAlias(KeyValue<String, String> alias) {
+		getAliases().remove(alias);
+	}
 }

@@ -110,9 +110,10 @@ public interface LoginService extends Serializable {
 	 * Remove alias from current username
 	 * 
 	 * @param currentUsername
-	 * @param loginType
+	 * @param alias
+	 *            to remove
 	 */
-	void removeAlias(String currentUsername, String loginType);
+	void removeAlias(String currentUsername, KeyValue<String, String> alias);
 
 	/**
 	 * @param username
