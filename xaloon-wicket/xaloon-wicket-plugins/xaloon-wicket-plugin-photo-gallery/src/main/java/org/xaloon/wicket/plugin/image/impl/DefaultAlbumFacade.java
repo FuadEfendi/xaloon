@@ -56,6 +56,7 @@ import org.xaloon.core.api.storage.FileStorageService;
 import org.xaloon.core.api.storage.InputStreamContainer;
 import org.xaloon.core.api.storage.UrlInputStreamContainer;
 import org.xaloon.core.api.user.model.User;
+import org.xaloon.core.api.util.UrlUtil;
 import org.xaloon.wicket.plugin.image.model.JpaAlbum;
 import org.xaloon.wicket.plugin.image.model.JpaImage;
 import org.xaloon.wicket.plugin.system.SystemPlugin;
@@ -224,7 +225,7 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
 		fileName.append('-');
 		fileName.append(newImage.getName());
-		File outputFile = new File(new File(systemPluginBean.getTemporaryFileLocation()), fileName.toString());
+		File outputFile = new File(new File(systemPluginBean.getTemporaryFileLocation()), UrlUtil.encode(fileName.toString()));
 
 		InputStream in = newImage.getImageInputStreamContainer().getInputStream();
 		OutputStream out = new FileOutputStream(outputFile);
