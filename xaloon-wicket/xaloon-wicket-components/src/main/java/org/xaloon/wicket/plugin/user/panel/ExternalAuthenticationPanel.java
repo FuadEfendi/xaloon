@@ -23,10 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,9 +41,9 @@ import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.external.AuthenticationFacade;
 import org.xaloon.core.api.user.UserFacade;
 import org.xaloon.core.api.user.model.User;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.security.page.SignInNoParamsPage;
 import org.xaloon.wicket.component.security.panel.SignInPanel;
-import org.xaloon.wicket.plugin.AbstractPluginPanel;
 import org.xaloon.wicket.plugin.user.page.UserProfilePage;
 import org.xaloon.wicket.util.UrlUtils;
 
@@ -101,24 +98,12 @@ public class ExternalAuthenticationPanel extends Panel {
 				item.add(new Label("key", new Model<String>(keyValue.getKey())));
 
 				// Add delete link
-				AjaxLink<KeyValue<String, String>> link_delete = new AjaxLink<KeyValue<String, String>>("delete", item.getModel()) {
+				AjaxLink<KeyValue<String, String>> link_delete = new ConfirmationAjaxLink<KeyValue<String, String>>("delete", item.getModel()) {
 
 					/**
 					 * 
 					 */
 					private static final long serialVersionUID = 1L;
-
-					@Override
-					protected IAjaxCallDecorator getAjaxCallDecorator() {
-						return new AjaxCallDecorator() {
-							private static final long serialVersionUID = 1L;
-
-							@Override
-							public CharSequence decorateScript(Component c, CharSequence script) {
-								return "if(!confirm('" + getString(AbstractPluginPanel.DELETE_CONFIRMATION) + "')) return false;" + script;
-							}
-						};
-					}
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
