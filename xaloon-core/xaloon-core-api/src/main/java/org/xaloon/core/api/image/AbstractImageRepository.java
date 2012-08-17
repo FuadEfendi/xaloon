@@ -106,6 +106,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	@Override
 	public void uploadImage(ImageComposition composition, ImageOptions options) {
 		Image image = composition.getImage();
+		composition.setObject(persistenceServices.find(options.getAlbumEntityClass(), options.getAlbumId()));
 		try {
 			// Create image
 			storeOriginalFile(image, options);

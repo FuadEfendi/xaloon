@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.xaloon.core.api.image.model.Album;
 import org.xaloon.core.api.storage.InputStreamContainer;
 
 public class ImageOptions implements Serializable {
@@ -30,6 +31,10 @@ public class ImageOptions implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private Long albumId;
+
+	private Class<? extends Album> albumEntityClass;
 
 	private ImageSize imageSize;
 
@@ -54,6 +59,39 @@ public class ImageOptions implements Serializable {
 	public ImageOptions(InputStreamContainer imageInputStreamContainer, ImageSize imageSize) {
 		this.imageInputStreamContainer = imageInputStreamContainer;
 		this.imageSize = imageSize;
+	}
+
+	/**
+	 * Gets albumEntityClass.
+	 * 
+	 * @return albumEntityClass
+	 */
+	public Class<? extends Album> getAlbumEntityClass() {
+		return albumEntityClass;
+	}
+
+	/**
+	 * Sets albumEntityClass.
+	 * 
+	 * @param albumEntityClass
+	 *            albumEntityClass
+	 */
+	public void setAlbumEntityClass(Class<? extends Album> albumEntityClass) {
+		this.albumEntityClass = albumEntityClass;
+	}
+
+	/**
+	 * @return albumId
+	 */
+	public Long getAlbumId() {
+		return albumId;
+	}
+
+	/**
+	 * @param albumId
+	 */
+	public void setAlbumId(Long albumId) {
+		this.albumId = albumId;
 	}
 
 	/**

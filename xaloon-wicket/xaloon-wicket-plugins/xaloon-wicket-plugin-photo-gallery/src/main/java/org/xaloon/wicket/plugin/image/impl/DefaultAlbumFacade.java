@@ -181,7 +181,6 @@ public class DefaultAlbumFacade implements AlbumFacade {
 	 * @param thumbnailLocation
 	 */
 	public void createImage(Album album, ImageComposition newImage, String imageLocation, String thumbnailLocation) {
-		newImage.setObject(album);
 		newImage.getImage().setOwner(album.getOwner());
 
 		// Threats image as original file descriptor and modifies required
@@ -189,6 +188,8 @@ public class DefaultAlbumFacade implements AlbumFacade {
 		newImage.getImage().setLocation(imageLocation);
 
 		ImageOptions options = newImageOptions(newImage.getImage(), thumbnailLocation);
+		options.setAlbumId(album.getId());
+		options.setAlbumEntityClass(album.getClass());
 		getImageRepository().uploadImage(newImage, options);
 	}
 
