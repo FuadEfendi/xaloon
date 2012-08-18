@@ -47,7 +47,7 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 	@PrimaryKeyJoinColumn(name = "OBJECT_ID", referencedColumnName = "ID")
 	private T object;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	@PrimaryKeyJoinColumn(name = "IMAGE_ID", referencedColumnName = "ID")
 	private JpaImage image;
 
