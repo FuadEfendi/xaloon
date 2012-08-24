@@ -159,4 +159,20 @@ public interface SecurityFacade extends Serializable {
 	 * logout user
 	 */
 	void logout();
+
+	/**
+	 * Removes alias for a currently signed in user from the session
+	 * 
+	 * @param alias
+	 *            to remove
+	 */
+	void removeAlias(KeyValue<String, String> alias);
+
+	/**
+	 * Add temporary alias for a currently signed in user.
+	 * 
+	 * @param alias
+	 *            alias to add
+	 */
+	void addAlias(KeyValue<String, String> alias);
 }

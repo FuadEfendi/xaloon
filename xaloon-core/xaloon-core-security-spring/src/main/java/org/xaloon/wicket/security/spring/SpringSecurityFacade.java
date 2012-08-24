@@ -17,6 +17,7 @@
 package org.xaloon.wicket.security.spring;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -229,5 +230,22 @@ public class SpringSecurityFacade implements SecurityFacade {
 	@Override
 	public void logout() {
 		SecurityContextHolder.getContext().setAuthentication(null);
+	}
+
+	@Override
+	public void removeAlias(KeyValue<String, String> alias) {
+		getAliases().remove(alias);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addAlias(KeyValue<String, String> alias) {
+		if (alias == null) {
+			return;
+		}
+		List<KeyValue<String, String>> tmp = (List<KeyValue<String, String>>)getAliases();
+		if (tmp != null) {
+			tmp.add(alias);
+		}
 	}
 }

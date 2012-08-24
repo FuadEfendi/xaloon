@@ -35,6 +35,7 @@ import com.google.gdata.client.photos.PicasawebService;
 import com.google.gdata.data.Kind.AdaptorException;
 import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.media.MediaStreamSource;
+import com.google.gdata.data.media.mediarss.MediaContent;
 import com.google.gdata.data.photos.AlbumEntry;
 import com.google.gdata.data.photos.GphotoEntry;
 import com.google.gdata.data.photos.GphotoFeed;
@@ -116,7 +117,8 @@ public class PicasaFileStorageService implements FileStorageService {
 
 			GphotoEntry album = findOrCreateAlbum(picasawebService, userEmail, UrlUtil.encode(fileDescriptor.getLocation()));
 
-			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId());
+			final URL albumPostUrl = new URL(API_PREFIX + userEmail + "/albumid/" + album.getGphotoId() + "?imgmax=800");
+			
 
 			PhotoEntry myPhoto = new PhotoEntry();
 			String title = fileDescriptor.getPath();
@@ -135,6 +137,7 @@ public class PicasaFileStorageService implements FileStorageService {
 				throw new RuntimeException("Could not finish action, because service is not relialible!");
 			}
 			String identifier = "/albumid/" + album.getGphotoId() + "/photoid/" + entry.getGphotoId();
+			logMediaContents(entry.getMediaContents());
 			KeyValue<String, String> result = new DefaultKeyValue<String, String>(entry.getMediaContents().get(0).getUrl(), identifier);
 			LOGGER.info("New image uploaded:" + identifier);
 			return result;
@@ -145,6 +148,12 @@ public class PicasaFileStorageService implements FileStorageService {
 			if (in != null) {
 				IOUtils.closeQuietly(in);
 			}
+		}
+	}
+
+	private void logMediaContents(List<MediaContent> mediaContents) {
+		for (MediaContent item : mediaContents) {
+			LOGGER.debug(String.format("Got photo entry url: %s, w:%d, h:%d", item.getUrl(), item.getWidth(), item.getHeight()));
 		}
 	}
 

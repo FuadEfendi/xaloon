@@ -208,4 +208,21 @@ public class ShiroSecurityFacade implements SecurityFacade {
 		}
 		return PrincipalResolver.resolvePrincipal(currentUser.getPrincipal(), UserDetails.class);
 	}
+
+	@Override
+	public void removeAlias(KeyValue<String, String> alias) {
+		getAliases().remove(alias);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addAlias(KeyValue<String, String> alias) {
+		if (alias == null) {
+			return;
+		}
+		List<KeyValue<String, String>> tmp = (List<KeyValue<String, String>>)getAliases();
+		if (tmp != null) {
+			tmp.add(alias);
+		}
+	}
 }

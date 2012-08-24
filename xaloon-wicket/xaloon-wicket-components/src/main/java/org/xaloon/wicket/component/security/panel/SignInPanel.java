@@ -32,6 +32,7 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
+import org.xaloon.core.api.keyvalue.KeyValue;
 import org.xaloon.core.api.security.SecurityFacade;
 import org.xaloon.core.api.security.external.AuthenticationFacade;
 import org.xaloon.core.api.security.external.AuthenticationToken;
@@ -159,7 +160,10 @@ public class SignInPanel extends Panel {
 	}
 
 	protected void addAlias(String loginType, String name) {
-		userFacade.addAlias(securityFacade.getCurrentUsername(), new DefaultKeyValue<String, String>(loginType, name));
+		KeyValue<String, String> alias = new DefaultKeyValue<String, String>(loginType, name);
+		userFacade.addAlias(securityFacade.getCurrentUsername(), alias);
+		// We do not want to sign out, so we add temporary alias to the current user's properties
+		securityFacade.addAlias(alias);
 	}
 
 	private void beginConsumption(PageParameters pageParameters) {

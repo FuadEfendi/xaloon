@@ -180,8 +180,8 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public void removeAlias(String currentUsername, String loginType) {
-		loginService.removeAlias(currentUsername, loginType);
+	public void removeAlias(String currentUsername, KeyValue<String, String> alias) {
+		loginService.removeAlias(currentUsername, alias);
 	}
 
 	@Override

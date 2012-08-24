@@ -58,6 +58,9 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	@Named("imageResizer")
 	private ImageResizer imageResizer;
 
+	@Inject
+	private ImageDao imageDao;
+
 	@Override
 	public <T extends Image> void uploadThumbnail(T image, Image thumbnailImage, ImageOptions options) {
 		if (options.getImageSize() == null) {
@@ -106,9 +109,14 @@ public abstract class AbstractImageRepository implements ImageRepository {
 	@Override
 	public void uploadImage(ImageComposition composition, ImageOptions options) {
 		Image image = composition.getImage();
+		composition.setObject(persistenceServices.find(options.getAlbumEntityClass(), options.getAlbumId()));
 		try {
 			// Create image
-			storeOriginalFile(image, options);
+			image = storeOriginalFile(image, options);
+			if (image.getId() == null) {
+				image = persistenceServices.create(image);
+			}
+			composition.setImage(image);
 
 			if (options.getImageSize() != null) {
 				// Create copy
@@ -148,7 +156,7 @@ public abstract class AbstractImageRepository implements ImageRepository {
 		LOGGER.warn("Could not store image using any provider. Giving up.");
 	}
 
-	private void storeOriginalFile(Image image, ImageOptions options) {
+	private Image storeOriginalFile(Image image, ImageOptions options) {
 		KeyValue<String, String> originalImageUid = null;
 		// store physical file only if it ir from local file system
 		if (!image.isExternal()) {
@@ -156,14 +164,27 @@ public abstract class AbstractImageRepository implements ImageRepository {
 		} else {
 			originalImageUid = new DefaultKeyValue<String, String>(image.getPath(), image.getPath());
 		}
+		Image tmp = imageDao.getImageByPath(originalImageUid.getKey());
+		if (tmp != null) {
+			return tmp;
+		}
 		image.setIdentifier(originalImageUid.getValue());
 		image.setPath(originalImageUid.getKey());
 		image.setFileStorageServiceProvider(getFileStorageService().getName());
+		return image;
 	}
 
 	private FileDescriptor uploadFileDescriptor(Image image, ImageOptions options) throws IOException {
 		FileDescriptor fileDescriptor = createFileDescriptor(image, options);
+		FileDescriptor tmp = fileDescriptorDao.getFileDescriptorByPath(fileDescriptor.getPath());
+		if (tmp != null) {
+			return tmp;
+		}
 		KeyValue<String, String> fileDescriptorUniqueIdentifier = storeFile(image, options);
+		tmp = fileDescriptorDao.getFileDescriptorByPath(fileDescriptorUniqueIdentifier.getKey());
+		if (tmp != null) {
+			return tmp;
+		}
 		return fileDescriptorDao.save(fileDescriptor, fileDescriptorUniqueIdentifier);
 	}
 
