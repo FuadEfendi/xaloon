@@ -43,6 +43,7 @@ import org.xaloon.core.api.plugin.EmptyPlugin;
 import org.xaloon.wicket.component.classifier.ldm.ClassifierItemLoadableModel;
 import org.xaloon.wicket.component.classifier.page.ClassifiersItemPage;
 import org.xaloon.wicket.component.classifier.page.ClassifiersPage;
+import org.xaloon.wicket.component.custom.ConfirmationAjaxLink;
 import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.util.Link;
 
@@ -94,6 +95,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 		// Add data container
 		final DecoratedPagingNavigatorContainer<ClassifierItem> dataContainer = new DecoratedPagingNavigatorContainer<ClassifierItem>("container",
 			getCurrentRedirectLink());
+		dataContainer.setOutputMarkupId(true);
 		add(dataContainer);
 
 
@@ -104,7 +106,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 			@Override
 			protected void populateItem(Item<ClassifierItem> item) {
-				ClassifierItem classifierItem = item.getModelObject();
+				final ClassifierItem classifierItem = item.getModelObject();
 
 				// Add link
 				PageParameters pageParameters = new PageParameters();
@@ -116,6 +118,16 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 				// Add name
 				item.add(new Label("name", new Model<String>(classifierItem.getName())));
+
+				item.add(new ConfirmationAjaxLink<Void>("delete-item") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget arg0) {
+						getClassifierItemDao().delete(classifierItem.getId());
+						arg0.add(dataContainer);
+					}
+				});
 			}
 		};
 		dataContainer.addAbstractPageableView(classifierDataView);

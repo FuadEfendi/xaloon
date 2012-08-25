@@ -98,4 +98,13 @@ public interface ClassifierItemDao extends Serializable {
 	 * @return list of classifier items
 	 */
 	<T extends ClassifierItem> List<T> findLowerLevelItems(String classifierType);
+
+	/**
+	 * Deletes selected classifier item. There is assumption that classifier item is not used anymore so there is no reference to this classifier
+	 * item.
+	 * 
+	 * @param classifierItemId
+	 *            the id of classifier item to remove.
+	 */
+	void delete(Long classifierItemId);
 }

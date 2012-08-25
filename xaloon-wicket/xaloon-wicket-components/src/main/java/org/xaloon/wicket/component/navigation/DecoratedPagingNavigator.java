@@ -171,10 +171,13 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 	}
 
 	private void refreshDropDownItemsPerPage(WebMarkupContainer currentNavigator, Form<Void> form) {
-		if (currentNavigator.get(WICKET_ID_NAVIGATION) != null) {
-			Component navigation = currentNavigator.get(WICKET_ID_NAVIGATION);
+		Component navigation = currentNavigator.get(WICKET_ID_NAVIGATION);
+
+		if (navigation != null) {
 			currentNavigator.remove(navigation);
 			form.add(navigation);
+		} else {
+			form.add(newNavigation(WICKET_ID_NAVIGATION, getPageable(), null));
 		}
 		if (form.get("items-per-page") == null) {
 			List<Integer> itemsPerPageList = getItemsPerPageAsList();
@@ -208,6 +211,13 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 				nextPage.setVisible(true);
 				lastPage.setVisible(true);
 			}
+		} else {
+			if (lastPage == null) {
+				form.add(newPagingNavigationLink("last", getPageable(), -1));
+			}
+			if (nextPage == null) {
+				form.add(newPagingNavigationIncrementLink("next", getPageable(), 1));
+			}
 		}
 	}
 
@@ -230,6 +240,13 @@ public class DecoratedPagingNavigator extends PagingNavigator {
 			} else {
 				previousPage.setVisible(true);
 				firstPage.setVisible(true);
+			}
+		} else {
+			if (firstPage == null) {
+				form.add(newPagingNavigationLink("first", getPageable(), 0));
+			}
+			if (previousPage == null) {
+				form.add(newPagingNavigationIncrementLink("prev", getPageable(), -1));
 			}
 		}
 	}
