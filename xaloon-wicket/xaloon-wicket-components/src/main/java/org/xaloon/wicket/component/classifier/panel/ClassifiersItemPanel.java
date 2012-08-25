@@ -25,8 +25,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -92,6 +95,12 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 			parentClassifierItem = params.get(ClassifierConstants.PARENT_ITEM).toString();
 		}
 
+		// Add feedback panel
+		final WebMarkupContainer feedbackContainer = new WebMarkupContainer("cl-feedback-container");
+		feedbackContainer.setOutputMarkupId(true);
+		add(feedbackContainer);
+		feedbackContainer.add(new FeedbackPanel("cl-feedback", new ComponentFeedbackMessageFilter(this)));
+
 		// Add data container
 		final DecoratedPagingNavigatorContainer<ClassifierItem> dataContainer = new DecoratedPagingNavigatorContainer<ClassifierItem>("container",
 			getCurrentRedirectLink());
@@ -124,7 +133,12 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 					@Override
 					public void onClick(AjaxRequestTarget arg0) {
-						getClassifierItemDao().delete(classifierItem.getId());
+						try {
+							getClassifierItemDao().delete(classifierItem.getId());
+						} catch (Exception e) {
+							ClassifiersItemPanel.this.error("Could not delete classifier item. It has references.");
+							arg0.add(feedbackContainer);
+						}
 						arg0.add(dataContainer);
 					}
 				});
