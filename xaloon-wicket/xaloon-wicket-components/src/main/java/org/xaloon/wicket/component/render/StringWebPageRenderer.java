@@ -18,9 +18,10 @@ package org.xaloon.wicket.component.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * @author vytautas r.
@@ -41,8 +42,19 @@ public class StringWebPageRenderer extends WebPageRenderer {
 	 * @return rendered page as html code
 	 */
 	public String renderToString(RequestCycle requestCycle) {
-		Url currentUrl = requestCycle.getUrlRenderer().getBaseUrl();
-		BufferedWebResponse response = renderPage(currentUrl, requestCycle);
+		// get the page before checking for a scheduled request handler because
+		// the page may call setResponsePage in its constructor
+		IRequestablePage requestablePage = getPage();
+
+		// keep the original response
+		final WebResponse originalResponse = (WebResponse)requestCycle.getResponse();
+
+		// buffered web response for page
+		BufferedWebResponse response = new BufferedWebResponse(originalResponse);
+
+		requestCycle.setResponse(response);
+		requestablePage.renderPage();
+
 		return response.toString();
 	}
 
