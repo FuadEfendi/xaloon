@@ -31,15 +31,15 @@ public class CkEditorOptions implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final JavaScriptResourceReference jsCKEditorResource = new JavaScriptResourceReference(CkEditorOptions.class, "ckeditor.js");
+	public static final JavaScriptResourceReference JS_CKEDITOR_RESOURCE = new JavaScriptResourceReference(CkEditorOptions.class, "ckeditor.js");
 
-	public static final JavaScriptResourceReference jsCKEditorConfig = new JavaScriptResourceReference(CkEditorOptions.class, "config.js");
+	public static final JavaScriptResourceReference JS_CKEDITOR_CONFIG = new JavaScriptResourceReference(CkEditorOptions.class, "config.js");
 
-	public static final JavaScriptResourceReference jsCKEditorStyle = new JavaScriptResourceReference(CkEditorOptions.class,
+	public static final JavaScriptResourceReference JS_CKEDITOR_STYLE = new JavaScriptResourceReference(CkEditorOptions.class,
 		"plugins/styles/styles/default.js");
 
 
-	public static final JavaScriptResourceReference jsCKEditorAdapterResource = new JavaScriptResourceReference(CkEditorOptions.class,
+	public static final JavaScriptResourceReference JS_CKEDITOR_ADAPTER_RESOURCE = new JavaScriptResourceReference(CkEditorOptions.class,
 		"ckeditor-jqueryadapter-3.5.js");
 
 	org.odlabs.wiquery.core.options.Options options;
