@@ -574,18 +574,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
-	<!-- Added for wicket snapshots. TODO: Remove before releasing -->
-	<repositories>
-		<repository>
-			<id>Apache Nexus</id>
-			<url>https://repository.apache.org/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 </project>
