@@ -49,15 +49,14 @@ public class CkEditorBehavior extends WiQueryAbstractAjaxBehavior {
 	public void renderHead(Component arg0, IHeaderResponse response) {
 		super.renderHead(arg0, response);
 		CharSequence baseUrl = RequestCycle.get().urlFor(baseRef, null);
-		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_RESOURCE));
-		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_CONFIG));
-		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_STYLE));
-		// response.render(CssHeaderItem.forReference(GalleriaOptions.GALLERIA_CSS_THEME));
+
 		String ckeditor = "function CKEDITOR_GETURL(resource){\n"
 			+ "return resource.indexOf(CKEDITOR_BASEPATH) >= 0 ? resource : CKEDITOR_BASEPATH + resource;\n" + "}";
 		response.render(JavaScriptHeaderItem.forScript(String.format("var CKEDITOR_BASEPATH = '%s/';\n" + ckeditor, baseUrl), null));
-		// response.render(OnDomReadyHeaderItem.forScript(new JsQuery(getComponent()).$().chain("ckeditor",
-// options.getJavaScriptOptions()).render()));
 
+
+		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_RESOURCE));
+		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_CONFIG));
+		response.render(JavaScriptHeaderItem.forReference(CkEditorOptions.JS_CKEDITOR_STYLE));
 	}
 }
