@@ -28,12 +28,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		
-		<!-- Wicketstuff shiro -->
-		<dependency> 
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-shiro</artifactId>
-		</dependency>
-		
 		<!-- Eclipselink 
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>

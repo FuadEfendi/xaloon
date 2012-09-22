@@ -38,13 +38,25 @@ public class AuthenticatedWebSession extends WebSession {
 	@Inject
 	private transient StringResourceLoader stringResourceLoader;
 
+	private boolean replaceSession;
+
 	/**
 	 * Construct.
 	 * 
 	 * @param request
 	 */
 	public AuthenticatedWebSession(Request request) {
+		this(request, true);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param request
+	 */
+	public AuthenticatedWebSession(Request request, boolean replaceSession) {
 		super(request);
+		this.replaceSession = replaceSession;
 		Injector.get().inject(this);
 	}
 
@@ -81,9 +93,11 @@ public class AuthenticatedWebSession extends WebSession {
 		return signinInternal(token);
 	}
 
-	private AuthenticationToken signinInternal(AuthenticationToken authenticationResultToken) {
+	protected AuthenticationToken signinInternal(AuthenticationToken authenticationResultToken) {
 		if (authenticationResultToken.isAuthenticated()) {
-			replaceSession();
+			if (replaceSession) {
+				replaceSession();
+			}
 			bind();
 		}
 		return authenticationResultToken;

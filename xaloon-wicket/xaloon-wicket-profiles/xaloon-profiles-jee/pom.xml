@@ -19,12 +19,6 @@
 			<artifactId>xaloon-core-security-shiro</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<!-- Wicketstuff shiro -->
-		<dependency> 
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-shiro</artifactId>
-		</dependency>
 		
 		<!-- Xaloon jee -->
 		<dependency>
