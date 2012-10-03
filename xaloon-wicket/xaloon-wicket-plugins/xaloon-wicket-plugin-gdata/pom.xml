@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.xaloon.plugins</groupId>
 		<artifactId>xaloon-wicket-plugins-parent</artifactId>
-		<version>1.6.0-SNAPSHOT</version>
+		<version>1.6.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xaloon-wicket-plugin-gdata</artifactId>
 	<packaging>jar</packaging>

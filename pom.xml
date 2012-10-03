@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.xaloon</groupId>
 	<artifactId>xaloon-parent</artifactId>
-	<version>1.6.0-SNAPSHOT</version>
+	<version>1.6.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>xaloon components</name>
 	<description>xaloon.org introduces an open source package of wicket based components</description>
@@ -104,7 +104,6 @@
                         <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.8</version>
                                 <executions>
                                         <execution>
                                                 <id>attach-javadocs</id>
