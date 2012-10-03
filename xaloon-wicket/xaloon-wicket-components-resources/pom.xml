@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>xaloon-wicket-parent</artifactId>
 		<groupId>org.xaloon.wicket</groupId>
-		<version>1.6.0</version>
+		<version>1.6.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xaloon-wicket-components-resources</artifactId>
 	<packaging>jar</packaging>
