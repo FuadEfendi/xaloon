@@ -10,7 +10,7 @@
 	<artifactId>xaloon-parent</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>xaloon components</name>
+	<name>PARENT: xaloon business components</name>
 	<description>xaloon.org introduces an open source package of wicket based components</description>
 	<url>http://www.xaloon.org</url>
 	<properties>
