@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-	<entry key="message.error.key.empty">Key is not provided!</entry>
-	<entry key="message.error.activation">Could not activate your account!</entry>
-	<entry key="message.info.activated">Your account has been activated!</entry>
-</properties>
