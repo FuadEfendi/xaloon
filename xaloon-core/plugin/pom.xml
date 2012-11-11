@@ -3,18 +3,24 @@
 		<groupId>org.xaloon.core</groupId>
 		<artifactId>parent-core</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
-		<relativePath>xaloon-core/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>org.xaloon</groupId>
-	<artifactId>parent-xaloon</artifactId>
+	<groupId>org.xaloon.core.plugin</groupId>
+	<artifactId>plugin-core-parent</artifactId>
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 	<name>PARENT:PLUGIN plugin folder</name>
 	
 	<modules>
-		<module>xaloon-core</module>		
-		<module>xaloon-components</module>		
-		<module>xaloon-plugins</module>		
+		<module>client-api</module>
+		<module>client-wicket-ui</module>
+		<module>client-wicket-resources</module>
+		
+		<!-- Admin modules -->
+		<module>admin-api</module>
+		<module>admin-wicket-ui</module>
+		<module>admin-wicket-resources</module>
+		
 	</modules>
 
 </project>
