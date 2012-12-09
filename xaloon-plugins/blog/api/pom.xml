@@ -8,10 +8,24 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>	
-	<artifactId>plugin-blog-client-wicket-resources</artifactId>
+	<artifactId>plugin-blog-api</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin API</name>
+	<name>BLOG: xaloon plugin API</name>
 	<description>xaloon plugin interfaces</description>
 	<url>http://www.xaloon.org</url>
 	
+	<dependencies>
+		<dependency>
+			<groupId>org.xaloon.core.plugin</groupId> 
+			<artifactId>plugin-core-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0-4</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

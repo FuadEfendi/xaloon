@@ -8,16 +8,16 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>	
-	<artifactId>plugin-blog-client-wicket-ui</artifactId>
+	<artifactId>plugin-blog-wicket-ui</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin API</name>
+	<name>BLOG: xaloon plugin API</name>
 	<description>xaloon plugin interfaces</description>
 	<url>http://www.xaloon.org</url>
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.xaloon.plugins.blog</groupId>
-			<artifactId>plugin-blog-client-api</artifactId>
+			<artifactId>plugin-blog-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
