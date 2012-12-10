@@ -10,8 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>plugin-blog-admin-api</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin ADMIN API</name>
-	<description>xaloon plugin ADMIN interfaces</description>
+	<name>BLOG: xaloon plugin ADMIN API</name>
 	<url>http://www.xaloon.org</url>
 
 	<dependencies>

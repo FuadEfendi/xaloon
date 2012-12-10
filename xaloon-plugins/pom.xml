@@ -29,6 +29,7 @@
 	</licenses>
 
 	<modules>
+		<module>authentication</module>
 		<module>blog</module>
 	</modules>
 </project>
