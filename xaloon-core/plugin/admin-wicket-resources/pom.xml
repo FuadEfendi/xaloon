@@ -10,8 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>	
 	<artifactId>plugin-core-admin-wicket-resources</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin ADMIN resources</name>
-	<description>xaloon plugin ADMIN resources</description>
+	<name>CORE: xaloon plugin ADMIN wicket resources</name>
 	<url>http://www.xaloon.org</url>
 	
 </project>

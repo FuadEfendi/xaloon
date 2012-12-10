@@ -12,9 +12,9 @@
 	<name>PARENT:PLUGIN plugin folder</name>
 	
 	<modules>
-		<module>client-api</module>
-		<module>client-wicket-ui</module>
-		<module>client-wicket-resources</module>
+		<module>api</module>
+		<module>wicket-ui</module>
+		<module>wicket-resources</module>
 		
 		<!-- Admin modules -->
 		<module>admin-api</module>

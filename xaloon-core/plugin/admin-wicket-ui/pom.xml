@@ -10,8 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>	
 	<artifactId>plugin-core-admin-wicket-ui</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin ADMIN UI</name>
-	<description>xaloon plugin ADMIN UI</description>
+	<name>CORE: xaloon plugin ADMIN wicket UI</name>
 	<url>http://www.xaloon.org</url>
 	
 	<dependencies>

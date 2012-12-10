@@ -10,8 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>	
 	<artifactId>plugin-core-client-wicket-resources</artifactId>
 	<packaging>jar</packaging>
-	<name>xaloon plugin resources</name>
-	<description>xaloon plugin resources</description>
+	<name>CORE: xaloon plugin wicket resources</name>
 	<url>http://www.xaloon.org</url>
 	
 </project>
