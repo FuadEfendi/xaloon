@@ -68,6 +68,7 @@ public class DefaultEmailService implements EmailService {
 		email.setCharset(emailPluginBean.getCharset());
 		try {
 			email.setTLS(emailPluginBean.isStartTLS());
+			email.setSSL(emailPluginBean.isStartTLS());
 			email.addTo(toEmail, toName);
 			email.setFrom(fromEmail, fromName);
 			email.setSubject(subject);
