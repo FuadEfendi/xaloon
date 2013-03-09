@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -140,10 +140,9 @@ public class UrlUtils {
 	 * @return absolute link of page with parameters
 	 */
 	public static String toAbsolutePath(Class<? extends Page> pageClass, PageParameters params) {
-		HttpServletRequest req = (HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest();
-		StringBuilder domainPath = new StringBuilder(StringUtils.removeEnd(req.getRequestURL().toString(), req.getServletPath()));
-		domainPath.append(DelimiterEnum.SLASH.value());
-		return RequestUtils.toAbsolutePath(domainPath.toString(), RequestCycle.get().mapUrlFor(pageClass, params).toString());
+		String absolutePath = RequestCycle.get().getUrlRenderer().renderFullUrl(Url.parse(RequestCycle.get().urlFor(pageClass, params).toString()));
+
+		return absolutePath;
 	}
 
 	/**

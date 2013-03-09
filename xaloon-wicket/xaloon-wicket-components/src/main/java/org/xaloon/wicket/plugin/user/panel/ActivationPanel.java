@@ -29,9 +29,11 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.value.ValueMap;
 import org.xaloon.core.api.user.UserFacade;
+import org.xaloon.wicket.util.UrlUtils;
 
 /**
  * @author vytautas r.
@@ -106,8 +108,9 @@ public class ActivationPanel extends Panel {
 
 				if (userFacade.activate(activationKey, userPassword)) {
 					getSession().info(getString(MESSAGE_INFO_ACTIVATED));
+					throw new RedirectToUrlException(UrlUtils.toAbsolutePath(getApplication().getHomePage(), null));
 				} else {
-					getSession().warn(getString(MESSAGE_ERROR_ACTIVATION));
+					getSession().error(getString(MESSAGE_ERROR_ACTIVATION));
 				}
 				activationKeyField.setModelObject(null);
 				passwordTextField.setModelObject(null);

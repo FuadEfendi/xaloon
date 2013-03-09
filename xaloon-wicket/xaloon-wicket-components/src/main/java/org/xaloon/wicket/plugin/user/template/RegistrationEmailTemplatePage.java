@@ -22,6 +22,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.xaloon.wicket.plugin.email.template.EmailContentTemplatePage;
 import org.xaloon.wicket.plugin.user.page.ActivationPage;
+import org.xaloon.wicket.plugin.user.panel.ActivationPanel;
 import org.xaloon.wicket.util.UrlUtils;
 
 
@@ -50,7 +51,7 @@ public class RegistrationEmailTemplatePage extends EmailContentTemplatePage {
 		add(new Label("activation-key", new Model<String>(activationKey)));
 
 		PageParameters parameters = new PageParameters();
-		parameters.set(0, activationKey);
+		parameters.set(ActivationPanel.ACTIVATION_KEY, activationKey);
 
 		String url = UrlUtils.toAbsolutePath(ActivationPage.class, parameters);
 		Label activation_key_name = new Label("activation-link-name", new Model<String>(url));
