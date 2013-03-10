@@ -90,7 +90,7 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 			return 1;
 		}
 		CompareToBuilder compareToBuilder = new CompareToBuilder();
-		compareToBuilder.append(getObject().getId(), o.getObject().getId());
+		compareToBuilder.append(getId(), o.getId());
 
 		return compareToBuilder.toComparison();
 	}
@@ -103,7 +103,7 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 		JpaImageComposition item = (JpaImageComposition)obj;
 
 		EqualsBuilder equalsBuilder = new EqualsBuilder();
-		equalsBuilder.append(getObject().getId(), item.getObject().getId());
+		equalsBuilder.append(getId(), item.getId());
 		return equalsBuilder.isEquals();
 	}
 
@@ -113,7 +113,7 @@ public abstract class JpaImageComposition<T extends Album> extends AbstractEntit
 			return 1;
 		}
 		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-		hashCodeBuilder.append(getObject().getId());
+		hashCodeBuilder.append(getId());
 		return hashCodeBuilder.hashCode();
 	}
 }
