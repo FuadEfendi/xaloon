@@ -147,4 +147,9 @@ public class JpaClassifierItemDao implements ClassifierItemDao {
 		queryBuilder.addExpression(" cli.parent != null ");
 		return persistenceServices.executeQuery(queryBuilder);
 	}
+
+	@Override
+	public void deleteClassifierItem(ClassifierItem classifierItem) {
+		persistenceServices.remove(classifierItem);
+	}
 }

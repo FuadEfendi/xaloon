@@ -98,4 +98,11 @@ public interface ClassifierItemDao extends Serializable {
 	 * @return list of classifier items
 	 */
 	<T extends ClassifierItem> List<T> findLowerLevelItems(String classifierType);
+
+	/**
+	 * Deletes classifier item if no children exist.
+	 * 
+	 * @param classifierItem
+	 */
+	void deleteClassifierItem(ClassifierItem classifierItem);
 }

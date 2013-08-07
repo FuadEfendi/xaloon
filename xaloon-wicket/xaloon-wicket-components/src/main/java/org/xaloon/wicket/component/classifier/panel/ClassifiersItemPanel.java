@@ -24,9 +24,14 @@ import javax.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.navigation.paging.IPageable;
+import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -43,7 +48,6 @@ import org.xaloon.core.api.plugin.EmptyPlugin;
 import org.xaloon.wicket.component.classifier.ldm.ClassifierItemLoadableModel;
 import org.xaloon.wicket.component.classifier.page.ClassifiersItemPage;
 import org.xaloon.wicket.component.classifier.page.ClassifiersPage;
-import org.xaloon.wicket.component.navigation.DecoratedPagingNavigatorContainer;
 import org.xaloon.wicket.util.Link;
 
 
@@ -91,9 +95,8 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 			parentClassifierItem = params.get(ClassifierConstants.PARENT_ITEM).toString();
 		}
 
-		// Add data container
-		final DecoratedPagingNavigatorContainer<ClassifierItem> dataContainer = new DecoratedPagingNavigatorContainer<ClassifierItem>("container",
-			getCurrentRedirectLink());
+		final WebMarkupContainer dataContainer = new WebMarkupContainer("container");
+		dataContainer.setOutputMarkupId(true);
 		add(dataContainer);
 
 
@@ -104,7 +107,7 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 			@Override
 			protected void populateItem(Item<ClassifierItem> item) {
-				ClassifierItem classifierItem = item.getModelObject();
+				final ClassifierItem classifierItem = item.getModelObject();
 
 				// Add link
 				PageParameters pageParameters = new PageParameters();
@@ -116,9 +119,33 @@ public class ClassifiersItemPanel extends AbstractClassifiersPanel {
 
 				// Add name
 				item.add(new Label("name", new Model<String>(classifierItem.getName())));
+
+				item.add(new AjaxLink<Void>("delete-item") {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						classifierItemDao.deleteClassifierItem(classifierItem);
+						target.add(dataContainer);
+					}
+				});
 			}
 		};
-		dataContainer.addAbstractPageableView(classifierDataView);
+		dataContainer.add(classifierDataView);
+		AjaxPagingNavigator navigator = new AjaxPagingNavigator("navigator", classifierDataView) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
+				PagingNavigation nav = super.newNavigation(id, pageable, labelProvider);
+				nav.setViewSize(10);
+				return nav;
+			}
+		};
+		dataContainer.add(navigator);
 		dataContainer.setVisible(true);
 		classifierDataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
