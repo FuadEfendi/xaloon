@@ -6,7 +6,7 @@ package ${package};
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.xaloon.core.api.tree.TreeNode;
@@ -68,7 +68,7 @@ public class WicketLayoutComponentInitializer implements LayoutComponentInitiali
 		layoutWebPage.add(new GoogleAnalyticsPanel("google-analytics-panel"));
 		
 		if (hasSidebarMenu(layoutWebPage)) {
-			content.add(new SimpleAttributeModifier("class", "content_sidebar"));
+			content.add(new AttributeModifier("class", "content_sidebar"));
 		}
 	}
 	
