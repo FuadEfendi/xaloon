@@ -52,7 +52,7 @@ public class CreateNewEntityPanelTest extends AbstractUserAdminTestCase {
 		tester.executeAjaxEvent("id:new-entity:submit", "onclick");
 
 		// Validate result
-		tester.assertErrorMessages("Field 'name' is required.");
+		tester.assertErrorMessages("'name' is required.");
 		Assert.assertEquals("", invocationResult.toString());
 	}
 
